@@ -1,7 +1,5 @@
 # Web.py Cookbook 简体中文版
 
-# Web.py Cookbook 简体中文版
-
 > 来源：[Web.py Cookbook 简体中文版](http://webpy.org/cookbook/index.zh-cn)
 
 欢迎来到 web.py 0.3 的 Cookbook。提醒您注意：某些特性在之前的版本中并不可用。当前开发版本是 0.3。

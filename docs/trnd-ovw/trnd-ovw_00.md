@@ -1,5 +1,3 @@
-# 介绍
-
 # Tornado 概览
 
 Tornado 是 [Facebook 开源技术](http://developers.facebook.com/opensource/)之一，基于[Apache Licence, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html) 发布。

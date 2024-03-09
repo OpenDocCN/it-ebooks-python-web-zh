@@ -1,4 +1,6 @@
-# 浅入浅出 Flask 框架：在 ubuntu 下安装 Flask
+# 浅入浅出 Flask 框架
+
+## 在 ubuntu 下安装 Flask
 
 2014-06-01
 

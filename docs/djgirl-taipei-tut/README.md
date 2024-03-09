@@ -1,7 +1,5 @@
 # Django Girls 學習指南
 
-# Django Girls 學習指南
-
 這份學習指南適合所有 Django 初學者，為了更好的學習效果，我們希望你能具備：
 
 *   Web 的初步認識

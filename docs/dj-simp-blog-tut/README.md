@@ -1,6 +1,4 @@
-# Introduce
-
-# Introduction
+# Django 之歌：简易博客搭建教程
 
 本书主要面向 `Django 学习者和博客开发者`, 其中的代码可以在作者的 github 上获得, 主要是在 Mac 上进行开发, 并没有在其他运行环境下做测试
 

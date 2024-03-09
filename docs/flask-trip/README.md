@@ -1,5 +1,3 @@
-# 介绍
-
 # Flask 之旅
 
 《explore flask》中文翻译

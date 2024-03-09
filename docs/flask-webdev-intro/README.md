@@ -1,8 +1,6 @@
-# 前言
+# Flask Web 开发入门
 
 ![](img/626865cb.jpg)
-
-# Flask Web 开发入门
 
 ## Flask 简介
 

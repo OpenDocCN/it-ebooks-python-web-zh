@@ -1,10 +1,4 @@
-### 导航
-
-*   索引
-*   下一页 |
-*   flask mega-tutorial 1.0 文档 »
-
-# 欢迎进入 Flask 大型教程项目！
+# Flask 大型教程
 
 翻译者注：本系列的原文名为：[The Flask Mega-Tutorial](http://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world) [http://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world] ，作者是 **Miguel Grinberg** 。
 
