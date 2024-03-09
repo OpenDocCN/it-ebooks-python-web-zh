@@ -1,3 +1,5 @@
+# 第四章：数据库
+
 在本章中，我们将给出几个使用数据库的 Tornado Web 应用的例子。我们将从一个简单的 RESTful API 例子起步，然后创建 3.1.2 节中的 Burt's Book 网站的完整功能版本。
 
 本章中的例子使用 MongoDB 作为数据库，并通过 pymongo 作为驱动来连接 MongoDB。当然，还有很多数据库系统可以用在 Web 应用中：Redis、CouchDB 和 MySQL 都是一些知名的选择，并且 Tornado 自带处理 MySQL 请求的库。我们选择使用 MongoDB 是因为它的简单性和便捷性：安装简单，并且能够和 Python 代码很好地融合。它结构自然，预定义数据结构不是必需的，很适合原型开发。
@@ -29,7 +31,7 @@ PyMongo 是一个简单的包装 MongoDB 客户端 API 的 Python 库。你可�
 首先，你需要导入 PyMongo 库，并创建一个到 MongoDB 数据库的连接。
 
 ```
-      >>> import pymongo
+>>> import pymongo
 >>> conn = pymongo.Connection("localhost", 27017)
 
 ```
@@ -37,7 +39,7 @@ PyMongo 是一个简单的包装 MongoDB 客户端 API 的 Python 库。你可�
 前面的代码向我们展示了如何连接运行在你本地机器上默认端口（27017）上的 MongoDB 服务器。如果你正在使用一个远程 MongoDB 服务器，替换 localhost 和 27017 为合适的值。你也可以使用 MongoDB URI 来连接 MongoDB，就像下面这样：
 
 ```
-      >>> conn = pymongo.Connection(
+>>> conn = pymongo.Connection(
 ... "mongodb://user:password@staff.mongohq.com:10066/your_mongohq_db")
 
 ```
@@ -47,14 +49,14 @@ PyMongo 是一个简单的包装 MongoDB 客户端 API 的 Python 库。你可�
 一个 MongoDB 服务器可以包括任意数量的数据库，而 Connection 对象可以让你访问你连接的服务器的任何一个数据库。你可以通过对象属性或像字典一样使用对象来获得代表一个特定数据库的对象。如果数据库不存在，则被自动建立。
 
 ```
-      >>> db = conn.example or: db = conn['example']
+>>> db = conn.example or: db = conn['example']
 
 ```
 
 一个数据库可以拥有任意多个集合。一个集合就是放置一些相关文档的地方。我们使用 MongoDB 执行的大部分操作（查找文档、保存文档、删除文档）都是在一个集合对象上执行的。你可以在数据库对象上调用 collection_names 方法获得数据库中的集合列表。
 
 ```
-      >>> db.collection_names()
+>>> db.collection_names()
 []
 
 ```
@@ -62,7 +64,7 @@ PyMongo 是一个简单的包装 MongoDB 客户端 API 的 Python 库。你可�
 当然，我们还没有在我们的数据库中添加任何集合，所以这个列表是空的。当我们插入第一个文档时，MongoDB 会自动创建集合。你可以在数据库对象上通过访问集合名字的属性来获得代表集合的对象，然后调用对象的 insert 方法指定一个 Python 字典来插入文档。比如，在下面的代码中，我们在集合 widgets 中插入了一个文档。因为 widgets 集合并不存在，MongoDB 会在文档被添加时自动创建。
 
 ```
-      >>> widgets = db.widgets or: widgets = db['widgets'] (see below)
+>>> widgets = db.widgets or: widgets = db['widgets'] (see below)
 >>> widgets.insert({"foo": "bar"})
 ObjectId('4eada0b5136fc4aa41000000')
 >>> db.collection_names()
@@ -81,7 +83,7 @@ MongoDB 以文档的形式存储数据，这种形式有着相对自由的数据
 为了在集合中 创建一个新的文档，我们可以使用字典作为参数调用文档的 insert 方法。
 
 ```
-      >>> widgets.insert({"name": "flibnip", "description": "grade-A industrial flibnip", "quantity": 3})
+>>> widgets.insert({"name": "flibnip", "description": "grade-A industrial flibnip", "quantity": 3})
 ObjectId('4eada3a4136fc4aa41000001')
 
 ```
@@ -89,7 +91,7 @@ ObjectId('4eada3a4136fc4aa41000001')
 既然文档在数据库中，我们可以使用集合对象的 find_one 方法来取出文档。你可以通过传递一个键为文档名、值为你想要匹配的表达式的字典来告诉 find_one 找到 一个特定的文档。比如，我们想要返回文档名域 name 的值等于 flibnip 的文档（即，我们刚刚创建的文档），可以像下面这样调用 find_oen 方法：
 
 ```
-      >>> widgets.find_one({"name": "flibnip"})
+>>> widgets.find_one({"name": "flibnip"})
 {u'description': u'grade-A industrial flibnip',
  u'_id': ObjectId('4eada3a4136fc4aa41000001'),
  u'name': u'flibnip', u'quantity': 3}
@@ -101,7 +103,7 @@ ObjectId('4eada3a4136fc4aa41000001')
 find_one 方法返回的值是一个简单的 Python 字典。你可以从中访问独立的项，迭代它的键值对，或者就像使用其他 Python 字典那样修改值。
 
 ```
-      >>> doc = db.widgets.find_one({"name": "flibnip"})
+>>> doc = db.widgets.find_one({"name": "flibnip"})
 >>> type(doc)
 <type 'dict'>
 >>> print doc['name']
@@ -113,7 +115,7 @@ flibnip
 然而，字典的改变并不会自动保存到数据库中。如果你希望把字典的改变保存，需要调用集合的 save 方法，并将修改后的字典作为参数进行传递：
 
 ```
-      >>> doc['quantity'] = 4
+>>> doc['quantity'] = 4
 >>> db.widgets.save(doc)
 >>> db.widgets.find_one({"name": "flibnip"})
 {u'_id': ObjectId('4eb12f37136fc4b59d000000'),
@@ -125,7 +127,7 @@ flibnip
 让我们在集合中添加更多的文档：
 
 ```
-      >>> widgets.insert({"name": "smorkeg", "description": "for external use only", "quantity": 4})
+>>> widgets.insert({"name": "smorkeg", "description": "for external use only", "quantity": 4})
 ObjectId('4eadaa5c136fc4aa41000002')
 >>> widgets.insert({"name": "clobbasker", "description": "properties available on request", "quantity": 2})
 ObjectId('4eadad79136fc4aa41000003')
@@ -135,7 +137,7 @@ ObjectId('4eadad79136fc4aa41000003')
 我们可以通过调用集合的 find 方法来获得集合中所有文档的列表，然后迭代其结果：
 
 ```
-      >>> for doc in widgets.find():
+>>> for doc in widgets.find():
 ...     print doc
 ...
 {u'_id': ObjectId('4eada0b5136fc4aa41000000'), u'foo': u'bar'}
@@ -155,7 +157,7 @@ ObjectId('4eadad79136fc4aa41000003')
 如果我们希望获得文档的一个子集，我们可以在 find 方法中传递一个字典参数，就像我们在 find_one 中那样。比如，找到那些 quantity 键的值为 4 的集合：
 
 ```
-      >>> for doc in widgets.find({"quantity": 4}):
+>>> for doc in widgets.find({"quantity": 4}):
 ...     print doc
 ...
 {u'description': u'grade-A industrial flibnip',
@@ -171,14 +173,14 @@ ObjectId('4eadad79136fc4aa41000003')
 最后，我们可以使用集合的 remove 方法从集合中删除一个文档。remove 方法和 find、find_one 一样，也可以使用一个字典参数来指定哪个文档需要被删除。比如，要删除所有 name 键的值为 flipnip 的文档，输入：
 
 ```
-      >>> widgets.remove({"name": "flibnip"})
+>>> widgets.remove({"name": "flibnip"})
 
 ```
 
 列出集合中的所有文档来确认上面的文档已经被删除：
 
 ```
-      >>> for doc in widgets.find():
+>>> for doc in widgets.find():
 ...     print doc
 ...
 {u'_id': ObjectId('4eada0b5136fc4aa41000000'),
@@ -198,7 +200,7 @@ ObjectId('4eadad79136fc4aa41000003')
 使用 Web 应用时，你经常会想采用 Python 字典并将其序列化为一个 JSON 对象（比如，作为一个 AJAX 请求的响应）。由于你使用 PyMongo 从 MongoDB 中取出的文档是一个简单的字典，你可能会认为你可以使用 json 模块的 dumps 函数就可以简单地将其转换为 JSON。但，这还有一个障碍：
 
 ```
-      >>> doc = db.widgets.find_one({"name": "flibnip"})
+>>> doc = db.widgets.find_one({"name": "flibnip"})
 >>> import json
 >>> json.dumps(doc)
 Traceback (most recent call last):
@@ -211,7 +213,7 @@ TypeError: ObjectId('4eb12f37136fc4b59d000000') is not JSON serializable
 这里的问题是 Python 的 json 模块并不知道如何转换 MongoDB 的 ObjectID 类型到 JSON。有很多方法可以处理这个问题。其中最简单的方法（也是我们在本章中采用的方法）是在我们序列化之前从字典里简单地删除 _id 键。
 
 ```
-      >>> del doc["_id"]
+>>> del doc["_id"]
 >>> json.dumps(doc)
 '{"description": "grade-A industrial flibnip", "quantity": 4, "name": "flibnip"}'
 
@@ -228,7 +230,7 @@ TypeError: ObjectId('4eb12f37136fc4b59d000000') is not JSON serializable
 我们将要创建的应用是一个基于 Web 的简单字典。你发送一个指定单词的请求，然后返回这个单词的定义。一个典型的交互看起来是下面这样的：
 
 ```
-      $ curl http://localhost:8000/oarlock
+$ curl http://localhost:8000/oarlock
 {definition: "A device attached to a rowboat to hold the oars in place",
 "word": "oarlock"}
 
@@ -237,7 +239,7 @@ TypeError: ObjectId('4eb12f37136fc4b59d000000') is not JSON serializable
 这个 Web 服务将从 MongoDB 数据库中取得数据。具体来说，我们将根据 word 属性查询文档。在我们查看 Web 应用本身的源码之前，先让我们从 Python 解释器中向数据库添加一些单词。
 
 ```
-      >>> import pymongo
+>>> import pymongo
 >>> conn = pymongo.Connection("localhost", 27017)
 >>> db = conn.example
 >>> db.words.insert({"word": "oarlock", "definition": "A device attached to a rowboat to hold the oars in place"})
@@ -256,7 +258,7 @@ ObjectId('4eb1d39d136fc4be90000002')
 代码清单 4-1 一个词典 Web 服务：definitions_readonly.py
 
 ```
-      import tornado.httpserver
+import tornado.httpserver
 import tornado.ioloop
 import tornado.options
 import tornado.web
@@ -295,14 +297,14 @@ if __name__ == "__main__":
 在命令行中像下面这样运行这个程序：
 
 ```
-      $ python definitions_readonly.py
+$ python definitions_readonly.py
 
 ```
 
 现在使用 curl 或者你的浏览器来向应用发送一个请求。
 
 ```
-      $ curl http://localhost:8000/perturb
+$ curl http://localhost:8000/perturb
 {"definition": "Bother, unsettle, modify", "word": "perturb"}
 
 ```
@@ -310,7 +312,7 @@ if __name__ == "__main__":
 如果我们请求一个数据库中没有添加的单词，会得到一个 404 错误以及一个错误信息：
 
 ```
-      $ curl http://localhost:8000/snorkle
+$ curl http://localhost:8000/snorkle
 {"error": "word not found"}
 
 ```
@@ -318,7 +320,7 @@ if __name__ == "__main__":
 那么这个程序是如何工作的呢？让我们看看这个程序的主线。开始，我们在程序的最上面导入了 import pymongo 库。然后我们在我们的 TornadoApplication 对象的**init**方法中实例化了一个 pymongo 连接对象。我们在 Application 对象中创建了一个 db 属性，指向 MongoDB 的 example 数据库。下面是相关的代码：
 
 ```
-      conn = pymongo.Connection("localhost", 27017)
+conn = pymongo.Connection("localhost", 27017)
 self.db = conn["example"]
 
 ```
@@ -326,7 +328,7 @@ self.db = conn["example"]
 一旦我们在 Application 对象中添加了 db 属性，我们就可以在任何 RequestHandler 对象中使用 self.application.db 访问它。实际上，这正是我们为了取出 pymongo 的 words 集合对象而在 WordHandler 中 get 方法所做的事情。
 
 ```
-      def get(self, word):
+def get(self, word):
     coll = self.application.db.words
     word_doc = coll.find_one({"word": word})
     if word_doc:
@@ -349,7 +351,7 @@ self.db = conn["example"]
 它的工作流程是：发出一个特定单词的 POST 请求，将根据请求中给出的定义修改已经存在的定义。如果这个单词并不存在，则创建它。例如，创建一个新的单词：
 
 ```
-      $ curl -d definition=a+leg+shirt http://localhost:8000/pants
+$ curl -d definition=a+leg+shirt http://localhost:8000/pants
 {"definition": "a leg shirt", "word": "pants"}
 
 ```
@@ -357,7 +359,7 @@ self.db = conn["example"]
 我们可以使用一个 GET 请求来获得已创建单词的定义：
 
 ```
-      $ curl http://localhost:8000/pants
+$ curl http://localhost:8000/pants
 {"definition": "a leg shirt", "word": "pants"}
 
 ```
@@ -365,7 +367,7 @@ self.db = conn["example"]
 我们可以发出一个带有一个单词定义域的 POST 请求来修改一个已经存在的单词（就和我们创建一个新单词时使用的参数一样）：
 
 ```
-      $ curl -d definition=a+boat+wizard http://localhost:8000/oarlock
+$ curl -d definition=a+boat+wizard http://localhost:8000/oarlock
 {"definition": "a boat wizard", "word": "oarlock"}
 
 ```
@@ -375,7 +377,7 @@ self.db = conn["example"]
 代码清单 4-2 一个读写字典服务：definitions_readwrite.py
 
 ```
-      import tornado.httpserver
+import tornado.httpserver
 import tornado.ioloop
 import tornado.options
 import tornado.web
@@ -425,7 +427,7 @@ if __name__ == "__main__":
 除了在 WordHandler 中添加了一个 post 方法之外，这个源代码和只读服务的版本完全一样。让我们详细看看这个方法吧：
 
 ```
-      def post(self, word):
+def post(self, word):
     definition = self.get_argument("definition")
     coll = self.application.db.words
     word_doc = coll.find_one({"word": word})
@@ -451,7 +453,7 @@ if __name__ == "__main__":
 让我们从一些简单的版本开始：一个从数据库中读取书籍列表的 Burt's Books。首先，我们需要在我们的 MongoDB 服务器上创建一个数据库和一个集合，然后用书籍文档填充它，就像下面这样：
 
 ```
-      >>> import pymongo
+>>> import pymongo
 >>> conn = pymongo.Connection()
 >>> db = conn["bookstore"]
 >>> db.books.insert({
@@ -484,7 +486,7 @@ ObjectId('4eb6f1cb136fc42171000001')
 代码清单 4-3 读取数据库：burts_books_db.py
 
 ```
-      import os.path
+import os.path
 import tornado.locale
 import tornado.httpserver
 import tornado.ioloop
@@ -552,7 +554,7 @@ if __name__ == "__main__":
 正如你看到的，这个程序和[第三章](http://dockerpool.com/static/books/introduction_to_tornado_cn/ch3.html)中 Burt's Books Web 应用的原始版本几乎完全相同。它们之间只有两个不同点。其一，我们在我们的 Application 中添加了一个 db 属性来连接 MongoDB 服务器：
 
 ```
-      conn = pymongo.Connection("localhost", 27017)
+conn = pymongo.Connection("localhost", 27017)
 self.db = conn["bookstore"]
 
 ```
@@ -560,7 +562,7 @@ self.db = conn["bookstore"]
 其二，我们使用连接的 find 方法来从数据库中取得书籍文档的列表，然后在渲染 recommended.html 时将这个列表传递给 RecommendedHandler 的 get 方法。下面是相关的代码：
 
 ```
-      def get(self):
+def get(self):
     coll = self.application.db.books
     books = coll.find()
     self.render(
@@ -577,7 +579,7 @@ self.db = conn["bookstore"]
 像下面这样运行应用：
 
 ```
-      $ python burts_books_db.py
+$ python burts_books_db.py
 
 ```
 
@@ -599,7 +601,7 @@ self.db = conn["bookstore"]
 下面是处理程序的源代码：
 
 ```
-      class BookEditHandler(tornado.web.RequestHandler):
+class BookEditHandler(tornado.web.RequestHandler):
     def get(self, isbn=None):
         book = dict()
         if isbn:
@@ -633,7 +635,7 @@ self.db = conn["bookstore"]
 我们将在稍后对其进行详细讲解，不过现在先让我们看看如何在 Application 类中建立请求到处理程序的路由。下面是 Application 的**init**方法的相关代码部分：
 
 ```
-      handlers = [
+handlers = [
     (r"/", MainHandler),
     (r"/recommended/", RecommendedHandler),
     (r"/edit/([0-9Xx\-]+)", BookEditHandler),
@@ -649,7 +651,7 @@ self.db = conn["bookstore"]
 让我们看看 BookEditHandler 的 get 方法是如何工作的：
 
 ```
-      def get(self, isbn=None):
+def get(self, isbn=None):
     book = dict()
     if isbn:
         coll = self.application.db.books
@@ -668,7 +670,7 @@ self.db = conn["bookstore"]
 下面是模板（book_edit.html）的代码：
 
 ```
-      {% extends "main.html" %}
+{% extends "main.html" %}
 {% autoescape None %}
 
 {% block body %}
@@ -707,7 +709,7 @@ self.db = conn["bookstore"]
 让我们看看 BookEditHandler 的 post 方法。这个方法处理书籍编辑表单的请求。下面是源代码：
 
 ```
-      def post(self, isbn=None):
+def post(self, isbn=None):
     import time
     book_fields = ['isbn', 'title', 'subtitle', 'image', 'author',
         'date_released', 'description']
@@ -740,7 +742,7 @@ self.db = conn["bookstore"]
 你还将注意到我们给每个图书条目添加了一个"Edit"链接，用于链接到列表中每个书籍的编辑表单。下面是修改后的图书模块的源代码：
 
 ```
-      <div class="book" style="overflow: auto">
+<div class="book" style="overflow: auto">
     <h3 class="book_title">{{ book["title"] }}</h3>
     {% if book["subtitle"] != "" %}
         <h4 class="book_subtitle">{{ book["subtitle"] }}</h4>
@@ -761,7 +763,7 @@ relative=False) }}</div>
 其中最重要的一行是：
 
 ```
-      <p><a href="/edit/{{ book['isbn'] }}">Edit</a></p>
+<p><a href="/edit/{{ book['isbn'] }}">Edit</a></p>
 
 ```
 

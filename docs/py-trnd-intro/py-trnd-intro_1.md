@@ -1,3 +1,5 @@
+# 第一章：引言
+
 > 本书出处：[`demo.pythoner.com/itt2zh/`](http://demo.pythoner.com/itt2zh/)
 > 中文翻译：[你像从前一样](http://www.pythoner.com/)
 
@@ -45,7 +47,7 @@ Tornado 是使用 Python 编写的一个强大的、可扩展的 Web 服务器�
 在大部分*nix 系统中安装 Tornado 非常容易--你既可以从 PyPI 获取（并使用`easy_install`或`pip`安装），也可以从 Github 上下载源码编译安装，如下所示[1]：
 
 ```
-      $ curl -L -O https://github.com/facebook/tornado/archive/v3.1.0.tar.gz
+$ curl -L -O https://github.com/facebook/tornado/archive/v3.1.0.tar.gz
 $ tar xvzf v3.1.0.tar.gz
 $ cd tornado-3.1.0
 $ python setup.py build
@@ -56,7 +58,7 @@ $ sudo python setup.py install
 Tornado 官方并不支持 Windows，但你可以通过 ActivePython 的 PyPM 包管理器进行安装，类似如下所示：
 
 ```
-      C:\> pypm install tornado
+C:\> pypm install tornado
 
 ```
 
@@ -79,7 +81,7 @@ Tornado 是一个编写对 HTTP 请求响应的框架。作为程序员，你的
 代码清单 1-1 基础：hello.py
 
 ```
-      import tornado.httpserver
+import tornado.httpserver
 import tornado.ioloop
 import tornado.options
 import tornado.web
@@ -106,14 +108,14 @@ if __name__ == "__main__":
 你可以在命令行里尝试运行这个程序以测试输出：
 
 ```
-      $ python hello.py --port=8000
+$ python hello.py --port=8000
 
 ```
 
 现在你可以在浏览器中打开[`localhost:8000`](http://localhost:8000)，或者打开另一个终端窗口使用 curl 测试我们的应用：
 
 ```
-      $ curl http://localhost:8000/
+$ curl http://localhost:8000/
 Hello, friendly user!
 $ curl http://localhost:8000/?greeting=Salutations
 Salutations, friendly user!
@@ -123,7 +125,7 @@ Salutations, friendly user!
 让我们把这个例子分成小块，逐步分析它们：
 
 ```
-      import tornado.httpserver
+import tornado.httpserver
 import tornado.ioloop
 import tornado.options
 import tornado.web
@@ -133,7 +135,7 @@ import tornado.web
 在程序的最顶部，我们导入了一些 Tornado 模块。虽然 Tornado 还有另外一些有用的模块，但在这个例子中我们必须至少包含这四个模块。
 
 ```
-      from tornado.options import define, options
+from tornado.options import define, options
 define("port", default=8000, help="run on the given port", type=int)
 
 ```
@@ -141,7 +143,7 @@ define("port", default=8000, help="run on the given port", type=int)
 Tornado 包括了一个有用的模块（tornado.options）来从命令行中读取设置。我们在这里使用这个模块指定我们的应用监听 HTTP 请求的端口。它的工作流程如下：如果一个与 define 语句中同名的设置在命令行中被给出，那么它将成为全局 options 的一个属性。如果用户运行程序时使用了`--help`选项，程序将打印出所有你定义的选项以及你在 define 函数的 help 参数中指定的文本。如果用户没有为这个选项指定值，则使用 default 的值进行代替。Tornado 使用 type 参数进行基本的参数类型验证，当不合适的类型被给出时抛出一个异常。因此，我们允许一个整数的 port 参数作为 options.port 来访问程序。如果用户没有指定值，则默认为 8000。
 
 ```
-      class IndexHandler(tornado.web.RequestHandler):
+class IndexHandler(tornado.web.RequestHandler):
     def get(self):
         greeting = self.get_argument('greeting', 'Hello')
         self.write(greeting + ', friendly user!')
@@ -151,21 +153,21 @@ Tornado 包括了一个有用的模块（tornado.options）来从命令行中读
 这是 Tornado 的请求处理函数类。当处理一个请求时，Tornado 将这个类实例化，并调用与 HTTP 请求方法所对应的方法。在这个例子中，我们只定义了一个 get 方法，也就是说这个处理函数将对 HTTP 的 GET 请求作出响应。我们稍后将看到实现不止一个 HTTP 方法的处理函数。
 
 ```
-      greeting = self.get_argument('greeting', 'Hello')
+greeting = self.get_argument('greeting', 'Hello')
 
 ```
 
 Tornado 的 RequestHandler 类有一系列有用的内建方法，包括 get_argument，我们在这里从一个查询字符串中取得参数 greeting 的值。（如果这个参数没有出现在查询字符串中，Tornado 将使用 get_argument 的第二个参数作为默认值。）
 
 ```
-      self.write(greeting + ', friendly user!')
+self.write(greeting + ', friendly user!')
 
 ```
 
 RequestHandler 的另一个有用的方法是 write，它以一个字符串作为函数的参数，并将其写入到 HTTP 响应中。在这里，我们使用请求中 greeting 参数提供的值插入到 greeting 中，并写回到响应中。
 
 ```
-      if __name__ == "__main__":
+if __name__ == "__main__":
     tornado.options.parse_command_line()
     app = tornado.web.Application(handlers=[(r"/", IndexHandler)])
 
@@ -174,7 +176,7 @@ RequestHandler 的另一个有用的方法是 write，它以一个字符串作�
 这是真正使得 Tornado 运转起来的语句。首先，我们使用 Tornado 的 options 模块来解析命令行。然后我们创建了一个 Tornado 的 Application 类的实例。传递给 Application 类**init**方法的最重要的参数是 handlers。它告诉 Tornado 应该用哪个类来响应请求。马上我们讲解更多相关知识。
 
 ```
-      http_server = tornado.httpserver.HTTPServer(app)
+http_server = tornado.httpserver.HTTPServer(app)
 http_server.listen(options.port)
 tornado.ioloop.IOLoop.instance().start()
 
@@ -187,7 +189,7 @@ tornado.ioloop.IOLoop.instance().start()
 让我们再看一眼 hello.py 示例中的这一行：
 
 ```
-      app = tornado.web.Application(handlers=[(r"/", IndexHandler)])
+app = tornado.web.Application(handlers=[(r"/", IndexHandler)])
 
 ```
 
@@ -206,7 +208,7 @@ Tornado 在元组中使用正则表达式来匹配 HTTP 请求的路径。（这
 代码清单 1-2 处理输入：string_service.py
 
 ```
-      import textwrap
+import textwrap
 
 import tornado.httpserver
 import tornado.ioloop
@@ -243,14 +245,14 @@ if __name__ == "__main__":
 如同运行第一个例子，你可以在命令行中运行这个例子使用如下的命令：
 
 ```
-      $ python string_service.py --port=8000
+$ python string_service.py --port=8000
 
 ```
 
 这个程序是一个通用的字符串操作的 Web 服务端基本框架。到目前为止，你可以用它做两件事情。其一，到`/reverse/string`的 GET 请求将会返回 URL 路径中指定字符串的反转形式。
 
 ```
-      $ curl http://localhost:8000/reverse/stressed
+$ curl http://localhost:8000/reverse/stressed
 desserts
 
 $ curl http://localhost:8000/reverse/slipup
@@ -261,7 +263,7 @@ pupils
 其二，到`/wrap`的 POST 请求将从参数 text 中取得指定的文本，并返回按照参数 width 指定宽度装饰的文本。下面的请求指定一个没有宽度的字符串，所以它的输出宽度被指定为程序中的 get_argument 的默认值 40 个字符。
 
 ```
-      $ http://localhost:8000/wrap -d text=Lorem+ipsum+dolor+sit+amet,+consectetuer+adipiscing+elit.
+$ http://localhost:8000/wrap -d text=Lorem+ipsum+dolor+sit+amet,+consectetuer+adipiscing+elit.
 Lorem ipsum dolor sit amet, consectetuer
 adipiscing elit.
 
@@ -270,7 +272,7 @@ adipiscing elit.
 字符串服务示例和上一节示例代码中大部分是一样的。让我们关注那些新的代码。首先，让我们看看传递给 Application 构造函数的 handlers 参数的值：
 
 ```
-      app = tornado.web.Application(handlers=[
+app = tornado.web.Application(handlers=[
     (r"/reverse/(\w+)", ReverseHandler),
     (r"/wrap", WrapHandler)
 ])
@@ -280,14 +282,14 @@ adipiscing elit.
 在上面的代码中，Application 类在"handlers"参数中实例化了两个 RequestHandler 类对象。第一个引导 Tornado 传递路径匹配下面的正则表达式的请求：
 
 ```
-      /reverse/(\w+)
+/reverse/(\w+)
 
 ```
 
 正则表达式告诉 Tornado 匹配任何以字符串/reverse/开始并紧跟着一个或多个字母的路径。括号的含义是让 Tornado 保存匹配括号里面表达式的字符串，并将其作为请求方法的一个参数传递给 RequestHandler 类。让我们检查 ReverseHandler 的定义来看看它是如何工作的：
 
 ```
-      class ReverseHandler(tornado.web.RequestHandler):
+class ReverseHandler(tornado.web.RequestHandler):
     def get(self, input):
         self.write(input[::-1])
 
@@ -298,7 +300,7 @@ adipiscing elit.
 现在，让我们看一下 WrapHandler 的定义：
 
 ```
-      class WrapHandler(tornado.web.RequestHandler):
+class WrapHandler(tornado.web.RequestHandler):
     def post(self):
         text = self.get_argument('text')
         width = self.get_argument('width', 40)
@@ -319,7 +321,7 @@ WrapHandler 类处理匹配路径为`/wrap`的请求。这个处理函数定义�
 截止到目前讨论的例子，每个 RequestHandler 类都只定义了一个 HTTP 方法的行为。但是，在同一个处理函数中定义多个方法是可能的，并且是有用的。把概念相关的功能绑定到同一个类是一个很好的方法。比如，你可能会编写一个处理函数来处理数据库中某个特定 ID 的对象，既使用 GET 方法，也使用 POST 方法。想象 GET 方法来返回这个部件的信息，而 POST 方法在数据库中对这个 ID 的部件进行改变：
 
 ```
-      # matched with (r"/widget/(\d+)", WidgetHandler)
+# matched with (r"/widget/(\d+)", WidgetHandler)
 class WidgetHandler(tornado.web.RequestHandler):
     def get(self, widget_id):
         widget = retrieve_from_db(widget_id)
@@ -335,7 +337,7 @@ class WidgetHandler(tornado.web.RequestHandler):
 我们到目前为止只是用了 GET 和 POST 方法，但 Tornado 支持任何合法的 HTTP 请求（GET、POST、PUT、DELETE、HEAD、OPTIONS）。你可以非常容易地定义上述任一种方法的行为，只需要在 RequestHandler 类中使用同名的方法。下面是另一个想象的例子，在这个例子中针对特定 frob ID 的 HEAD 请求只根据 frob 是否存在给出信息，而 GET 方法返回整个对象：
 
 ```
-      # matched with (r"/frob/(\d+)", FrobHandler)
+# matched with (r"/frob/(\d+)", FrobHandler)
 class FrobHandler(tornado.web.RequestHandler):
     def head(self, frob_id):
         frob = retrieve_from_db(frob_id)
@@ -378,7 +380,7 @@ Tornado 会在 HTTP 请求的路径无法匹配任何 RequestHandler 类相对�
 代码清单 1-3 常规错误响应：hello-errors.py
 
 ```
-      import tornado.httpserver
+import tornado.httpserver
 import tornado.ioloop
 import tornado.options
 import tornado.web
@@ -405,7 +407,7 @@ if __name__ == "__main__":
 当我们尝试一个 POST 请求时，会得到下面的响应。一般来说，我们应该得到 Tornado 默认的错误响应，但因为我们覆写了 write_error，我们会得到不一样的东西：
 
 ```
-      $ curl -d foo=bar http://localhost:8000/
+$ curl -d foo=bar http://localhost:8000/
 Gosh darnit, user! You caused a 405 error.
 
 ```

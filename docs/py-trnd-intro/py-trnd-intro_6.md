@@ -1,3 +1,5 @@
+# 第七章：外部服务认证
+
 第六章的例子像我们展示了如何使用安全 cookies 和 tornado.web.authenticated 装饰器来实现一个简单的用户验证表单。在本章中，我们将着眼于如何对第三方服务进行身份验证。流行的 Web API，比如 Facebbok 和 Twitter，使用 OAuth 协议安全验证某人的身份，同时允许他们的用户保持第三方应用访问他们个人信息的控制权。Tornado 提供了一些 Python mix-in 来帮助开发者验证外部服务，既包括显式地支持流行服务，也包括通过通用的 OAuth 支持。在本章中，我们将探讨两个使用 Tornado 的 auth 模块的示例应用：一个连接 Twitter，另一个连接 Facebook。
 
 *   7.1 Tornado 的 auth 模块
@@ -31,7 +33,7 @@
 代码清单 7-1 查看 Twitter 时间轴：twitter.py
 
 ```
-      import tornado.web
+import tornado.web
 import tornado.httpserver
 import tornado.auth
 import tornado.ioloop
@@ -113,7 +115,7 @@ if __name__ == '__main__':
 代码清单 7-2 Twitter 时间轴：home.html
 
 ```
-      <html>
+<html>
     <head>
         <title>{{ user['name'] }} ({{ user['screen_name'] }}) on Twitter</title>
     </head>
@@ -153,7 +155,7 @@ if __name__ == '__main__':
 代码清单 7-3 Twitter 时间轴：logout.html
 
 ```
-      <html>
+<html>
     <head>
         <title>Tornadoes on Twitter</title>
     </head>
@@ -173,7 +175,7 @@ if __name__ == '__main__':
 TwitterHandler 类包含我们应用逻辑的主要部分。有两件事情需要立刻引起我们的注意，其一是这个类继承自能给我们提供 Twitter 功能的 tornado.auth.TwitterMixin 类，其二是 get 方法使用了我们在[第五章](http://dockerpool.com/static/books/introduction_to_tornado_cn/ch5.html)中讨论的@tornado.web.asynchronous 装饰器。现在让我们看看第一个异步调用：
 
 ```
-      if self.get_argument('oauth_token', None):
+if self.get_argument('oauth_token', None):
     self.get_authenticated_user(self.async_callback(self._twitter_on_auth))
     return
 
@@ -186,7 +188,7 @@ TwitterHandler 类包含我们应用逻辑的主要部分。有两件事情需�
 如果 oauth_token 参数没有被发现，我们继续测试是否之前已经看到过这个特定用户了。
 
 ```
-      elif oAuthToken and oAuthSecret:
+elif oAuthToken and oAuthSecret:
     accessToken = {
         'key': oAuthToken,
         'secret': oAuthSecret
@@ -209,7 +211,7 @@ twitter_quest 方法期待一个路径地址作为它的第一个参数，另外
 如果上面我们讨论的情况都没有发生，这说明用户是首次访问我们的应用（或者已经注销或删除了 cookies），此时我们想将其重定向到 Twitter 的验证页面。调用 self.authorize_redirect()来完成这项工作。
 
 ```
-      def _twitter_on_auth(self, user):
+def _twitter_on_auth(self, user):
     if not user:
         self.clear_all_cookies()
         raise tornado.web.HTTPError(500, 'Twitter authentication failed')
@@ -225,7 +227,7 @@ twitter_quest 方法期待一个路径地址作为它的第一个参数，另外
 我们的 Twitter 请求的回调方法非常的直接。_twitter_on_auth 使用一个 user 参数进行调用，这个参数是已授权用户的用户数据字典。我们的方法实现只需要验证我们接收到的用户是否合法，并设置应有的 cookies。一旦 cookies 被设置好，我们将用户重定向到根目录，即我们之前谈论的发起请求到/users/show API 方法。
 
 ```
-      def _twitter_on_user(self, user):
+def _twitter_on_user(self, user):
     if not user:
         self.clear_all_cookies()
         raise tornado.web.HTTPError(500, "Couldn't retrieve user information")
@@ -255,7 +257,7 @@ Facebook 的这个例子在结构上和刚才看到的 Twitter 的例子非常�
 代码清单 7-4 Facebook 验证：facebook.py
 
 ```
-      import tornado.web
+import tornado.web
 import tornado.httpserver
 import tornado.auth
 import tornado.ioloop
@@ -379,7 +381,7 @@ class Application(tornado.web.Application):
 代码清单 7-5 Facebook 验证：home.html
 
 ```
-      <html>
+<html>
     <head>
         <title>{{ name }} on Facebook</title>
     </head>

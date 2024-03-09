@@ -1,3 +1,5 @@
+# 第三章：模板扩展
+
 在第二章中，我们看到了 Tornado 模板系统如何简单地传递信息给网页，使你在插入动态数据时保持网页标记的整洁。然而，大多数站点希望复用像 header、footer 和布局网格这样的内容。在这一章中，我们将看到如何使用扩展 Tornado 模板或 UI 模块完成这一工作。
 
 *   3.1 块和替换
@@ -17,7 +19,7 @@
 为了扩展一个已经存在的模板，你只需要在新的模板文件的顶部放上一句`{% extends "filename.html" %}。`比如，为了在新模板中扩展一个父模板（在这里假设为 main.html），你可以这样使用：
 
 ```
-      {% extends "main.html" %}
+{% extends "main.html" %}
 
 ```
 
@@ -30,7 +32,7 @@
 一个块语句压缩了一些当你扩展时可能想要改变的模板元素。比如，为了使用一个能够根据不同页覆写的动态 header 块，你可以在父模板 main.html 中添加如下代码：
 
 ```
-      <header>
+<header>
     {% block header %}{% end %}
 </header>
 
@@ -39,7 +41,7 @@
 然后，为了在子模板 index.html 中覆写`{% block header %}{% end %}`部分，你可以使用块的名字引用，并把任何你想要的内容放到其中。
 
 ```
-      {% block header %}{% end %}
+{% block header %}{% end %}
 
 {% block header %}
     <h1>Hello world!</h1>
@@ -52,7 +54,7 @@
 为了在 Web 应用中调用这个子模板，你可以在你的 Python 脚本中很轻松地渲染它，就像之前你渲染其他模板那样：
 
 ```
-      class MainHandler(tornado.web.RequestHandler):
+class MainHandler(tornado.web.RequestHandler):
     def get(self):
         self.render("index.html")
 
@@ -69,7 +71,7 @@
 下面是一个在父模板 main.html 中使用多个块的例子：
 
 ```
-      <html>
+<html>
 <body>
     <header>
         {% block header %}{% end %}
@@ -88,7 +90,7 @@
 当我们扩展父模板 main.html 时，可以在子模板 index.html 中引用这些块。
 
 ```
-      {% extends "main.html" %}
+{% extends "main.html" %}
 
 {% block header %}
     <h1>{{ header_text }}</h1>
@@ -107,7 +109,7 @@
 用来加载模板的 Python 脚本和上一个例子差不多，不过在这里我们传递了几个字符串变量给模板使用（如图 3-2）：
 
 ```
-      class MainHandler(tornado.web.RequestHandler):
+class MainHandler(tornado.web.RequestHandler):
     def get(self):
         self.render(
             "index.html",
@@ -142,7 +144,7 @@ Burt 通过他的书店卖很多书，他的网站会展示很多不同的内容
 Burt's Book 的网站使用一个叫作 main.html 的主要基础模板，用来包含网站的通用架构，如下面的代码所示：
 
 ```
-      <html>
+<html>
 <head>
     <title>{{ page_title }}</title>
     <link rel="stylesheet" href="{{ static_url("css/style.css") }}" />
@@ -177,7 +179,7 @@ Burt's Book 的网站使用一个叫作 main.html 的主要基础模板，用来
 这个网站的 index 页（index.html）欢迎友好的网站访问者并提供一些商店的信息。通过扩展 main.html，这个文件只需要包括用于替换默认文本的 header 和 body 块的信息。
 
 ```
-      {% extends "main.html" %}
+{% extends "main.html" %}
 
 {% block header %}
     <h1>{{ header_text }}</h1>
@@ -197,7 +199,7 @@ Burt's Book 的网站使用一个叫作 main.html 的主要基础模板，用来
 为了运作网站，传递信息给 index 模板，下面给出 Burt's Book 的 Python 脚本（main.py）：
 
 ```
-      import tornado.web
+import tornado.web
 import tornado.httpserver
 import tornado.ioloop
 import tornado.options
@@ -247,14 +249,14 @@ Tornado 默认会自动转义模板中的内容，把标签转换为相应的 HT
 让我们考虑 Burt's Book 网站上的一个用户反馈页面。Melvin，今天感觉特别邪恶，在评论里提交了下面的文字：
 
 ```
-      Totally hacked your site lulz <script>alert('RUNNING EVIL H4CKS AND SPL01TS NOW...')</script>
+Totally hacked your site lulz <script>alert('RUNNING EVIL H4CKS AND SPL01TS NOW...')</script>
 
 ```
 
 当我们在没有转义用户内容的情况下给一个不知情的用户构建页面时，脚本标签被作为一个 HTML 元素解释，并被浏览器执行，所以 Alice 看到了如图 3-4 所示的提示窗口。幸亏 Tornado 会自动转义在双大括号间被渲染的表达式。更早地转义 Melvin 输入的文本不会激活 HTML 标签，并且会渲染为下面的字符串：
 
 ```
-      Totally hacked your site lulz &lt;script&gt;alert('RUNNING EVIL H4CKS AND SPL01TS NOW...')&lt;/script&gt;
+Totally hacked your site lulz &lt;script&gt;alert('RUNNING EVIL H4CKS AND SPL01TS NOW...')&lt;/script&gt;
 
 ```
 
@@ -275,7 +277,7 @@ Tornado 默认会自动转义模板中的内容，把标签转换为相应的 HT
 举个例子，如果 Burt 想在 footer 中使用模板变量设置 email 联系链接，他将不会得到期望的 HTML 链接。考虑下面的模板片段：
 
 ```
-      {% set mailLink = "<a href="mailto:contact@burtsbooks.com">Contact Us</a>" %}
+{% set mailLink = "<a href="mailto:contact@burtsbooks.com">Contact Us</a>" %}
 {{ mailLink }}'
 
 ```
@@ -283,7 +285,7 @@ Tornado 默认会自动转义模板中的内容，把标签转换为相应的 HT
 它会在页面源代码中渲染成如下代码：
 
 ```
-      &lt;a href=&quot;mailto:contact@burtsbooks.com&quot;&gt;Contact Us&lt;/a&gt;
+&lt;a href=&quot;mailto:contact@burtsbooks.com&quot;&gt;Contact Us&lt;/a&gt;
 
 ```
 
@@ -292,7 +294,7 @@ Tornado 默认会自动转义模板中的内容，把标签转换为相应的 HT
 为了处理这种情况，你可以禁用自动转义，一种方法是在 Application 构造函数中传递 autoescape=None，另一种方法是在每页的基础上修改自动转义行为，如下所示：
 
 ```
-      {% autoescape None %}
+{% autoescape None %}
 {{ mailLink }}
 
 ```
@@ -302,14 +304,14 @@ Tornado 默认会自动转义模板中的内容，把标签转换为相应的 HT
 然而，在理想的情况下，你希望保持自动转义开启以便继续防护你的网站。因此，你可以使用{% raw %}指令来输出不转义的内容。
 
 ```
-      {% raw mailLink %}
+{% raw mailLink %}
 
 ```
 
 需要特别注意的是，当你使用诸如 Tornado 的 linkify()和 xsrf_form_html()函数时，自动转义的设置被改变了。所以如果你希望在前面代码的 footer 中使用 linkify()来包含链接，你可以使用一个{% raw %}块：
 
 ```
-      {% block footer %}
+{% block footer %}
     <p>
         For more information about our selection, hours or events, please email us at
         <a href="mailto:contact@burtsbooks.com">contact@burtsbooks.com</a>.
@@ -338,7 +340,7 @@ UI 模块是封装模板中包含的标记、样式以及行为的可复用组�
 代码清单 3-1 模块基础：hello_module.py
 
 ```
-      import tornado.web
+import tornado.web
 import tornado.httpserver
 import tornado.ioloop
 import tornado.options
@@ -373,7 +375,7 @@ if __name__ == '__main__':
 现在，当调用 HelloHandler 并渲染 hello.html 时，我们可以使用{% module Hello() %}模板标签来包含 HelloModule 类中 render 方法返回的字符串。
 
 ```
-      <html>
+<html>
     <head><title>UI Module Example</title></head>
     <body>
         {% module Hello() %}
@@ -391,7 +393,7 @@ if __name__ == '__main__':
 UI 模块的一个常见应用是迭代数据库或 API 查询中获得的结果，为每个独立项目的数据渲染相同的标记。比如，Burt 想在 Burt's Book 里创建一个推荐阅读部分，他已经创建了一个名为 recommended.html 的模板，其代码如下所示。就像前面看到的那样，我们将使用{% module Book(book) %}标签调用模块。
 
 ```
-      {% extends "main.html" %}
+{% extends "main.html" %}
 
 {% block body %}
 <h2>Recommended Reading</h2>
@@ -405,7 +407,7 @@ UI 模块的一个常见应用是迭代数据库或 API 查询中获得的结果
 Burt 还创建了一个叫作 book.html 的图书模块的模板，并把它放到了 templates/modules 目录下。一个简单的图书模板看起来像下面这样：
 
 ```
-      <div class="book">
+<div class="book">
     <h3 class="book_title">{{ book["title"] }}</h3>
     <img src="{{ book["image"] }}" class="book_image"/>
 </div>
@@ -415,7 +417,7 @@ Burt 还创建了一个叫作 book.html 的图书模块的模板，并把它放�
 现在，当我们定义 BookModule 类的时候，我们将调用继承自 UIModule 的 render_string 方法。这个方法显式地渲染模板文件，当我们返回给调用者时将其关键字参数作为一个字符串。
 
 ```
-      class BookModule(tornado.web.UIModule):
+class BookModule(tornado.web.UIModule):
     def render(self, book):
         return self.render_string('modules/book.html', book=book)
 
@@ -424,7 +426,7 @@ Burt 还创建了一个叫作 book.html 的图书模块的模板，并把它放�
 在完整的例子中，我们将使用下面的模板来格式化每个推荐书籍的所有属性，代替先前的 book.html
 
 ```
-      <div class="book">
+<div class="book">
     <h3 class="book_title">{{ book["title"] }}</h3>
     {% if book["subtitle"] != "" %}
         <h4 class="book_subtitle">{{ book["subtitle"] }}</h4>
@@ -451,7 +453,7 @@ Burt 还创建了一个叫作 book.html 的图书模块的模板，并把它放�
 现在，我们可以定义一个 RecommendedHandler 类来渲染模板，就像你通常的操作那样。这个模板可以在渲染推荐书籍列表时引用 Book 模块。
 
 ```
-      class RecommendedHandler(tornado.web.RequestHandler):
+class RecommendedHandler(tornado.web.RequestHandler):
     def get(self):
         self.render(
             "recommended.html",
@@ -494,7 +496,7 @@ relative=False 将使其返回一个绝对时间（包含小时和分钟），�
 为了给这些模块提供更高的灵活性，Tornado 允许你使用 embedded_css 和 embedded_javascript 方法嵌入其他的 CSS 和 JavaScript 文件。举个例子，如果你想在调用模块时给 DOM 添加一行文字，你可以通过从模块中嵌入 JavaScript 来做到：
 
 ```
-      class BookModule(tornado.web.UIModule):
+class BookModule(tornado.web.UIModule):
     def render(self, book):
         return self.render_string(
             "modules/book.html",
@@ -509,7 +511,7 @@ relative=False 将使其返回一个绝对时间（包含小时和分钟），�
 当调用模块时，document.write(\"hi!\")将被包围，并被插入到的闭标签中：
 
 ```
-      <script type="text/javascript">
+<script type="text/javascript">
 //<![CDATA[
 document.write("hi!")
 //]]>
@@ -522,7 +524,7 @@ document.write("hi!")
 类似的，你也可以把只在这些模块被调用时加载的额外的 CSS 规则放进来：
 
 ```
-      def embedded_css(self):
+def embedded_css(self):
     return ".book {background-color:#F5F5F5}"
 
 ```
@@ -530,7 +532,7 @@ document.write("hi!")
 在这种情况下，`.book {background-color:#555}`这条 CSS 规则被包裹在中，并被直接添加到的闭标签之前。
 
 ```
-      <style type="text/css">
+<style type="text/css">
 .book {background-color:#F5F5F5}
 </style>
 
@@ -539,7 +541,7 @@ document.write("hi!")
 更加灵活的是，你甚至可以简单地使用 html_body()来在闭合的标签前添加完整的 HTML 标记：
 
 ```
-      def html_body(self):
+def html_body(self):
     return "<script>document.write("Hello!")</script>"
 
 ```
@@ -549,7 +551,7 @@ document.write("hi!")
 比如，你可以添加一个额外的本地 CSS 文件如下：
 
 ```
-      def css_files(self):
+def css_files(self):
     return "/static/css/newreleases.css"
 
 ```
@@ -557,7 +559,7 @@ document.write("hi!")
 或者你可以取得一个外部的 JavaScript 文件：
 
 ```
-      def javascript_files(self):
+def javascript_files(self):
     return "https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.min.js"
 
 ```
@@ -569,7 +571,7 @@ document.write("hi!")
 如果你有一个模块如下面的代码所示：
 
 ```
-      class SampleModule(tornado.web.UIModule):
+class SampleModule(tornado.web.UIModule):
     def render(self, sample):
         return self.render_string(
             "modules/sample.html",
