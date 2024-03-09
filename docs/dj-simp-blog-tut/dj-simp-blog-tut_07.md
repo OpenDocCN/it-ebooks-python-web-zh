@@ -1,7 +1,3 @@
-# Template
-
-# Template
-
 # Template 初探
 
 到目前为止我们只是简单的将后端数据显示到页面上, 没有涉及到`HTML`代码, 而优雅的网站总算通过 CSS+HTML, 甚至还有强大的 JS 的支持.

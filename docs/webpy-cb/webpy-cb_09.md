@@ -1,9 +1,5 @@
 # User input 用户输入
 
-# User input 用户输入
-
-# File Upload Recipe
-
 # File Upload Recipe
 
 ## 问题
@@ -45,8 +41,6 @@ if __name__ == "__main__":
 
 *   表单需要一个 enctype="multipart/form-data"的属性, 否则不会正常工作.
 *   在 webpy 的代码里, 如果你需要默认值的话, myfile 就需要默认值了(myfile={}), 文件会以字符串的形式传输 -- 这确实可以工作, 但是你会丢失文件的名称
-
-# 保存上传的文件
 
 # 保存上传的文件
 
@@ -98,8 +92,6 @@ if __name__ == "__main__":
 
 # 上传文件大小限定
 
-# 上传文件大小限定
-
 ## 问题
 
 如何限定上传文件的大小？
@@ -130,8 +122,6 @@ class upload:
         except ValueError:
             return "File too large" 
 ```
-
-# web.input
 
 # web.input
 
@@ -177,8 +167,6 @@ class SomePage:
 ```
 
 译者补充: 多值变量这儿,在 WEB 上除了上面所说的 multiple select 和 query strings 外,用得最多的就是复选框(checkbox)了,另外还有多文件上传时的<input type="file" ...>.
-
-# 怎样使用表单 forms
 
 # 怎样使用表单 forms
 
@@ -240,8 +228,6 @@ $def with(form)
     $:form.render()
 </form> 
 ```
-
-# 个别显示表单字段
 
 # 个别显示表单字段
 

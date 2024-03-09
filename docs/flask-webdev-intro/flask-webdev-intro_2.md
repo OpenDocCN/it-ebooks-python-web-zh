@@ -1,7 +1,5 @@
 # 快速入门
 
-# 快速入门
-
 本章主要介绍 flask 的基础使用，主要包含以下几个方面：
 
 *   路由和视图
@@ -11,8 +9,6 @@
 *   数据库集成
 *   REST Web 服务
 *   部署
-
-# 一个最简单的应用
 
 # 一个最简单的应用
 
@@ -84,8 +80,6 @@ OK，到此为止，我们基本明白一个简单的 Flask 程序是怎么运�
 
 # 路由和视图
 
-# 路由和视图
-
 我们在前面的一小节介绍了一个简单的 Flask 程序是怎么运行的。其中，有三行代码，我们并没有深入讲解。在这里，我们就对它们进行深入解析。回顾这三行代码：
 
 ```
@@ -127,8 +121,6 @@ def hello(user_name):
 现在，任何类似 `https://hello.com/<user_name>` 的 URL 都会映射到这个路由上，比如 `https://hello.com/ethan-funny`，`https://hello.com/torvalds`，访问这些 URL 都会执行上面的路由程序。
 
 也就是说，Flask 支持这种动态形式的路由，路由中的动态部分默认是字符串，像上面这种情况。当然，除了字符串，Flask 也支持在路由中使用 int、float，比如路由 /articles/ <intu0003aid class="hljs-meta">只会匹配动态片段 id 为整数的 URL，例如匹配 [`hello.com/articles/100，https://hello.com/articles/101，但不匹配`](https://hello.com/articles/100，https://hello.com/articles/101，但不匹配) [`hello.com/articles/the-first-article`](https://hello.com/articles/the-first-article) 这种 URL。</intu0003aid>
-
-# 静态文件
 
 # 静态文件
 
@@ -191,8 +183,6 @@ favicon 是 favorites icon 的缩写，也被称为 website icon（网页图标�
 ```
 
 在上面的代码中，我们使用了 `super()` 来保留基模板中定义的块的原始内容，并添加了两个 link 组件声明图标位置，这两个 link 组件声明会插入到 head 块的末尾。
-
-# 使用 Jinja2 模板引擎
 
 # 使用 Jinja2 模板引擎
 
@@ -367,8 +357,6 @@ Jinja 提供了多种控制结构，来改变模板的渲染流程，比如常�
 
 # 请求、重定向及会话
 
-# 请求、重定向及会话
-
 Web 开发中经常需要处理 HTTP 请求、重定向和会话等诸多事务，相应地，Flask 也内建了一些常见的对象如 request, session, redirect 等对它们进行处理。
 
 ## 请求对象 request
@@ -504,8 +492,6 @@ $ cat login.html
 </form>
 {% endblock %} 
 ```
-
-# 数据库
 
 # 数据库
 
@@ -1041,8 +1027,6 @@ HTTP 状态码主要有以下几类：
 *   [What Does RESTful Really Mean? - DZone Integration](https://dzone.com/articles/what-does-restful-really-mean?utm_medium=feed&utm_source=feedpress.me&utm_campaign=Feed:%20dzone)
 *   [HTTP 状态码 - 维基百科，自由的百科全书](https://zh.wikipedia.org/wiki/HTTP%E7%8A%B6%E6%80%81%E7%A0%81)
 *   [理解 RESTful 架构 - 阮一峰的网络日志](http://www.ruanyifeng.com/blog/2011/09/restful.html)
-
-# 部署
 
 # 部署
 

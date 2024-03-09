@@ -1,7 +1,5 @@
 # flask 实战
 
-# Flask 实战
-
 [项目代码](https://github.com/ethan-funny/flask-todo-app)。
 
 本章主要介绍如何开发一个 Web TODO 应用，用于管理个人的任务清单，该项目改编自 [flask-simple-todo](https://bitbucket.org/wwq0327/flask-simple-todo)，由于原项目已经很久没更新了，我对其进行了修改和完善，改编后的代码可以在[这里](https://github.com/ethan-funny/flask-todo-app)找到。
@@ -24,8 +22,6 @@
 1.  生成项目结构
 2.  设计数据模型
 3.  编写业务逻辑
-
-# 项目结构规范
 
 # 项目结构规范
 
@@ -161,8 +157,6 @@ INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
 INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
 INFO  [alembic.runtime.migration] Running upgrade  -> 70215a3905e0, empty message 
 ```
-
-# 编写业务逻辑
 
 # 编写业务逻辑
 

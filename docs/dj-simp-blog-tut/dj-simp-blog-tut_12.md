@@ -1,7 +1,5 @@
 # RSS 和分页
 
-# RSS 和分页
-
 # RSS 功能
 
 Django 是一个全面型框架, 很多功能都可以直接找到, 对于 RSS 功能, 可以从其中的高层框架的`聚合 Feed 框架`中找到([The syndication feed framework](https://docs.djangoproject.com/en/1.7/ref/contrib/syndication/))

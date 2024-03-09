@@ -1,9 +1,5 @@
 # Sessions and user state 会话和用户状态
 
-# Sessions and user state 会话和用户状态
-
-# Sessions
-
 # Sessions
 
 ### 问题
@@ -84,8 +80,6 @@ web.config.session_parameters['expired_message'] = 'Session expired'
 
 # 在调试模式下使用 session
 
-# 在调试模式下使用 session
-
 ## 问题
 
 如何在调试模式下使用 session?
@@ -131,8 +125,6 @@ if __name__ == "__main__":
 
 # 在 template 中使用 session
 
-# 在 template 中使用 session
-
 `问题`: 我想在模板中使用 session（比如：读取并显示 session.username）
 
 `解决`:
@@ -150,8 +142,6 @@ render = web.template.render('templates', globals={'context': session})
 ```
 
 你可以真正的使用任何符合语法的 python 变量名，比如上面用的*context*。我更喜欢在应用中直接使用'session'。
-
-# 如何操作 Cookie
 
 # 如何操作 Cookie
 
@@ -260,8 +250,6 @@ class CookieGet:
 
 # 用户认证
 
-# 用户认证
-
 ## 原作者没有写完，但是可以参照下一节，写得很详细
 
 ## 问题
@@ -294,8 +282,6 @@ def POST(self):
 ## 注意
 
 这仅仅是个例子，可不要在真实的生产环境中应用哦。
-
-# 在 PostgreSQL 下实现用户认证
 
 # 在 PostgreSQL 下实现用户认证
 
@@ -479,8 +465,6 @@ class reset:
 *   邮件：您可以联想我，我的邮箱是 guillaume(at)process-evolution(dot)fr
 *   IRC：#webpy on irc.freenode.net (pseudo: Ephedrax)
 *   翻译：我是法国人，我的英文不好...你可以修改我的文档(译注：哈哈，谦虚啥，你那是没见过 wrongway 的山东英文...)
-
-# 在子应用下使用 session
 
 # 在子应用下使用 session
 

@@ -1,9 +1,5 @@
 # 基本应用
 
-# 基本应用
-
-# Hello World!
-
 # Hello World!
 
 ## 问题
@@ -41,8 +37,6 @@ class redirect:
     def GET(self, path):
         web.seeother('/' + path) 
 ```
-
-# 提供静态文件 (诸如 js 脚本, css 样式表和图象文件)
 
 # 提供静态文件 (诸如 js 脚本, css 样式表和图象文件)
 
@@ -87,8 +81,6 @@ class redirect:
     </Directory>
 </VirtualHost> 
 ```
-
-# 理解 URL 控制
 
 # 理解 URL 控制
 
@@ -146,8 +138,6 @@ class list_users:
 
 # 使用子应用
 
-# 使用子应用
-
 ## 问题
 
 如何在当前应用中包含定义在其他文件中的某个应用？
@@ -195,8 +185,6 @@ if __name__ == "__main__":
 
 # 提供 XML 访问
 
-# 提供 XML 访问
-
 ### 问题
 
 如何在 web.py 中提供 XML 访问？
@@ -236,8 +224,6 @@ class index:
 web.webapi.internalerror = web.debugerror
 if __name__ == '__main__': app.run() 
 ```
-
-# 从 post 读取原始数据
 
 # 从 post 读取原始数据
 

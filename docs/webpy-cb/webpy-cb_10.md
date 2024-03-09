@@ -1,9 +1,5 @@
 # Database 数据库
 
-# Database 数据库
-
-# 多数据库使用
-
 # 多数据库使用
 
 ## 问题
@@ -27,8 +23,6 @@ print db2.select('bar', where='id=5')
 增加, 更新, 删除和查询的方法跟原有单数据库操作类似.
 
 当然, 你可以使用 host 和 port 参数来指定服务器地址和监听端口.
-
-# db.select 查询
 
 # db.select 查询
 
@@ -130,8 +124,6 @@ results = db.select('mytable', offset=10, _test=True)
 
 # db.upate 数据更新
 
-# db.upate 数据更新
-
 ### 问题
 
 向数据库中更新数据。
@@ -151,8 +143,6 @@ db.update('mytable', where="id = 10", value1 = "foo")
 
 # db.delete 数据删除
 
-# db.delete 数据删除
-
 ### 问题
 
 在数据库中删除数据。
@@ -169,8 +159,6 @@ db.delete('mytable', where="id=10")
 上面接受 "using" 和 "vars" 参数。
 
 删除方法返回被删除的影响行数。
-
-# db.insert 向数据库中新增数据
 
 # db.insert 向数据库中新增数据
 
@@ -223,8 +211,6 @@ results = db.select('mytable', offset=10, _test=True)
 
 # 使用 db.query 进行高级数据库查询
 
-# 使用 db.query 进行高级数据库查询
-
 ### 问题：
 
 您要执行的 SQL 语句如：高级的联接或计数。
@@ -259,8 +245,6 @@ results = db.query("SELECT * FROM users WHERE id=$id", vars={'id':10})
 ```
 
 这将避免用户输入，如果你信任这个“id”变量。
-
-# 怎样使用数据库事务处理
 
 # 怎样使用数据库事务处理
 
@@ -324,8 +308,6 @@ def add_tags(post_id, tags):
 ```
 
 嵌套的事务在 sqlite 中将被忽略，因为此特性不被 sqlite 支持。
-
-# sqlalchemy
 
 # sqlalchemy
 
@@ -426,8 +408,6 @@ if __name__ == "__main__":
 
 # 整合 SQLite UDF (用户定义函数) 到 webpy 数据库层
 
-# 整合 SQLite UDF (用户定义函数) 到 webpy 数据库层
-
 问题：
 
 用户在邮件列表中询问，我把它放在这里作为将来使用和参考。
@@ -465,8 +445,6 @@ if __name__ == "__main__":
 >>> print db.query("select sign(1), sign(-1), sign(0), sign(-99), sign(99)").list()
 [<Storage {'sign(1)': 1, 'sign(-1)': -1, 'sign(99)': 1, 'sign(-99)': -1, 'sign(0)': 0}>] 
 ```
-
-# 使用字典动态构造 where 子句
 
 # 使用字典动态构造 where 子句
 

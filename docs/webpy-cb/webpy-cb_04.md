@@ -1,9 +1,5 @@
 # 高级应用
 
-# 高级应用
-
-# web.ctx
-
 # web.ctx
 
 ## 问题
@@ -50,8 +46,6 @@ web.ctx 另一个特性，是它可以被 loadhook 赋值。例如：当一个�
 *   `status` – HTTP 状态码（默认是'200 OK') *401 Unauthorized 未经授权*
 *   `headers` – 包含 HTTP 头信息(headers)的二元组列表。
 *   `output` – 包含响应实体的字符串。
-
-# Application processors
 
 # Application processors
 
@@ -102,8 +96,6 @@ def my_loadhook():
     input = web.input()
     print input 
 ```
-
-# 如何使用 web.background
 
 # 如何使用 web.background
 
@@ -183,8 +175,6 @@ web.py 并不会主动去清空 threaddb 词典，这使得输出(如[`localhost
 
 # 自定义 NotFound 消息
 
-# 自定义 NotFound 消息
-
 ## 问题
 
 如何定义 NotFound 消息和其他消息？
@@ -223,8 +213,6 @@ def internalerror():
 
 app.internalerror = internalerror 
 ```
-
-# 如何流传输大文件
 
 # 如何流传输大文件
 
@@ -287,8 +275,6 @@ if __name__ == "__main__":
 
 # 管理自带 webserver 日志
 
-# 管理自带 webserver 日志
-
 ## 问题
 
 如何操作 web.py 自带的 webserver 的日志？
@@ -329,8 +315,6 @@ application.run(Log)
 
 # 用 cherrypy 提供 SSL 支持
 
-# 用 cherrypy 提供 SSL 支持
-
 ## 问题
 
 如何用内置的 cheerypy 提供 SSL 支持？
@@ -355,8 +339,6 @@ class hello:
 if __name__ == "__main__":
     app.run() 
 ```
-
-# 实时语言切换
 
 # 实时语言切换
 

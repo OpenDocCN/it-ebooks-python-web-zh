@@ -1,9 +1,5 @@
 # Templates 模板
 
-# Templates 模板
-
-# Templetor: web.py 模板系统
-
 # Templetor: web.py 模板系统
 
 ## Introduction
@@ -288,8 +284,6 @@ render = web.template.render('templates', builtins={})
 
 # 站点布局模板
 
-# 站点布局模板
-
 ### 问题
 
 如何让站点每个页面共享一个整站范围的模板？（在某些框架中，称为模板继承，比如 ASP.NET 中的母版页）
@@ -386,8 +380,6 @@ $:content
 
 # 交替风格
 
-# 交替风格
-
 ### 问题:
 
 你想通过数据集合动态的生成交替背景色的列表.
@@ -433,8 +425,6 @@ $for foo in foos:
 
 # Import functions into templates
 
-# Import functions into templates
-
 `Problem`: How can I import a python module in template?
 
 `Solution`:
@@ -472,8 +462,6 @@ $def with(status)
 ```
 
 Remember that you can import more than one name into the *globals* dict. This trick is also used in importing session variable into template.
-
-# i18n support in template file
 
 # i18n support in template file
 
@@ -575,8 +563,6 @@ http://0.0.0.0:8000/
 
 # 在 webpy 中使用 Mako 模板引擎
 
-# 在 webpy 中使用 Mako 模板引擎
-
 ### 问题
 
 如何在 webpy 中使用 Mako 模板引擎?
@@ -643,8 +629,6 @@ render = render_mako(
 
 # 在 webpy 中使用 Cheetah 模板引擎
 
-# 在 webpy 中使用 Cheetah 模板引擎
-
 ### 问题：
 
 怎样在 webpy 中使用 Cheetah 模板引擎？
@@ -696,8 +680,6 @@ hello, $name.
 
 # Use Jinja2 template engine in webpy
 
-# Use Jinja2 template engine in webpy
-
 ### 问题
 
 如何在 web.py 中使用 Jinja2 ([`jinja.pocoo.org/2/`](http://jinja.pocoo.org/2/)) 模板引擎?
@@ -740,8 +722,6 @@ if __name__ == "__main__":
 ```
 Hello, . 
 ```
-
-# How to use templates on Google App Engine
 
 # How to use templates on Google App Engine
 

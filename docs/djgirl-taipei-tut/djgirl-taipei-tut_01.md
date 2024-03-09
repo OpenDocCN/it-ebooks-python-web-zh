@@ -1,7 +1,5 @@
 # Django 介紹
 
-# Django 介紹
-
 [Django](https://www.djangoproject.com/) (/ˈdʒæŋɡoʊ/ jang-goh) 可以說是 Python 最著名的 Web Framework，一些知名的網站如 [Pinterest](http://www.pinterest.com/), [Instagram](http://instagram.com), [Disqus](https://disqus.com/) 等等都使用過它來開發。
 
 它有以下的特色：

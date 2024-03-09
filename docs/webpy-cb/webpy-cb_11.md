@@ -1,9 +1,5 @@
 # Deployment 部署
 
-# Deployment 部署
-
-# 通过 Fastcgi 和 lighttpd 部署
-
 # 通过 Fastcgi 和 lighttpd 部署
 
 如果你对这个主题有任何问题，可以点击下面的链接访问相应的话题:
@@ -111,8 +107,6 @@ server.modules   += ( "mod_rewrite" )
 ```
 $ chmod 755 /path-to/webpy-app/code.py 
 ```
-
-# Webpy + Nginx with FastCGI 搭建 Web.py
 
 # Webpy + Nginx with FastCGI 搭建 Web.py
 
@@ -237,8 +231,6 @@ if __name__ == "__main__":
 
 # CGI deployment on Apache
 
-# CGI deployment on Apache
-
 Here are the simple steps needed to create and run an web.py application.
 
 *   Install web.py and flups
@@ -283,8 +275,6 @@ That's it. Your application is accessible via `http://server/app/app.py/`. Addit
     ```
 
 Here it is assumed that your application is called index.py. The above htaccess checks if some static file/directory exists failing which it routes the data to your index.py. Change the Rewrite Base to a sub-directory if needed.
-
-# 使用 Apache + mod_wsgi 部署 webpy 应用
 
 # 使用 Apache + mod_wsgi 部署 webpy 应用
 
@@ -360,8 +350,6 @@ application = app.wsgifunc()
 
 # deploying web.py with nginx and mod_wsgi
 
-# deploying web.py with nginx and mod_wsgi
-
 It is possible to deploy web.py with nginx using a mod_wsgi similar to the module for Apache.
 
 After compiling and installing nginx with mod_wsgi, you can easily get a web.py app up and running with the following config* (edit the paths and settings with your own):
@@ -384,8 +372,6 @@ server {
 *Note: This is a snippet of the relevant information to setup mod_wsgi for your web app and NOT a full config for running nginx.
 
 Helpful links: [nginx website](http://nginx.net/) [wiki page on mod_wsgi](http://wiki.codemongers.com/NginxNgxWSGIModule)
-
-# Webpy + Nginx with FastCGI 搭建 Web.py
 
 # Webpy + Nginx with FastCGI 搭建 Web.py
 

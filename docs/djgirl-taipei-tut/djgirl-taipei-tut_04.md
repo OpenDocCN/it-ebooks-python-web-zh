@@ -1,7 +1,5 @@
 # Views and URLconfs
 
-# Views and URLconfs
-
 ![Django 處理 HTTP request 產生 response 的流程](img/url-dispatch.png)
 
 在前面的介紹，我們有提到 Django 的 MTV 架構。其處理 request 的流程如下：
