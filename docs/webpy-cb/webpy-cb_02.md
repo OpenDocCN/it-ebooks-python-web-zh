@@ -1,7 +1,5 @@
 # web.py 0.3 新手指南
 
-# web.py 0.3 新手指南
-
 *   开始
 *   URL 处理
 *   GET 和 POST 的区别

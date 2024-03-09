@@ -1,9 +1,5 @@
 # Utils 实用工具
 
-# Utils 实用工具
-
-# 发送邮件
-
 # 发送邮件
 
 ### 问题
@@ -47,8 +43,6 @@ web.sendmail('cookbook@webpy.org', 'user@example.com', 'subject', 'message',
 
 # 如何用 Gmail 发送邮件
 
-# 如何用 Gmail 发送邮件
-
 ### 问题
 
 如何用 Gmail 发送邮件？
@@ -72,8 +66,6 @@ web.sendmail('cookbook@gmail.com', 'user@example.com', 'subject', 'message')
 ```
 
 可以在这里了解有关 Gmail 设置的更多信息 [GMail: Configuring other mail clients](http://mail.google.com/support/bin/answer.py?hl=en&answer=13287)
-
-# 用 soaplib 实现 webservice
 
 # 用 soaplib 实现 webservice
 

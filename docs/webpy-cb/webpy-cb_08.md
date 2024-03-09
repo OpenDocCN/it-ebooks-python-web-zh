@@ -1,9 +1,5 @@
 # Testing 测试
 
-# Testing 测试
-
-# Testing with Paste and Nose
-
 # Testing with Paste and Nose
 
 ## Problem
@@ -82,8 +78,6 @@ WEBPY_ENV=test nosetests
 ```
 
 The is_test() function comes in handy for other things, such as doing conditional database commits to avoid test database pollution.
-
-# RESTful doctesting using app.request
 
 # RESTful doctesting using app.request
 

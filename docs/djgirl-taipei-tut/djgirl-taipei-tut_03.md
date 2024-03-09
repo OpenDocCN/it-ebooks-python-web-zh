@@ -1,7 +1,5 @@
 # Project and Apps
 
-# Project and apps
-
 每一個 Django project 裡面可以有多個 Django apps，可以想成是類似模組的概念。在實務上，**通常會依功能分成不同 app**，方便未來的維護和重複使用。
 
 例如，我們要做一個類似 Facebook 這種網站時，依功能可能會有以下 apps：

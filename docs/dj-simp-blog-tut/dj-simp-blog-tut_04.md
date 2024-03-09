@@ -1,7 +1,5 @@
 # Models
 
-# Models
-
 # Django Model
 
 *   每一个`Django Model`都继承自`django.db.models.Model`

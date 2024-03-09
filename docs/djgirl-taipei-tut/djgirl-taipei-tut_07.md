@@ -1,7 +1,5 @@
 # Admin
 
-# Admin
-
 大部份網站都設計有管理後台，讓管理者方便新增或異動網站內容。
 
 而這樣的管理後台，Django 也有內建一個 App -- [**Django Admin**](https://docs.djangoproject.com/en/1.8/ref/contrib/admin/) 。只需要稍微設定，網站就能擁有管理後台功能。

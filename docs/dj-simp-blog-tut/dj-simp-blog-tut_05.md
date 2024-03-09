@@ -1,7 +1,5 @@
 # Admin
 
-# Admin
-
 # Admin 简介
 
 Django 有一个优秀的特性, 内置了 Django admin 后台管理界面, 方便管理者进行添加和删除网站的内容.
