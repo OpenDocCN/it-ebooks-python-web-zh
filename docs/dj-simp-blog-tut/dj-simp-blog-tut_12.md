@@ -8,7 +8,7 @@ Django 是一个全面型框架, 很多功能都可以直接找到, 对于 RSS �
 
 在 my_blog/article/views.py 中定义类
 
-```
+```py
 from django.contrib.syndication.views import Feed  #注意加入 import 语句
 
 class RSSFeed(Feed) :
@@ -31,7 +31,7 @@ class RSSFeed(Feed) :
 
 然后在 my_blog/my_blog/urls.py 中设置对应的 url
 
-```
+```py
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from article.views import RSSFeed
@@ -54,7 +54,7 @@ urlpatterns = patterns('',
 
 下面修改 my_blog/templates/base.html, 在其中添加 RSS 按钮
 
-```
+```py
 <!doctype html>
 <html lang="en">
 <head>
@@ -148,7 +148,7 @@ urlpatterns = patterns('',
 
 修改 my_blog/my_blog/views.py 中的 home 函数
 
-```
+```py
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger  #添加包
 
 def home(request):
@@ -166,7 +166,7 @@ def home(request):
 
 修改 my_blog/templates 下的`home.html`
 
-```
+```py
 {% extends "base.html" %}
 
 {% load custom_markdown %}
@@ -218,7 +218,7 @@ def home(request):
 
 最后我们把整个 blog 更新到 github 仓库中
 
-```
+```py
  $  git add .  #添加全部更新到暂存区
 $  git commit -m "rss and paginator"  #提交到 git
 [master b53356b] rss and paginator

@@ -23,13 +23,13 @@
 
 在入门系列第二篇路由中，我们了解到 Flask 路由可以指定 HTTP 请求方法，并在请求函数中根据不同的请求方法，执行不同的逻辑。这样实现一个 Restful 的请求已经相当简单了（不熟悉 Restful？先去恶补下）。但是 Flask 还有更简便的方法，就是其 Flask-RESTful 扩展。首先，我们来安装这个扩展：
 
-```
+```py
 $ pip install Flask-RESTful
 ```
 
 安装完后，你就可以在代码中导入该扩展包”flask.ext.restful”。让我们来看个例子：
 
-```
+```py
 from flask import Flask, request
 from flask.ext.restful import Api, Resource
 
@@ -62,7 +62,7 @@ if __name__ == '__main__':
 
 另外，路由支持多路径，比如：
 
-```
+```py
 api.add_resource(UserList, '/userlist', '/users')
 
 ```
@@ -73,7 +73,7 @@ api.add_resource(UserList, '/userlist', '/users')
 
 上面的例子请求是针对 user 列表的，如果我们要对某个具体的 user 做操作，就需要传递具体的”user_id”了。这时候，我们需要路由支持带参数。Flask-RESTful 的实现同 Flask 一样，就是在路由中加上参数变量即可。我们看下例子：
 
-```
+```py
 class User(Resource):
     def get(self, user_id):
         return USER_LIST[user_id]
@@ -96,7 +96,7 @@ api.add_resource(User, '/users/<user_id>')
 
 在 POST 或 PUT 请求中，直接访问 form 表单并验证的工作有些麻烦。Flask-RESTful 提供了”reqparse”库来简化。我们来改进下上例中的 PUT 函数：
 
-```
+```py
 from flask.ext.restful import reqparse
 
 parser = reqparse.RequestParser()
@@ -116,7 +116,7 @@ class User(Resource):
 
 结合上述的内容，我们来看一个完整的例子：
 
-```
+```py
 from flask import Flask
 from flask.ext.restful import Api, Resource, reqparse, abort
 

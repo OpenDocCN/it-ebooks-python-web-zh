@@ -10,7 +10,7 @@ Flask 的闪存系统（flashing system）用于向用户提供反馈信息，�
 
 按照以下命令建立 Flask 项目 HelloWorld:
 
-```
+```py
 mkdir HelloWorld
 mkdir HelloWorld/static
 mkdir HelloWorld/templates
@@ -21,7 +21,7 @@ touch HelloWorld/index.py
 
 内容如下：
 
-```
+```py
 from flask import Flask, flash, get_flashed_messages
 import time
 
@@ -54,37 +54,37 @@ if __name__ == "__main__":
 
 运行服务器：
 
-```
+```py
 $ python HelloWorld/index.py 
 ```
 
 打开浏览器，访问`http://127.0.0.1:5000/gen`，浏览器界面显示（注意，时间戳是动态生成的，每次都会不一样，除非并行访问）：
 
-```
+```py
 access at 1404020982.83 
 ```
 
 查看浏览器的 cookie，可以看到`session`，其对应的内容是：
 
-```
+```py
 .eJyrVopPy0kszkgtVrKKrlZSKIFQSUpWSknhYVXJRm55UYG2tkq1OlDRyHC_rKgIvypPdzcDTxdXA1-XwHLfLEdTfxfPUn8XX6DKWCAEAJKBGq8.BpE6dg.F1VURZa7VqU9bvbC4XIBO9-3Y4Y 
 ```
 
 再一次访问`http://127.0.0.1:5000/gen`，浏览器界面显示：
 
-```
+```py
 access at 1404021130.32 
 ```
 
 cookie 中`session`发生了变化，新的内容是：
 
-```
+```py
 .eJyrVopPy0kszkgtVrKKrlZSKIFQSUpWSknhYVXJRm55UYG2tkq1OlDRyHC_rKgIvypPdzcDTxdXA1-XwHLfLEdTfxfPUn8XX6DKWLBaMg1yrfCtciz1rfIEGxRbCwAhGjC5.BpE7Cg.Cb_B_k2otqczhknGnpNjQ5u4dqw 
 ```
 
 然后使用浏览器访问`http://127.0.0.1:5000/show1`，浏览器界面显示：
 
-```
+```py
 ['access at 1404020982.83', 'access at 1404021130.32'] 
 ```
 
@@ -92,7 +92,7 @@ cookie 中`session`发生了变化，新的内容是：
 
 如果使用浏览器访问`http://127.0.0.1:5000/show1`或者`http://127.0.0.1:5000/show2`，只会得到：
 
-```
+```py
 [] 
 ```
 
@@ -100,7 +100,7 @@ cookie 中`session`发生了变化，新的内容是：
 
 flash 系统也支持对 flash 的内容进行分类。修改`HelloWorld/index.py`内容：
 
-```
+```py
 from flask import Flask, flash, get_flashed_messages
 import time
 
@@ -132,7 +132,7 @@ if __name__ == "__main__":
 
 某一时刻，浏览器访问`http://127.0.0.1:5000/gen`，浏览器界面显示：
 
-```
+```py
 access at 1404022326.39 
 ```
 
@@ -140,13 +140,13 @@ access at 1404022326.39
 
 使用浏览器访问`http://127.0.0.1:5000/show1`，得到如下内容：
 
-```
+```py
 ['1 access at 1404022326.39'] 
 ```
 
 而继续访问`http://127.0.0.1:5000/show2`，得到的内容为空：
 
-```
+```py
 [] 
 ```
 

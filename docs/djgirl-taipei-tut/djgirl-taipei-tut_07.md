@@ -18,7 +18,7 @@
 
 後台管理的功能 Django 已預設開啟。因此，設定檔中的 `INSTALLED_APPS` 裡，已經有 `django.contrib.admin` 這個 app ：
 
-```
+```py
 # mysite/settings.py
 
 INSTALLED_APPS = (
@@ -35,7 +35,7 @@ INSTALLED_APPS = (
 
 我們將管理後台的網址設定為 `/admin/`。確認 `mysite/urls.py` 中的 `urlpatterns` 包含下面這行：
 
-```
+```py
 url(r'^admin/', include(admin.site.urls)), 
 ```
 
@@ -45,7 +45,7 @@ url(r'^admin/', include(admin.site.urls)),
 
 使用 [createsuperuser](https://docs.djangoproject.com/en/1.8/ref/django-admin/#django-admin-createsuperuser) 這個指令，建立一個 superuser：
 
-```
+```py
 (djangogirls_venv) ~/djangogirls/mysite$ python manage.py createsuperuser
 Username (leave blank to use 'YOUR_NAME'):
 Email address: your_name@yourmail.com
@@ -62,7 +62,7 @@ Superuser created successfully.
 
 修改 **trips app** 裡的 admin.py，並註冊 **Post** 這個 Model：
 
-```
+```py
 # trips/admin.py
 
 from django.contrib import admin
@@ -101,7 +101,7 @@ Django 通常以 `Post object` 來表示 Post 物件，但此種顯示不易辨�
 
 修改 `trips/models.py`：
 
-```
+```py
 # trips/models.py
 
 from django.db import models

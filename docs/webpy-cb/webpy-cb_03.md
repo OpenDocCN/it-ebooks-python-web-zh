@@ -8,7 +8,7 @@
 
 ## 解法
 
-```
+```py
 import web
 
 urls = ("/.*", "hello")
@@ -26,13 +26,13 @@ if __name__ == "__main__":
 
 在 URL 开头添加代码：
 
-```
+```py
 '/(.*)/', 'redirect', 
 ```
 
 然后用 redirect 类处理以'/'结尾的网址：
 
-```
+```py
 class redirect:
     def GET(self, path):
         web.seeother('/' + path) 
@@ -58,7 +58,7 @@ class redirect:
 
 这是一个在 Unix like 系统上虚拟主机配置的例子：
 
-```
+```py
 <VirtualHost *:80>
     ServerName example.com:80
     DocumentRoot /doc/root/
@@ -90,7 +90,7 @@ class redirect:
 
 web.py 的 URL 控制模式是简单的、强大的、灵活的。在每个应用的最顶部，你通常会看到整个 URL 调度模式被定义在元组中:
 
-```
+```py
 urls = (
     "/tasks/?", "signin",
     "/tasks/list", "listing",
@@ -108,7 +108,7 @@ urls = (
 
 你可以利用强大的正则表达式去设计更灵活的 URL 路径。比如 /(test1|test2) 可以捕捉 /test1 或 /test2。要理解这里的关键，匹配是依据 URL 路径的。比如下面的 URL:
 
-```
+```py
 http://localhost/myapp/greetings/hello?name=Joe 
 ```
 
@@ -118,13 +118,13 @@ http://localhost/myapp/greetings/hello?name=Joe
 
 你可以捕捉 URL 的参数，然后用在处理类中:
 
-```
+```py
 /users/list/(.+), "list_users" 
 ```
 
 在 *list/*后面的这块会被捕捉，然后作为参数被用在 GET 或 POST:
 
-```
+```py
 class list_users:
     def GET(self, name):
         return "Listing info about user: {0}".format(name) 
@@ -146,7 +146,7 @@ class list_users:
 
 在`blog.py`中:
 
-```
+```py
 import web
 urls = (
   "", "reblog",
@@ -165,7 +165,7 @@ app_blog = web.application(urls, locals())
 
 当前的主应用`code.py`:
 
-```
+```py
 import web
 import blog
 urls = (
@@ -195,7 +195,7 @@ if __name__ == "__main__":
 
 根据要访问的 xml 文件(如 response.xml)创建一个 XML 模板。如果 XML 中有变量，就使用相应的模板标签进行替换。下面是一个例子：
 
-```
+```py
 $def with (code)
 <?xml version="1.0"?>
 <RequestNotification-Response>
@@ -205,7 +205,7 @@ $def with (code)
 
 为了提供这个 XML，需要创建一个单独的 web.py 程序(如 response.py)，它要包含下面的代码。注意：要用"web.header('Content-Type', 'text/xml')"来告知客户端－－正在发送的是一个 XML 文件。
 
-```
+```py
 import web
 
 render = web.template.render('templates/', cache=False)
@@ -233,7 +233,7 @@ if __name__ == '__main__': app.run()
 
 ## 代码
 
-```
+```py
 class RequestHandler():
     def POST():
         data = web.data() # 通过这个方法可以取到数据 

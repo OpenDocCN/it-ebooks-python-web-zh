@@ -14,7 +14,7 @@
 
 我们在第一章已经看到了一个简单的 Hello World 的例子，相信你已经成功地把它跑起来了，下面我们对这个程序进行讲解。回顾一下这个程序：
 
-```
+```py
 $ cat hello.py
 
 from flask import Flask
@@ -31,7 +31,7 @@ if __name__ == "__main__":
 
 *   先看程序的第 1 句：
 
-```
+```py
 from flask import Flask 
 ```
 
@@ -39,7 +39,7 @@ from flask import Flask
 
 *   接着看程序的第 2 句：
 
-```
+```py
 app = Flask(__name__) 
 ```
 
@@ -47,7 +47,7 @@ app = Flask(__name__)
 
 *   接着看程序的第 3，4，5 句：
 
-```
+```py
 @app.route("/")
 def hello():
     return "Hello World!" 
@@ -63,14 +63,14 @@ def hello():
 
 *   接着看程序的最后两句：
 
-```
+```py
 if __name__ == "__main__":
     app.run() 
 ```
 
 上面两句的意思，当我们运行该脚本的时候（第 1 句），启动 Flask 集成的开发 Web 服务器（第 2 句）。默认情况下，改服务器会监听本地的 5000 端口，如果你想改变端口的话，可以传入 "port=端口号"，另外，如果你想支持远程，需要传入 "host=0.0.0.0"，你还可以设置调试模式，如下：
 
-```
+```py
 app.run(host='0.0.0.0', port=8234, debug=True) 
 ```
 
@@ -82,7 +82,7 @@ OK，到此为止，我们基本明白一个简单的 Flask 程序是怎么运�
 
 我们在前面的一小节介绍了一个简单的 Flask 程序是怎么运行的。其中，有三行代码，我们并没有深入讲解。在这里，我们就对它们进行深入解析。回顾这三行代码：
 
-```
+```py
 @app.route("/")
 def hello():
     return "Hello World!" 
@@ -96,7 +96,7 @@ def hello():
 
 假设服务器域名为 `https://hello.com`, 我们来看下面一个路由：
 
-```
+```py
 @app.route("/ethan")
 def hello():
     return '<h1>Hello, ethan!</h1>' 
@@ -104,7 +104,7 @@ def hello():
 
 再来看一个路由：
 
-```
+```py
 @app.route("/peter")
 def hello():
     return '<h1>Hello, peter!</h1>' 
@@ -112,7 +112,7 @@ def hello():
 
 可以看到，上面两个路由的功能是当用户访问 `https://hello.com/<user_name>` 时，网页显示对该用户的问候。按上面的写法，如果对每个用户都需要写一个路由，那么 100 个用户岂不是要写 100 个路由！这当然是不能忍受的，实际上一个路由就够了！且看下面：
 
-```
+```py
 @app.route("/<user_name>")
 def hello(user_name):
     return '<h1>Hello, %s!</h1>' % user_name 
@@ -126,7 +126,7 @@ def hello(user_name):
 
 静态文件，顾名思义，就是那些不会被改变的文件，比如图片，CSS 文件和 JavaScript 源码文件。默认情况下，Flask 在程序根目录中名为 static 的子目录中寻找静态文件。因此，我们一般在应用的包中创建一个叫 static 的文件夹，并在里面放置我们的静态文件。比如，我们可以按下面的结构组织我们的 app：
 
-```
+```py
 app/
     __init__.py
     static/
@@ -151,7 +151,7 @@ run.py
 
 但是，我们有时还会应用到第三方库，比如 jQuery, Bootstrap 等，这时我们为了不跟自己的 Javascript 和 CSS 文件混起来，我们可以将这些第三方库放到 lib 文件夹或者 vendor 文件夹，比如下面这种：
 
-```
+```py
 static/
     css/
         lib/
@@ -174,7 +174,7 @@ static/
 
 favicon 是 favorites icon 的缩写，也被称为 website icon（网页图标）、page icon（页面图标）等。通常而言，定义一个 favicon 的方法是将一个名为『favicon.ico』的文件置于 Web 服务器的根目录下。但是，正如我们在上面指出，我们一般将图片等静态资源放在一个单独的 static 文件夹中。为了解决这种不一致，我们可以在站点模板的 部分添加两个 link 组件，比如我们可以在 template/base.html 中定义 favicon 图标：
 
-```
+```py
 {% block head %}
 {{ super() }}
 <link rel="shortcut icon" href="{{ url_for('static', filename = 'favicon.ico') }}" type="image/x-icon">
@@ -190,7 +190,7 @@ favicon 是 favorites icon 的缩写，也被称为 website icon（网页图标�
 
 在 Web 开发中，我们经常会使用到模板引擎。简单点来说，我们可以**把模板看成是一个含有某些变量的字符串，它们的具体值需要在动态运行时（请求的上下文）才能知道**。比如，有下面一个模板：
 
-```
+```py
 <h1>Hello, {{ name }}!</h1> 
 ```
 
@@ -202,7 +202,7 @@ Flask 默认使用 [Jinja2](http://jinja.pocoo.org/) 模板引擎。
 
 先来看一个简单的程序。
 
-```
+```py
 $ cat hello.py
 
 from flask import Flask
@@ -222,7 +222,7 @@ if __name__ == "__main__":
 
 在终端运行上面的代码 `python hello.py`，终端输出：
 
-```
+```py
  * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit) 
 ```
 
@@ -238,7 +238,7 @@ if __name__ == "__main__":
 
 我们将上面的例子用 Jinja 模板进行改写。默认情况下，Flask 在程序文件夹中的 templates 子文件夹中寻找模板。改写后的文件结构如下：
 
-```
+```py
 .
 ├── hello.py
 └── templates
@@ -247,7 +247,7 @@ if __name__ == "__main__":
 
 `hello.py` 文件内容如下：
 
-```
+```py
 from flask import Flask, render_template
 
 app = Flask(__name__)
@@ -265,7 +265,7 @@ if __name__ == "__main__":
 
 `index.html` 文件内容如下：
 
-```
+```py
 <h1>Hello, world!</h1> <h2>Hello, {{ name }}!</h2> 
 ```
 
@@ -277,7 +277,7 @@ Jinja 模板使用 `{{ 变量名 }}` 表示一个变量，比如上面的 `{{ na
 
 在 Jinja 中，还能使用列表，字典和对象等复杂的类型，比如：
 
-```
+```py
 <p> Hello, {{ mydict['key'] }}. Hello, {{ mylist[0] }}. </p> 
 ```
 
@@ -285,7 +285,7 @@ Jinja 模板使用 `{{ 变量名 }}` 表示一个变量，比如上面的 `{{ na
 
 Jinja 提供了多种控制结构，来改变模板的渲染流程，比如常见的判断结构，循环结构。示例如下：
 
-```
+```py
 {% if user == 'ethan' or user =='peter' %}
     <p> Hello, {{ user }} </p>
 {% else %}
@@ -303,7 +303,7 @@ Jinja 提供了多种控制结构，来改变模板的渲染流程，比如常�
 
 当有一段代码我们经常要用到的时候，我们往往会写一个函数，在 Jinja 中，我们可以使用宏来实现。例如:
 
-```
+```py
 {% macro render_user(user) %}
     {% if user == 'ethan' %}
         <p> Hello, {{ user }} </p>
@@ -313,7 +313,7 @@ Jinja 提供了多种控制结构，来改变模板的渲染流程，比如常�
 
 为了重复使用宏，我们将其保存在单独的文件中，比如 'macros.html'，然后在需要使用的模板中导入：
 
-```
+```py
 {% import 'macros.html' as macros %}
 
 {{ macros.render_user(user) }} 
@@ -323,7 +323,7 @@ Jinja 提供了多种控制结构，来改变模板的渲染流程，比如常�
 
 另一种重复使用代码的强大方式是**模板继承**，就像类继承需要有一个**基类**一样，我们需要一个**基模板**。比如，我们可以创建一个名为 base.html 的基模板：
 
-```
+```py
 <html>
 <head>
     {% block head %}
@@ -340,7 +340,7 @@ Jinja 提供了多种控制结构，来改变模板的渲染流程，比如常�
 
 我们可以看到上面的基模板含有三个 `block` 块：head、title 和 body。下面，我们通过这个基模板来派生新的模板：
 
-```
+```py
 {% extends "base.html" %}
 {% block title %}Index{% endblock %}
 {% block head %}
@@ -363,7 +363,7 @@ Web 开发中经常需要处理 HTTP 请求、重定向和会话等诸多事务�
 
 HTTP 请求方法有 GET、POST、PUT 等，request 对象也相应地提供了支持。举个例子，假设现在我们开发一个功能：用户注册。如果 HTTP 请求方法是 POST，我们就注册该用户，如果是 GET 请求，我们就显示注册的字样。代码示例如下（注意，下面代码并不能直接运行，文末提供了完整的代码）：
 
-```
+```py
 from flask import Flask, request
 
 app = Flask(__name__)
@@ -381,7 +381,7 @@ def register():
 
 当用户访问某些网页时，如果他还没登录，我们往往会把网页**重定向**到登录页面，Flask 提供了 redirect 对象对其进行处理，我们对上面的代码做一点简单的改造，如果用户注册了，我们将网页重定向到首页。代码示例如下：
 
-```
+```py
 from flask import Flask, request, redirect
 
 app = Flask(__name__)
@@ -403,7 +403,7 @@ def register():
 
 程序可以把数据存储在**用户会话**中，用户会话是一种私有存储，默认情况下，它会保存在客户端 cookie 中。Flask 提供了 session 对象来操作用户会话，下面看一个示例：
 
-```
+```py
 from flask import Flask, request, session, redirect, url_for, render_template
 
 app = Flask(__name__)
@@ -436,7 +436,7 @@ if __name__ == '__main__':
 
 本节完整的代码如下：
 
-```
+```py
 $ tree .
 .
 ├── flask-session.py
@@ -522,13 +522,13 @@ Python 中最广泛使用的 ORM 框架是 [SQLAlchemy](http://www.sqlalchemy.or
 
 首先，我们使用 pip 安装 Flask-SQLAlchemy:
 
-```
+```py
 $ pip install flask-sqlalchemy 
 ```
 
 接下来，我们配置一个简单的 SQLite 数据库：
 
-```
+```py
 $ cat app.py
 # -*- coding: utf-8 -*-
 
@@ -563,7 +563,7 @@ class User(db.Model):
 
 接着，我们创建表和数据库。为此，我们先在当前目录创建 "db" 子目录和新建一个 "users.db" 文件，然后在交互式 Python shell 中导入 db 对象并调用 SQLAlchemy 类的 create_all() 方法：
 
-```
+```py
 $ mkdir db && cd db && touch users.db
 $ python
 >>> from app import db
@@ -572,7 +572,7 @@ $ python
 
 我们验证一下，"users" 表是否创建成功：
 
-```
+```py
 $ sqlite3 db/users.db    # 打开数据库文件
 SQLite version 3.8.10.2 2015-05-20 18:17:19
 Enter ".help" for usage hints.
@@ -592,7 +592,7 @@ CREATE TABLE users (
 
 现在，我们创建一些用户：
 
-```
+```py
 >>> from app import db
 >>> from app import User
 >>>
@@ -610,7 +610,7 @@ CREATE TABLE users (
 
 查询数据主要是用 "query" 接口，例如 `all()` 方法返回所有数据，`filter_by()` 方法对查询结果进行过滤，参数是键值对，更多方法可以查看[这里](http://flask-sqlalchemy.pocoo.org/2.1/api/)。
 
-```
+```py
 >>> from app import User
 >>> users = User.query.all()
 >>> users
@@ -625,7 +625,7 @@ u'admin@example.com'
 
 如果我们想查看 SQLAlchemy 为查询生成的原生 SQL 语句，只需要把 query 对象转化成字符串：
 
-```
+```py
 >>> str(User.query.filter_by(username='guest'))
 'SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email \nFROM users \nWHERE users.username = :username_1' 
 ```
@@ -634,7 +634,7 @@ u'admin@example.com'
 
 更新数据也用 "add()" 方法，如果存在要更新的对象，SQLAlchemy 就更新该对象而不是添加。
 
-```
+```py
 >>> from app import db
 >>> from app import User
 >>>
@@ -653,7 +653,7 @@ u'admin@hotmail.com'
 
 删除数据用 "delete()" 方法，同样要记得 "delete" 数据后，要调用 "commit()" 提交事务：
 
-```
+```py
 >>> from app import db
 >>> from app import User
 >>>
@@ -712,7 +712,7 @@ REST Web 服务的核心概念是资源（resources）。资源被 URI（Uniform
 
 首先，我们先明确访问该 Service 的根地址是什么。这里，我们可以这样定义：
 
-```
+```py
 http://[hostname]/blog/api/ 
 ```
 
@@ -744,7 +744,7 @@ http://[hostname]/blog/api/
 
 下面我们使用 GET 方法获取资源。
 
-```
+```py
 # -*- coding: utf-8 -*-
 
 from flask import Flask, jsonify, abort, make_response
@@ -792,7 +792,7 @@ if __name__ == '__main__':
 
 开启终端，敲入如下命令进行测试：
 
-```
+```py
 $ curl -i http://localhost:5632/blog/api/articles
 HTTP/1.0 200 OK
 Content-Type: application/json
@@ -848,7 +848,7 @@ Date: Wed, 17 Aug 2016 02:32:10 GMT
 
 下面我们使用 POST 方法创建一个新的资源。在上面的代码中添加以下代码：
 
-```
+```py
 from flask import request
 
 @app.route('/blog/api/articles', methods=['POST'])
@@ -866,7 +866,7 @@ def create_article():
 
 测试如下：
 
-```
+```py
 $ curl -i -H "Content-Type: application/json" -X POST -d '{"title":"the way to java"}' http://localhost:5632/blog/api/articles
 HTTP/1.0 201 CREATED
 Content-Type: application/json
@@ -889,7 +889,7 @@ Date: Wed, 17 Aug 2016 03:07:14 GMT
 
 下面我们使用 PUT 方法更新文章，继续添加代码：
 
-```
+```py
 @app.route('/blog/api/articles/<int:article_id>', methods=['PUT'])
 def update_article(article_id):
     article = filter(lambda a: a['id'] == article_id, articles)
@@ -906,7 +906,7 @@ def update_article(article_id):
 
 测试如下：
 
-```
+```py
 $ curl -i -H "Content-Type: application/json" -X PUT -d '{"content": "hello, rest"}' http://localhost:5632/blog/api/articles/2
 HTTP/1.0 200 OK
 Content-Type: application/json
@@ -929,7 +929,7 @@ Date: Wed, 17 Aug 2016 03:44:09 GMT
 
 下面我们使用 DELETE 方法删除文章，继续添加代码：
 
-```
+```py
 @app.route('/blog/api/articles/<int:article_id>', methods=['DELETE'])
 def delete_article(article_id):
     article = filter(lambda t: t['id'] == article_id, articles)
@@ -941,7 +941,7 @@ def delete_article(article_id):
 
 测试如下：
 
-```
+```py
 $ curl -i -H "Content-Type: application/json" -X DELETE http://localhost:5632/blog/api/articles/2
 HTTP/1.0 200 OK
 Content-Type: application/json
@@ -1042,7 +1042,7 @@ HTTP 状态码主要有以下几类：
 *   创建 Python 虚拟环境，以便隔离不同的项目
 *   安装项目依赖包
 
-```
+```py
 $ pip install virtualenvwrapper
 $ source /usr/local/bin/virtualenvwrapper.sh
 $ mkvirtualenv flask-todo-env   # 创建完后，会自动进入到该虚拟环境，以后可以使用 workon 命令
@@ -1056,7 +1056,7 @@ $
 
 我们在本地调试的时候经常使用命令 `python manage.py runserver` 或者 `python app.py` 等启动 Flask 自带的服务器，但是，Flask 自带的服务器性能无法满足生产环境的要求，因此这里我们采用 [Gunicorn](http://gunicorn.org/) 做 wsgi (Web Server Gateway Interface，Web 服务器网关接口) 容器，假设我们以 root 用户身份进行部署：
 
-```
+```py
 (flask-todo-env)$ pip install gunicorn
 (flask-todo-env)$ /home/root/.virtualenvs/flask-todo-env/bin/gunicorn -w 4 -b 127.0.0.1:7345 application.app:create_app() 
 ```
@@ -1069,7 +1069,7 @@ $
 
 在上面，我们手动使用命令启动了 flask 程序，当程序挂掉的时候，我们又要再启动一次。另外，当我们想关闭程序的时候，我们需要找到 pid 进程号并 kill 掉。这里，我们采用一种更好的方式来管理服务器进程，我们将 supervisor 安装全局环境下，而不是在当前的虚拟环境：
 
-```
+```py
 $ pip install supervisor
 $ echo_supervisord_conf > supervisor.conf   # 生成 supervisor 默认配置文件
 $ vi supervisor.conf    # 修改 supervisor 配置文件，添加 gunicorn 进程管理 
@@ -1077,7 +1077,7 @@ $ vi supervisor.conf    # 修改 supervisor 配置文件，添加 gunicorn 进�
 
 在 `supervisor.conf` 添加以下内容：
 
-```
+```py
 [program:flask-todo-env]
 directory=/home/root/flask-todo-app
 command=/home/root/.virtualenvs/%(program_name)s/bin/gunicorn
@@ -1106,7 +1106,7 @@ stderr_logfile_backups=10
 
 supervisor 的常用命令如下：
 
-```
+```py
 supervisord -c supervisor.conf                             通过配置文件启动 supervisor
 supervisorctl -c supervisor.conf status                    查看 supervisor 的状态
 supervisorctl -c supervisor.conf reload                    重新载入 配置文件
@@ -1121,7 +1121,7 @@ supervisorctl -c supervisor.conf restart [all]|[appname]   重启指定/所有 s
 
 要想配置 Nginx 作为运行在 127.0.0.1:7345 的 Gunicorn 的反向代理，我们可以在 /etc/nginx/sites-enabled 下给应用创建一个文件，不妨称之为 flask-todo-app.com，nginx 的类似配置如下：
 
-```
+```py
 # Handle requests to exploreflask.com on port 80
 server {
     listen 80;
@@ -1142,7 +1142,7 @@ server {
 
 常用的 nginx 使用命令如下：
 
-```
+```py
 $ sudo service nginx start
 $ sudo service nginx stop
 $ sudo service nginx restart 

@@ -20,7 +20,7 @@ SQLAlchemy 是一个 ORM（[对象关系映射](http://zh.wikipedia.org/wiki/%E5
 
 *myapp/__init__.py_*
 
-```
+```py
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
@@ -36,7 +36,7 @@ db = SQLAlchemy(app)
 
 *myapp/models.py*
 
-```
+```py
 from . import db
 
 class Engine(db.Model):
@@ -56,7 +56,7 @@ class Engine(db.Model):
 
 *instance/config.py*
 
-```
+```py
 SQLALCHEMY_DATABASE_URI = "postgresql://user:password@localhost/spaceshipDB" 
 ```
 
@@ -70,7 +70,7 @@ SQLALCHEMY_DATABASE_URI = "postgresql://user:password@localhost/spaceshipDB"
 
 让我们在版本库的根目录下打开一个 Python 终端。
 
-```
+```py
 $ pwd
 /Users/me/Code/myapp
 $ workon myapp
@@ -95,7 +95,7 @@ Alembic 有一个可拓展的新手教程，所以我只会大概地说一下并
 
 通过一个初始化的`alembic init`命令，你将创建一个 alembic"迁移环境"。在你的版本库的根目录下执行这个命令，你将得到一个叫`alembic`的新文件夹。你的版本库将看上去就像 Alembic 教程中的这个例子一样：
 
-```
+```py
 myapp/
     alembic.ini
     alembic/

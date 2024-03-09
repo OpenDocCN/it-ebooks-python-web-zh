@@ -19,19 +19,19 @@
 
 如果你使用 Linux 或者 OS X 系统的话，脚本必须给予一定的权限，像这样:
 
-```
+```py
 chmod a+x script.py 
 ```
 
 脚本中有一个 [shebang](http://en.wikipedia.org/wiki/Shebang_(Unix)) [http://en.wikipedia.org/wiki/Shebang_(Unix)] ，它指明应该使用的解释器。一个脚本如果被赋予了执行权限并且有一个 shebang 行能够被简单地像这样执行:
 
-```
+```py
 ./script.py <arguments> 
 ```
 
 在 Windows 上，上面的操作是没有作用的，相反你必须提供脚本作为选择的 Python 解释器的一个参数:
 
-```
+```py
 flask\Scripts\python script.py <arguments> 
 ```
 
@@ -59,7 +59,7 @@ ORMs 允许数据库应用程序与对象一起工作，而不是表以及 SQL�
 
 我们有许多新的配置项需要添加到配置文件中(文件 *config.py*):
 
-```
+```py
 import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -73,7 +73,7 @@ SQLALCHEMY_MIGRATE_REPO 是文件夹，我们将会把 SQLAlchemy-migrate 数据
 
 最后，当我们初始化应用程序的时候，我们也必须初始化数据库。这是我们更新后的初始化文件(文件 *app/__init__.py*):
 
-```
+```py
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
 
@@ -100,7 +100,7 @@ from app import views, models
 
 现在我们已经决定用户表的样子，剩下的工作就是把它转换成代码(文件 *app/models.py*):
 
-```
+```py
 from app import db
 
 class User(db.Model):
@@ -122,7 +122,7 @@ class User(db.Model):
 
 这是创建数据库的脚本(文件 *db_create.py*):
 
-```
+```py
 #!flask/bin/python
 from migrate.versioning import api
 from config import SQLALCHEMY_DATABASE_URI
@@ -139,7 +139,7 @@ else:
 
 为了创建数据库，你需要运行这个脚本(记得如果在 Windows 上命令有些不同):
 
-```
+```py
 ./db_create.py 
 ```
 
@@ -151,7 +151,7 @@ else:
 
 为了实现迁移，我们需要编写一小段 Python 代码(文件 *db_migrate.py*):
 
-```
+```py
 #!flask/bin/python
 import imp
 from migrate.versioning import api
@@ -177,13 +177,13 @@ print 'Current database version: ' + str(api.db_version(SQLALCHEMY_DATABASE_URI,
 
 因此让我们继续进行，记录下迁移:
 
-```
+```py
 ./db_migrate.py 
 ```
 
 脚本的输出如下:
 
-```
+```py
 New migration saved as db_repository/versions/001_migration.py
 Current database version: 1 
 ```
@@ -198,7 +198,7 @@ Current database version: 1
 
 如果有数据库迁移的支持，当你准备发布新版的时候，你只需要录制一个新的迁移，拷贝迁移脚本到生产服务器上接着运行脚本，所有事情就完成了。数据库升级也只需要一点 Python 脚本(文件 *db_upgrade.py*):
 
-```
+```py
 #!flask/bin/python
 from migrate.versioning import api
 from config import SQLALCHEMY_DATABASE_URI
@@ -211,7 +211,7 @@ print 'Current database version: ' + str(api.db_version(SQLALCHEMY_DATABASE_URI,
 
 通常情况下，没有必要把数据库降低到旧版本，但是，SQLAlchemy-migrate 支持这么做(文件 *db_downgrade.py*):
 
-```
+```py
 #!flask/bin/python
 from migrate.versioning import api
 from config import SQLALCHEMY_DATABASE_URI
@@ -239,7 +239,7 @@ print 'Current database version: ' + str(api.db_version(SQLALCHEMY_DATABASE_URI,
 
 让我们修改模型以反映这些变化(*app/models.py*):
 
-```
+```py
 from app import db
 
 class User(db.Model):
@@ -267,13 +267,13 @@ class Post(db.Model):
 
 首先还是来运行迁移脚本:
 
-```
+```py
 ./db_migrate.py 
 ```
 
 输出:
 
-```
+```py
 New migration saved as db_repository/versions/002_migration.py
 Current database version: 2 
 ```
@@ -284,19 +284,19 @@ Current database version: 2
 
 让我们先启动 Python。在 Linux 或者 OS X 上:
 
-```
+```py
 flask/bin/python 
 ```
 
 或者在 Windows 上:
 
-```
+```py
 flask\Scripts\python 
 ```
 
 一旦启动 Python，在 Python 提示符中输入如下语句:
 
-```
+```py
 >>> from app import db, models
 >>> 
 ```
@@ -305,7 +305,7 @@ flask\Scripts\python
 
 首先创建一个新用户:
 
-```
+```py
 >>> u = models.User(nickname='john', email='john@email.com')
 >>> db.session.add(u)
 >>> db.session.commit()
@@ -316,7 +316,7 @@ flask\Scripts\python
 
 让我们添加另一个用户:
 
-```
+```py
 >>> u = models.User(nickname='susan', email='susan@email.com')
 >>> db.session.add(u)
 >>> db.session.commit()
@@ -325,7 +325,7 @@ flask\Scripts\python
 
 现在我们可以查询用户:
 
-```
+```py
 >>> users = models.User.query.all()
 >>> print users
 [<User u'john'>, <User u'susan'>]
@@ -341,7 +341,7 @@ flask\Scripts\python
 
 这是另外一种查询。如果你知道用户的 *id* ，我们能够找到这个用户的数据像下面这样:
 
-```
+```py
 >>> u = models.User.query.get(1)
 >>> print u
 <User u'john'>
@@ -350,7 +350,7 @@ flask\Scripts\python
 
 现在让我们提交一篇 blog:
 
-```
+```py
 >>> import datetime
 >>> u = models.User.query.get(1)
 >>> p = models.Post(body='my first post!', timestamp=datetime.datetime.utcnow(), author=u)
@@ -364,7 +364,7 @@ flask\Scripts\python
 
 让我们多做一些查询:
 
-```
+```py
 # get all posts from a user
 >>> u = models.User.query.get(1)
 >>> print u
@@ -396,7 +396,7 @@ flask\Scripts\python
 
 在结束之前，需要清除一下刚才创建的数据，以便在下一章中会有一个干净的数据库:
 
-```
+```py
 >>> users = models.User.query.all()
 >>> for u in users:
 ...     db.session.delete(u)

@@ -19,7 +19,7 @@
 
 这里就是视图函数(文件 *app/views.py*):
 
-```
+```py
 @app.route('/user/<nickname>')
 @login_required
 def user(nickname):
@@ -44,7 +44,7 @@ def user(nickname):
 
 我们最初的视图模版是十分简单的(文件 *app/templates/user.html*):
 
-```
+```py
 <!-- extend base layout -->
 {% extends "base.html" %}
 
@@ -61,7 +61,7 @@ def user(nickname):
 
 用户信息页现在已经完成了，但是缺少对它的链接。为了让用户很容易地检查他的或者她的信息，我们直接把用户信息页的链接放在导航栏中(文件 *app/templates/base.html*):
 
-```
+```py
 <div>Microblog:
      <a href="{{ url_for('index') }}">Home</a>
      {% if g.user.is_authenticated() %}
@@ -81,7 +81,7 @@ def user(nickname):
 
 因为返回一个头像是与用户相关的任务，我们把它放在 *User* 类(文件 *app/models.py*):
 
-```
+```py
 from hashlib import md5
 # ...
 class User(db.Model):
@@ -98,7 +98,7 @@ class User(db.Model):
 
 现在我们的 *User* 类知道怎样返回一个头像图片，我们把它融入到用户信息页的布局中(文件 *app/templates/user.html*):
 
-```
+```py
 <!-- extend base layout -->
 {% extends "base.html" %}
 
@@ -122,7 +122,7 @@ class User(db.Model):
 
 我们已经在用户信息页上添加了头像，如果我们想要在每一个 blog 前面显示头像了？这也是一个简单的工作，为了在每一个 blog 前显示头像，我们只需要在模块做一些小改变(文件 *app/templates/user.html*):
 
-```
+```py
 <!-- extend base layout -->
 {% extends "base.html" %}
 
@@ -156,7 +156,7 @@ class User(db.Model):
 
 我们创建一个 blog 的子模板，这是一个再普通不过的模板(文件 */app/templates/post.html*):
 
-```
+```py
 <table>
     <tr valign="top">
         <td><img src="{{post.author.avatar(50)}}"></td><td><i>{{post.author.nickname}} says:</i><br>{{post.body}}</td>
@@ -166,7 +166,7 @@ class User(db.Model):
 
 接着我们使用 Jinja2 的 *include* 命令在我们的用户模板中调用这个子模板(文件 *app/templates/user.html*):
 
-```
+```py
 <!-- extend base layout -->
 {% extends "base.html" %}
 
@@ -192,7 +192,7 @@ class User(db.Model):
 
 为了增加这些，我们必须开始修改数据库。更具体地说，我们必须在我们的 *User* 类上增加两个字段(文件 *app/models.py*):
 
-```
+```py
 class User(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     nickname = db.Column(db.String(64), unique = True)
@@ -204,13 +204,13 @@ class User(db.Model):
 
 前面的章节我们已经讲述过数据库的迁移。因此为了增加这两个新字段到数据库，需要运行升级脚本:
 
-```
+```py
 ./db_migrate.py 
 ```
 
 脚本会返回如下信息:
 
-```
+```py
 New migration saved as db_repository/versions/003_migration.py
 Current database version: 3 
 ```
@@ -221,7 +221,7 @@ Current database version: 3
 
 接着，让我们修改用户信息页模板来展示这些字段(文件 *app/templates/user.html*):
 
-```
+```py
 <!-- extend base layout -->
 {% extends "base.html" %}
 
@@ -247,7 +247,7 @@ Current database version: 3
 
 *last_seen* 字段能够被聪明地支持。记得在之前的章节中，我们创建了一个 *before_request* 函数，用来注册登录的用户到全局变量 *flask.g* 中。这个函数可以用来在数据库中更新用户最后一次的访问时间(文件 *app/views.py*):
 
-```
+```py
 from datetime import datetime
 # ...
 @app.before_request
@@ -269,7 +269,7 @@ def before_request():
 
 新增一个用户信息表单是相当容易的。我们开始创建网页表单(文件 *app/forms.py*):
 
-```
+```py
 from flask.ext.wtf import Form
 from wtforms import StringField, BooleanField, TextAreaField
 from wtforms.validators import DataRequired, Length
@@ -281,7 +281,7 @@ class EditForm(Form):
 
 接着视图模板(文件 *app/templates/edit.html*):
 
-```
+```py
 <!-- extend base layout -->
 {% extends "base.html" %}
 
@@ -309,7 +309,7 @@ class EditForm(Form):
 
 最后我们编写视图函数(文件 *app/views.py*):
 
-```
+```py
 from forms import LoginForm, EditForm
 
 @app.route('/edit', methods=['GET', 'POST'])
@@ -331,7 +331,7 @@ def edit():
 
 为了能够让这页很容易访问到，我们在用户信息页上添加了一个链接(文件 *app/templates/user.html*):
 
-```
+```py
 <!-- extend base layout -->
 {% extends "base.html" %}
 

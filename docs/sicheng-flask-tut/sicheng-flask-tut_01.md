@@ -19,7 +19,7 @@
 
 让我们在上一篇 Hello World 的基础上，加上下面的函数。并运行程序。
 
-```
+```py
 @app.route('/hello/<name>')
 def hello(name):
     return 'Hello %s' % name
@@ -29,7 +29,7 @@ def hello(name):
 当你在浏览器的地址栏中输入”http://localhost:5000/hello/man”，你将在页面上看到”Hello man”的字样。URL 路径中”/hello/”后面的参数被作为”hello()”函数的”name”参数传了进来。
 你还可以在 URL 参数前添加转换器来转换参数类型，我们再来加个函数：
 
-```
+```py
 @app.route('/user/<int:user_id>')
 def get_user(user_id):
     return 'User ID: %d' % user_id
@@ -50,7 +50,7 @@ def get_user(user_id):
 
 一个函数上可以设施多个 URL 路由规则
 
-```
+```py
 @app.route('/')
 @app.route('/hello')
 @app.route('/hello/<name>')
@@ -67,7 +67,7 @@ def hello(name=None):
 
 HTTP 请求方法常用的有 Get, Post, Put, Delete。不熟悉的朋友们可以去度娘查下。Flask 路由规则也可以设置请求方法。
 
-```
+```py
 from flask import request
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -85,7 +85,7 @@ def login():
 
 Flask 提供了”url_for()”方法来快速获取及构建 URL，方法的第一个参数指向函数名（加过”@app.route”注解的函数），后续的参数对应于要构建的 URL 变量。下面是几个例子：
 
-```
+```py
 url_for('login')    # 返回/login
 url_for('login', id='1')    # 将 id 作为 URL 参数，返回/login?id=1
 url_for('hello', name='man')    # 适配 hello 函数的 name 参数，返回/hello/man
@@ -97,7 +97,7 @@ url_for('static', filename='style.css')    # 静态文件地址，返回/sta
 
 一个 Web 应用的静态文件包括了 JS, CSS, 图片等，Flask 的风格是将所有静态文件放在”static”子目录下。并且在代码或模板（下篇会介绍）中，使用”url_for(‘static’)”来获取静态文件目录。上小节中第四个的例子就是通过”url_for()”函数获取”static”目录下的指定文件。如果你想改变这个静态目录的位置，你可以在创建应用时，指定”static_folder”参数。
 
-```
+```py
 app = Flask(__name__, static_folder='files')
 
 ```

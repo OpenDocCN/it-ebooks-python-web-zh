@@ -4,7 +4,7 @@
 
 `下面仅仅是我的项目开发环境, 没有必要追求完全一致...`
 
-```
+```py
 Mac OS X 10.10.1  #非必要
 Python3.4.1
 Django1.7.1 
@@ -17,7 +17,7 @@ virtualenv  1.11.6
 
 使用`virtualenv`创建虚拟环境, Ubuntun 和 Mac 安装程序基本一致
 
-```
+```py
 #安装 virtualenv
 $ pip install virtualenv  
 #创建虚拟环境
@@ -45,13 +45,13 @@ Git 是目前世界上最先进的分布式版本控制系统
 
 **Mac 下 git 安装**
 
-```
+```py
 $ brew install git 
 ```
 
 **Ubuntu 下 git 安装**
 
-```
+```py
 $ sudo apt-get install git 
 ```
 
@@ -71,7 +71,7 @@ $ sudo apt-get install git
 
 安装最新版的 Django 版本
 
-```
+```py
 #安装最新版本的 Django
 $ pip install  django 
 #或者指定安装版本

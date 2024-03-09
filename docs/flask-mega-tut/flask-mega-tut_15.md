@@ -33,13 +33,13 @@
 
 我们首先的问题就是确定 blog 撰写的语言。这不是一门精确的科学，它不会总是能够检测的语言的类型，所以我们只能尽最大努力去做。我们将会使用 [guess-language](http://code.google.com/p/guess-language/) [http://code.google.com/p/guess-language/] Python 模块。因此，请安装这个模块。针对 Linux 和 Mac OS X 用户:
 
-```
+```py
 flask/bin/pip install guess-language 
 ```
 
 针对 Windows 用户:
 
-```
+```py
 flask\Scripts\pip install guess-language 
 ```
 
@@ -47,7 +47,7 @@ flask\Scripts\pip install guess-language
 
 因此让我们开始在我们的 Post 表中添加一个 *language* 字段:
 
-```
+```py
 class Post(db.Model):
     __searchable__ = ['body']
 
@@ -60,7 +60,7 @@ class Post(db.Model):
 
 每一次修改数据库，我们都需要做一次迁移:
 
-```
+```py
 $ ./db_migrate.py
 New migration saved as microblog/db_repository/versions/005_migration.py
 Current database version: 5 
@@ -68,7 +68,7 @@ Current database version: 5
 
 现在我们已经在数据库中有了存储 blog 内容语言类型的地方，因此让我们检测每一个 blog 语言种类:
 
-```
+```py
 from guess_language import guessLanguage
 
 @app.route('/', methods = ['GET', 'POST'])
@@ -102,7 +102,7 @@ def index(page = 1):
 
 接下来一步就是在 blog 旁边显示 “翻译” 链接(文件 *app/templates/posts.html*):
 
-```
+```py
 {% if post.language != None and post.language != '' and post.language != g.locale %}
 <div><a href="#">{{ _('Translate') }}</a></div>
 {% endif %} 
@@ -134,7 +134,7 @@ def index(page = 1):
 
 这听起来很复杂，因此如果不需要关注细节的话，这里有一个做了很多“脏”工作并且把文本翻译成别的语言的函数(文件 *app/translate.py*):
 
-```
+```py
 try:
     import httplib  # Python 2
 except ImportError:
@@ -177,7 +177,7 @@ def microsoft_translate(text, sourceLang, destLang):
 
 这个函数从我们的配置文件中导入了两个新值，id 和密钥代码(文件 *config.py*):
 
-```
+```py
 # microsoft translation service
 MS_TRANSLATOR_CLIENT_ID = '' # enter your MS translator app id here
 MS_TRANSLATOR_CLIENT_SECRET = '' # enter your MS translator app secret here 
@@ -191,7 +191,7 @@ MS_TRANSLATOR_CLIENT_SECRET = '' # enter your MS translator app secret here
 
 因此我们该怎样使用翻译服务了？这实际上很简单。这是例子:
 
-```
+```py
 $ flask/bin/python
 Python 2.6.8 (unknown, Jun  9 2012, 11:30:32)
 >>> from app import translate
@@ -207,7 +207,7 @@ u'¿Hola, cómo estás hoy?'
 
 服务器上的 Ajax 服务像一个常规的视图函数，不同的是不返回一个 HTML 页面或者重定向，它返回的是数据，典型的格式化成 [XML](http://en.wikipedia.org/wiki/XML) [http://en.wikipedia.org/wiki/XML] 或者 [JSON](http://en.wikipedia.org/wiki/JSON) [http://en.wikipedia.org/wiki/JSON]。因为 JSON 对 Javascript 比较友好，我们将使用这种格式(文件 *app/views.py*):
 
-```
+```py
 from flask import jsonify
 from translate import microsoft_translate
 
@@ -223,7 +223,7 @@ def translate():
 
 这里没有多少新内容。这个路由处理一个携带要翻译的文本以及原语言类型和要翻译的语言类型的 POST 请求。因为这是个 POST 请求，我们获取的是输入到 HTML 表单中的数据，请直接使用 *request.form* 字典。我们用这些数据调用我们的一个翻译函数，一旦我们获取翻译的文本就用 Flask 的 *jsonify* 函数把它转换成 JSON。客户端看到的这个请求响应的数据类似这个格式:
 
-```
+```py
 { "text": "<translated text goes here>" } 
 ```
 
@@ -233,19 +233,19 @@ def translate():
 
 首先我们需要在模版中加入一个有唯一 id 的 *span* 元素，以便我们在 [DOM](http://en.wikipedia.org/wiki/Document_Object_Model) [http://en.wikipedia.org/wiki/Document_Object_Model] 中可以找到它并且替换成翻译的文本(文件 *app/templates/post.html*):
 
-```
+```py
 <p><strong><span id="post{{post.id}}">{{post.body}}</span></strong></p> 
 ```
 
 同样，我们需要给一个 “翻译” 链接一个唯一的 id，以保证一旦翻译显示我们能隐藏这个链接:
 
-```
+```py
 <div><span id="translation{{post.id}}"><a href="#">{{ _('Translate') }}</a></span></div> 
 ```
 
 为了做出一个漂亮的并且对用户友好的功能，我们将会加入一个动态的图片，开始的时候是隐藏的，仅仅出现当翻译服务运行在服务器上，同样也有唯一的 id:
 
-```
+```py
 <img id="loading{{post.id}}" style="display: none" src="/static/img/loading.gif"> 
 ```
 
@@ -253,19 +253,19 @@ def translate():
 
 现在我们需要在 “链接” 链接点击的时候触发 Ajax。与直接从链接上触发调用相反，我们将会创建一个 Javascript 函数，这个函数做了所有工作，因为我们有一些事情在那里做并且不希望在每个模板中重复代码。让我们添加一个对这个函数的调用当 “翻译” 链接被点击的时候:
 
-```
+```py
 <a href="javascript:translate('{{post.language}}', '{{g.locale}}', '#post{{post.id}}', '#translation{{post.id}}', '#loading{{post.id}}');">{{ _('Translate') }}</a> 
 ```
 
 变量看起来有些多，但是函数调用很简单。假设有一篇 id 为 23，使用西班牙语写的 blog，用户想要翻译成英语。这个函数的调用如下:
 
-```
+```py
 translate('es', 'en', '#post23', '#translation23', '#loading23') 
 ```
 
 最后我们需要实现的 *translate()*，我们将不会在 *post.html* 子模板中编写这个函数，因为每一篇 blog 内容会有些重复。我们将会在基础模版中实现这个函数，下面就是这个函数(文件 *app/templates/base.html*):
 
-```
+```py
 <script>
 function translate(sourceLang, destLang, sourceId, destId, loadingId) {
     $(destId).hide();

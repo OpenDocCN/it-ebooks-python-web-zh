@@ -12,7 +12,7 @@
 
 按照以下命令建立 Flask 项目 HelloWorld:
 
-```
+```py
 mkdir HelloWorld
 mkdir HelloWorld/static
 mkdir HelloWorld/templates
@@ -21,7 +21,7 @@ touch HelloWorld/index.py
 
 ### 编辑`HelloWorld/index.py`：
 
-```
+```py
 from flask import Flask, render_template_string, abort
 
 app = Flask(__name__)
@@ -52,7 +52,7 @@ if __name__ == '__main__':
 
 ### 编辑`HelloWorld/index.py`：
 
-```
+```py
 from flask import Flask, render_template_string, abort
 
 app = Flask(__name__)

@@ -14,14 +14,14 @@ virtualenv 也可以让你给不同的项目指定同样的依赖包的不同版
 
 用了 virtualenv，你将只会把少数几个 Python 模块安装到系统的全局空间中。其中一个会是 virtualenv 本身：
 
-```
+```py
 # 使用 pip 安装 virtualenv
 $ pip install virtualenv 
 ```
 
 安装完 virtualenv，就可以开始创建虚拟环境。切换到你的项目文件夹，运行`virtualenv`命令。这个命令接受一个参数，作为虚拟环境的名字（同样也是它的位置，在当前文件夹`ls`下你就知道了）。
 
-```
+```py
 $ virtualenv venv
 New python executable in venv/bin/python
 Installing setuptools, pip...done. 
@@ -31,13 +31,13 @@ Installing setuptools, pip...done.
 
 一旦新的 virtual environment 已经准备就绪，你需要给对应的 virtual environment 下的`bin/activate`脚本执行`source`，来激活它。
 
-```
+```py
 $ source venv/bin/activate 
 ```
 
 你可以通过运行`which python`看到：“python”现在指向的是 virtual environment 中的二进制版本。
 
-```
+```py
 $ which python
 /usr/local/bin/python
 $ source venv/bin/activate
@@ -51,7 +51,7 @@ $ source venv/bin/activate
 
 运行`deactivate`命令，你就能离开你的 virtual environment。
 
-```
+```py
 (venv)$ deactivate
 $ 
 ```
@@ -68,7 +68,7 @@ $
 
 现在，你不再需要运行`virtualenv`来创建一个环境，只需运行`mkvirtualenv`：
 
-```
+```py
 $ mkvirtualenv rocket
 New python executable in rocket/bin/python
 Installing setuptools, pip...done. 
@@ -109,7 +109,7 @@ Installing setuptools, pip...done.
 
 在使用 Git 时，你可以在版本库中创建一个特别的文件名为*.gitignore*。 在里面，能使用正则表达式来列出对应的文件。任何匹配的文件将被 Git 所忽略。 我建议你至少在其中加入`*.pyc`和`/instance`。instance 文件夹中存放着跟你的应用相关的不便公开的配置。
 
-```
+```py
 .gitignore:
 *.pyc
 instance/ 

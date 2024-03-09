@@ -8,7 +8,7 @@
 
 以下是经典的 “Hello, world” 示例：
 
-```
+```py
 import tornado.ioloop
 import tornado.web
 

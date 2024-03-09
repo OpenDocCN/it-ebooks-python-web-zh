@@ -51,7 +51,7 @@
 
 如果你正在使用 Python 3.4，先进入到 **microblog** 目录中接着使用如下的命令创建一个虚拟环境:
 
-```
+```py
 $ python -m venv flask 
 ```
 
@@ -59,25 +59,25 @@ $ python -m venv flask
 
 如果你使用 Python 3.4 以下的版本(包括 python 2.7)，你需要在创建虚拟环境之前下载以及安装 [virtualenv.py](https://pypi.python.org/pypi/virtualenv/) [https://pypi.python.org/pypi/virtualenv/] 。如果你在使用 Mac OS X，请使用下面的命令行安装:
 
-```
+```py
 $ sudo easy_install virtualenv 
 ```
 
 如果你使用 Linux，你需要获取一个包。例如，如果你使用 Ubuntu:
 
-```
+```py
 $ sudo apt-get install python-virtualenv 
 ```
 
 Windows 用户们在安装 virtualenv 上有些麻烦，因此如果你想省事的话，请直接安装 Python 3.4。在 Windows 上安装 virtualenv 最简单地方式就是先安装 pip，安装方式在 这里 <https://pip.pypa.io/en/latest/installing.html>。一旦安装好了 pip 的话，下面的命令可以安装 virtualenv:
 
-```
+```py
 $ pip install virtualenv 
 ```
 
 为了创建一个虚拟环境，请输入如下的命令行
 
-```
+```py
 $ virtualenv flask 
 ```
 
@@ -87,7 +87,7 @@ $ virtualenv flask
 
 如果你是在 Linux, OS X 或者 Cygwin 上，通过一个接一个输入如下的命令行来安装 flask 以及扩展:
 
-```
+```py
 $ flask/bin/pip install flask
 $ flask/bin/pip install flask-login
 $ flask/bin/pip install flask-openid
@@ -104,7 +104,7 @@ $ flask/bin/pip install coverage
 
 如果是在 Windows 上的话，命令行有些不同
 
-```
+```py
 $ flask\Scripts\pip install flask
 $ flask\Scripts\pip install flask-login
 $ flask\Scripts\pip install flask-openid
@@ -127,7 +127,7 @@ $ flask\Scripts\pip install coverage
 
 在 *cd* 到 *microblog* 文件夹后，我们开始为应用程序创建基本的文件结构:
 
-```
+```py
 mkdir app
 mkdir app/static
 mkdir app/templates
@@ -138,7 +138,7 @@ mkdir tmp
 
 让我们开始为我们的 *app* 包(文件 *app/__init__.py* )创建一个简单的初始化脚本:
 
-```
+```py
 from flask import Flask
 
 app = Flask(__name__)
@@ -151,7 +151,7 @@ from app import views
 
 让我们编写第一个视图函数(文件 *app/views.py* ):
 
-```
+```py
 from app import app
 
 @app.route('/')
@@ -164,7 +164,7 @@ return "Hello, World!"
 
 能够完整工作的 Web 应用程序的最后一步是创建一个脚本，启动我们的应用程序的开发 Web 服务器。让我们称这个脚本为 *run.py*，并把它置于根目录:
 
-```
+```py
 #!flask/bin/python
 from app import app
 app.run(debug = True) 
@@ -174,31 +174,31 @@ app.run(debug = True)
 
 要启动应用程序，您只需运行此脚本（*run.py*）。在 OS X，Linux 和 Cygwin 上，你必须明确这是一个可执行文件，然后你可以运行它:
 
-```
+```py
 chmod a+x run.py 
 ```
 
 然后脚本可以简单地按如下方式执行:
 
-```
+```py
 ./run.py 
 ```
 
 在 Windows 上过程可能有些不同。不再需要指明文件是否可执行。相反你必须运行该脚本作为 Python 解释器的一个参数:
 
-```
+```py
 flask/Scripts/python run.py 
 ```
 
 在服务器初始化后，它将会监听 5000 端口等待着连接。现在打开你的网页浏览器输入如下 URL:
 
-```
+```py
 http://localhost:5000 
 ```
 
 另外你也可以使用这个 URL:
 
-```
+```py
 http://localhost:5000/index 
 ```
 

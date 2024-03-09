@@ -86,7 +86,7 @@
 
 我们数据库的改变不是很大。我们首先开始添加 *followers* 表(文件 *app/models.py*):
 
-```
+```py
 followers = db.Table('followers',
     db.Column('follower_id', db.Integer, db.ForeignKey('user.id')),
     db.Column('followed_id', db.Integer, db.ForeignKey('user.id'))
@@ -97,7 +97,7 @@ followers = db.Table('followers',
 
 接着我们在 *users* 表中定义一个多对多的关系:
 
-```
+```py
 class User(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     nickname = db.Column(db.String(64), unique = True)
@@ -126,7 +126,7 @@ class User(db.Model):
 
 因为我们对数据库做出了修改，现在我们必须生成一个新的迁移脚本:
 
-```
+```py
 ./db_migrate.py 
 ```
 
@@ -136,7 +136,7 @@ class User(db.Model):
 
 下面是添加了添加和移除 ‘关注者’ 功能的 *User* 模型(文件 *app/models.py*):
 
-```
+```py
 class User(db.Model):
     #...
     def follow(self, user):
@@ -163,7 +163,7 @@ class User(db.Model):
 
 让我们编写单元测试框架来检验目前我们已经写好的代码(文件 *tests.py*):
 
-```
+```py
 class TestCase(unittest.TestCase):
     #...
     def test_follow(self):
@@ -193,7 +193,7 @@ class TestCase(unittest.TestCase):
 
 通过执行下面的命令来运行这个测试:
 
-```
+```py
 ./tests.py 
 ```
 
@@ -211,7 +211,7 @@ class TestCase(unittest.TestCase):
 
 下面这种查询可以实现上述的要求，这个单行的代码又被我们添加到 *User* 模型(文件 *app/models.py*):
 
-```
+```py
 class User(db.Model):
     #...
     def followed_posts(self):
@@ -240,7 +240,7 @@ class User(db.Model):
 
 下面是我们的查询的连接部分的，独立于其余的查询:
 
-```
+```py
 Post.query.join(followers,
     (followers.c.followed_id == Post.user_id)) 
 ```
@@ -265,7 +265,7 @@ Post.query.join(followers,
 
 因此我们过滤这个表格，查询的过滤操作是:
 
-```
+```py
 filter(followers.c.follower_id == self.id) 
 ```
 
@@ -279,7 +279,7 @@ filter(followers.c.follower_id == self.id)
 
 最后一步就是根据我们的规则对结果进行排序。排序操作如下:
 
-```
+```py
 order_by(Post.timestamp.desc()) 
 ```
 
@@ -291,7 +291,7 @@ order_by(Post.timestamp.desc())
 
 为了结束我们长时间的查询操作的讨论，让我们为我们查询写些单元测试(文件 *tests.py*):
 
-```
+```py
 #...
 from datetime import datetime, timedelta
 from app.models import User, Post
@@ -372,7 +372,7 @@ class TestCase(unittest.TestCase):
 
 我们决定在 *after_login* 中处理 OpenID 的时候就设置自己成为自己的关注者(文件 *app/views.py*):
 
-```
+```py
 @oid.after_login
 def after_login(resp):
     if resp.email is None or resp.email == "":
@@ -402,7 +402,7 @@ def after_login(resp):
 
 接着，我们将会定义关注以及取消关注用户的视图函数(文件 *app/views.py*):
 
-```
+```py
 @app.route('/follow/<nickname>')
 @login_required
 def follow(nickname):
@@ -446,7 +446,7 @@ def unfollow(nickname):
 
 最后需要修改下模版(文件 *app/templates/user.html*):
 
-```
+```py
 <!-- extend base layout -->
 {% extends "base.html" %}
 

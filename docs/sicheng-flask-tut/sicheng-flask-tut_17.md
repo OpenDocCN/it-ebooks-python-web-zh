@@ -19,13 +19,13 @@
 
 建议通过 pip 安装，简单方便：
 
-```
+```py
 $ pip install Flask-Babel
 ```
 
 我们可以采用下面的方法初始化一个 Flask-Babel 的实例：
 
-```
+```py
 from flask import Flask
 from flask.ext.babel import Babel
 
@@ -41,7 +41,7 @@ Flask-Babel 提供了两个 Flask 应用配置项：
 1.  BABEL_DEFAULT_LOCALE: 应用默认语言，不设置的话即为”en”
 2.  BABEL_DEFAULT_TIMEZONE: 应用默认时区，不设置的话即为”UTC”
 
-```
+```py
 app.config.update(
     DEBUG=True,
     BABEL_DEFAULT_LOCALE='zh'
@@ -51,7 +51,7 @@ app.config.update(
 
 当程序里没指定时，就会采用这些默认设置。那么如何在程序里指定呢？Flask-Babel 提供了两个装饰器”localeselector”和”timezoneselector”，分别用来设置语言和时区：
 
-```
+```py
 @babel.localeselector
 def get_locale():
     return 'zh'
@@ -66,7 +66,7 @@ def get_timezone():
 
 装饰器”localeselector”和”timezoneselector”修饰的函数，被调用一次后就会被缓存，也就是不会被多次调用。但是有时候，当切换用户时，我们想从新用户会话中重新获取语言/时区设置，此时可以在登录请求中调用”refresh()”方法清缓存：
 
-```
+```py
 from flask.ext.babel import refresh
 
 @app.route('/login')
@@ -81,7 +81,7 @@ def login():
 
 Flask-Babel 封装了 Python 的”gettext()”方法，你可以在视图函数中使用它：
 
-```
+```py
 from flask.ext.babel import gettext, ngettext
 
 @app.route('/trans')
@@ -97,7 +97,7 @@ def translate(num=None):
 
 同样在模板中，我们也可以使用”gettext()”方法，更简单的我们可以用”_()”方法代替：
 
-```
+```py
 <!doctype html>
 <title>{{ _('Test Sample') }}</title>
 <h1>{{ _('Hello World!') }}</h1>
@@ -106,7 +106,7 @@ def translate(num=None):
 
 在 Flask 请求中，我们来渲染此模板：
 
-```
+```py
 @app.route('/')
 def index():
     return render_template('hello.html')
@@ -121,7 +121,7 @@ def index():
 
 1.  首先让我们创建一个 Babel 的配置文件，文件名任意，这里我们取名为”babel.cfg”
 
-```
+```py
 [python: **.py]
 [jinja2: **/templates/**.html]
 extensions=jinja2.ext.autoescape,jinja2.ext.with_
@@ -132,7 +132,7 @@ extensions=jinja2.ext.autoescape,jinja2.ext.with_
 
 *   接下来，在当前目录下，生成一个名为”messages.pot”的翻译文件模板
 
-```
+```py
 $ pybabel extract -F babel.cfg -o messages.pot .
 ```
 
@@ -144,7 +144,7 @@ $ pybabel extract -F babel.cfg -o messages.pot .
 
 *   创建”.po”翻译文件
 
-```
+```py
 $ pybabel init -i messages.pot -d translations -l zh
 ```
 
@@ -154,7 +154,7 @@ $ pybabel init -i messages.pot -d translations -l zh
 
 打开刚才生成的中文 po 翻译文件，将我们要翻译的内容写入”msgstr”项中，并保存：
 
-```
+```py
 #: flask-ext3.py:31
 msgid "No users"
 msgstr "没有用户"
@@ -176,7 +176,7 @@ msgstr "世界，你好！"
 
 *   最后一步，编译 po 文件，并生成”*.mo”文件
 
-```
+```py
 $ pybabel compile -d translations
 ```
 
@@ -186,7 +186,7 @@ $ pybabel compile -d translations
 
 之后，如果代码中的待翻译的文字被更改过，我们需要重新生成”messages.pot”翻译文件模板。此时，要是再通过”pybabel init”命令来创建 po 文件的话，会丢失之前已翻译好的内容，这个损失是很大的，其实我们可以通过下面的方法来更新 po 文件：
 
-```
+```py
 $ pybabel update -i messages.pot -d translations
 ```
 
@@ -196,7 +196,7 @@ $ pybabel update -i messages.pot -d translations
 
 Flask-Babel 不仅可以翻译文字，还可以自动翻译日期格式，运行下面的例子：
 
-```
+```py
 from flask.ext.babel import format_datetime
 from datetime import datetime
 
@@ -214,7 +214,7 @@ def current_time():
 
 Flask-Babel 提供了”format_number”和”format_decimal”方法来格式化数字，使用方法同上例中的”format_datetime”非常类似，只需传入待格式化的数字即可：
 
-```
+```py
 from flask.ext.babel import format_decimal
 
 @app.route('/num')
@@ -229,7 +229,7 @@ def get_num():
 
 既然可以格式化数字，自然也少不了货币格式化显示的功能了。我们可以使用”format_currency”方法，它同”format_decimal”的区别是它必须传入两个参数，第二个参数指定了货币类型：
 
-```
+```py
 from flask.ext.babel import format_currency
 
 @app.route('/currency')

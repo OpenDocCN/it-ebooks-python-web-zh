@@ -8,7 +8,7 @@
 
 在 my_blog/my_blog/view 下新建归档 view
 
-```
+```py
 def archives(request) :
     try:
         post_list = Article.objects.all()
@@ -20,7 +20,7 @@ def archives(request) :
 
 在 my_blog/templates 新建模板`archives.html`
 
-```
+```py
 {% extends "base.html" %}
 
 {% block content %}
@@ -42,7 +42,7 @@ def archives(request) :
 
 并在 my_blog/my_blog/usls.py 中添加对应 url 配置
 
-```
+```py
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 
@@ -64,14 +64,14 @@ urlpatterns = patterns('',
 
 在 my_blog/my_blog/view.py 下添加新的逻辑
 
-```
+```py
 def about_me(request) :
     return render(request, 'aboutme.html') 
 ```
 
 在 my_blog/template 下新建模板 aboutme.html, 内容如下, 大家可以自定义自己喜欢的简介
 
-```
+```py
 {% extends "base.html" %}
 {% load custom_markdown %}
 
@@ -84,7 +84,7 @@ def about_me(request) :
 
 并在 my_blog/my_blog/usls.py 中添加对应 url 配置
 
-```
+```py
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 
@@ -107,7 +107,7 @@ urlpatterns = patterns('',
 
 只需要在在 my_blog/my_blog/view.py 下添加新的逻辑
 
-```
+```py
 def search_tag(request, tag) :
     try:
         post_list = Article.objects.filter(category__iexact = tag) #contains
@@ -120,7 +120,7 @@ def search_tag(request, tag) :
 
 在对应的有 tag 的 html 网页中修改代码
 
-```
+```py
 {% extends "base.html" %}
 
 {% load custom_markdown %}
@@ -152,7 +152,7 @@ def search_tag(request, tag) :
 
 并在 my_blog/my_blog/usls.py 中添加对应 url 配置
 
-```
+```py
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 

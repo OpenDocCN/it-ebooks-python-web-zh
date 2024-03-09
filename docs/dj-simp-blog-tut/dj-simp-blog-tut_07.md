@@ -6,7 +6,7 @@
 
 在 my_blog 下添加文件名, 文件夹名为`templates`
 
-```
+```py
 mkdir templates
 #看到当前文件构成
 my_blog
@@ -44,7 +44,7 @@ my_blog
 
 在 my_blog/my_blog/setting.py 下设置 templates 的位置
 
-```
+```py
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'templates').replace('\\', '/'),
     ) 
@@ -52,7 +52,7 @@ TEMPLATE_DIRS = (
 
 **1.7/1.8 版本 Django 已经修改的 template 添加形式**
 
-```
+```py
 #尝试这种写法
 TEMPLATE_PATH = os.path.join(BASE_DIR, 'templates')
 TEMPLATE_DIRS = (
@@ -66,7 +66,7 @@ TEMPLATE_DIRS = (
 
 templates/test.html 简单第一个 template html 文件
 
-```
+```py
 <!--在 test.html 文件夹下添加-->
 <!DOCTYPE html>
 <html>
@@ -92,7 +92,7 @@ templates/test.html 简单第一个 template html 文件
 
 在 article/view.py 中添加一个函数逻辑
 
-```
+```py
 from django.shortcuts import render
 from django.http import HttpResponse
 from article.models import Article
@@ -116,7 +116,7 @@ def test(request) :
 
 然后设置对应的 url 在 my_blog/urls.py 下
 
-```
+```py
  url(r'^test/$', 'article.views.test'), 
 ```
 
@@ -128,7 +128,7 @@ def test(request) :
 
 在 template 文件夹下增加 base.html, 并在其中增加如下代码
 
-```
+```py
 <!doctype html>
 <html lang="en">
 <head>
@@ -185,7 +185,7 @@ def test(request) :
 
 我们继续在 templates 文件夹下添加 home.html 文件
 
-```
+```py
 {% extends "base.html" %}
 
 {% block content %}
@@ -211,7 +211,7 @@ def test(request) :
 {% endblock %} 
 ```
 
-```
+```py
 其中
 - {% for <element> in <list> %}与{% endfor %}成对存在, 这是 template 中提供的 for 循环 tag
 - {% if <elemtnt> %} {% else %} {% endif %}是 template 中提供的 if 语句 tag
@@ -220,7 +220,7 @@ def test(request) :
 
 然后修改 my_blog/article/view.py, 并删除 test.html
 
-```
+```py
 # -*- coding: utf-8 -*-
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -235,7 +235,7 @@ def home(request):
 
 修改 my_blog/my_blog/urls.py
 
-```
+```py
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 
@@ -255,7 +255,7 @@ urlpatterns = patterns('',
 
 查看当前整个程序的目录结构
 
-```
+```py
 my_blog
 ├── article
 │   ├── __init__.py
@@ -295,7 +295,7 @@ my_blog
 
 在 github 中新建仓库`my_blog_tutorial`, 填写简单的描述
 
-```
+```py
 #查看当前目录位置
 $ pwd
 /Users/andrew_liu/Python/Django/my_blog
@@ -310,7 +310,7 @@ $ git remote add blog git@github.com:Andrew-liu/my_blog_tutorial.git
 
 在根目录下增加`.gitignore'和'LICENSE'和'README.md'文件
 
-```
+```py
 #添加所有文件
 $ git add .
 

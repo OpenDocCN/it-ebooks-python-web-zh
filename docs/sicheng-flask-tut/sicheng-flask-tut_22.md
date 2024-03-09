@@ -19,13 +19,13 @@
 
 遵循标准的 Flask 扩展安装和启用方式，先通过 pip 来安装扩展：
 
-```
+```py
 $ pip install Flask-Login
 ```
 
 接下来创建扩展对象实例：
 
-```
+```py
 from flask import Flask
 from flask.ext.login import LoginManager
 
@@ -36,7 +36,7 @@ login_manager = LoginManager(app)
 
 同时，你可以对 LoginManager 对象赋上配置参数：
 
-```
+```py
 # 设置登录视图的名称，如果一个未登录用户请求一个只有登录用户才能访问的视图，
 # 则闪现一条错误消息，并重定向到这里设置的登录视图。
 # 如果未设置登录视图，则直接返回 401 错误。
@@ -71,7 +71,7 @@ login_manager.login_message_category = "info"
 
 因为每次写个用户类很麻烦，Flask-Login 提供了”UserMixin”类，你可以直接继承它即可：
 
-```
+```py
 from flask.ext.login import UserMixin
 
 class User(UserMixin):
@@ -83,7 +83,7 @@ class User(UserMixin):
 
 在编写登录登出视图前，我们要先写一个加载用户对象的方法。它的功能是根据传入的用户 ID，构造一个新的用户类的对象。为了简化范例，我们不引入数据库，而是在列表里定义用户记录。
 
-```
+```py
 # 用户记录表
 users = [
     {'username': 'Tom', 'password': '111111'},
@@ -111,7 +111,7 @@ def load_user(username):
 
 有一个问题，启用 Session 的话一定需要客户端允许 Cookie，因为 Session ID 是保存在 Cookie 中的，如果 Cookie 被禁用了怎么办？那我们的应用只好通过请求参数将用户信息带过来，一般情况下会使用一个动态的 Token 来表示登录用户的信息。此时，我们就不能依靠”@login_manager.user_loader”回调，而是使用”@login_manager.request_loader”回调。
 
-```
+```py
 from flask import request
 
 # 从请求参数中获取 Token，如果 Token 所对应的用户存在则构建一个新的用户类对象
@@ -132,7 +132,7 @@ def load_user_from_request(request):
 
 一切准备就绪，我们开始实现登录视图：
 
-```
+```py
 from flask import render_template, redirect, url_for, flash
 from flask.ext.login import login_user
 
@@ -164,7 +164,7 @@ def login():
 
 “login.html”模板很简单，就是显示一个用户名密码的表单：
 
-```
+```py
 <!doctype html>
 <title>Login Sample</title>
 <h1>Login</h1>
@@ -181,7 +181,7 @@ def login():
 
 接下来，让我们写个 index 视图：
 
-```
+```py
 from flask.ext.login import current_user, login_required
 
 @app.route('/')
@@ -197,7 +197,7 @@ def index():
 
 Flask-Login 还提供了”current_user”代理，可以访问到登录用户的用户类对象。我们在模板中也可以使用这个代理。让我们再写一个 home 视图：
 
-```
+```py
 @app.route('/home')
 @login_required
 def home():
@@ -207,7 +207,7 @@ def home():
 
 模板代码如下：
 
-```
+```py
 <!doctype html>
 <title>Login Sample</title>
 {% if current_user.is_authenticated %}
@@ -220,7 +220,7 @@ def home():
 
 登出视图也很简单，Flask-Login 提供了”logout_user()”方法来帮助你清理用户 Session。
 
-```
+```py
 from flask.ext.login import logout_user
 
 @app.route('/logout')
@@ -235,7 +235,7 @@ def logout():
 
 “@login_required”装饰器对于未登录用户访问的默认处理是重定向到登录视图，如果我们不想它这么做的话，可以自定义处理方法：
 
-```
+```py
 @login_manager.unauthorized_handler
 def unauthorized_handler():
     return 'Unauthorized'
@@ -248,7 +248,7 @@ def unauthorized_handler():
 
 在登录视图中，调用”login_user()”方法时，传入”remember=True”参数，即可实现“记住我”功能：
 
-```
+```py
 ...
             login_user(curr_user, remember=True)
 ...
@@ -261,7 +261,7 @@ Flask-Login 是通过在 Cookie 实现的，它会在 Cookie 中添加一个”r
 
 当用户通过账号和密码登录后，Flask-Login 会将其标识为 Fresh 登录，即在 Session 中设置”_fresh”字段为 True。而用户通过 Remember Me 自动登录的话，则不标识为 Fresh 登录。对于”@login_required”装饰器修饰的视图，是否 Fresh 登录都可以访问，但是有些情况下，我们会强制要求用户登录一次，比如修改登录密码，这时候，我们可以用”@fresh_login_required”装饰器来修饰该视图。这样，通过 Remember Me 自动登录的用户，将无法访问该视图：
 
-```
+```py
 from flask.ext.login import fresh_login_required
 
 @app.route('/home')
@@ -275,7 +275,7 @@ def home():
 
 Flask-Login 自动启用会话保护功能。对于每个请求，它会验证用户标识，这个标识是由客户端 IP 地址和 User Agent 的值经 SHA512 编码而来。在用户登录成功时，Flask-Login 就会将这个值保存起来以便后续检查。默认的会话保护模式是”basic”，为了加强安全性，你可以启用强会话保护模式，方法是配置 LoginManager 实例对象中的”session_protection”属性：
 
-```
+```py
 login_manager.session_protection = "strong"
 
 ```

@@ -20,25 +20,25 @@
 
 安装 web.py, 请先下载：
 
-```
+```py
 http://webpy.org/static/web.py-0.37.tar.gz 
 ```
 
 或者获取最新的开发版：
 
-```
+```py
 https://github.com/webpy/webpy/tarball/master 
 ```
 
 解压并拷贝 *web* 文件夹到你的应用程序目录下。 或者，为了让所有的应用程序都可以使用，运行：
 
-```
+```py
 python setup.py install 
 ```
 
 注意: 在某些类 unix 系统上你可能需要切换到 root 用户或者运行：
 
-```
+```py
 sudo python setup.py install 
 ```
 
@@ -46,13 +46,13 @@ sudo python setup.py install
 
 另外一个选择是使用[Easy Install](http://peak.telecommunity.com/DevCenter/EasyInstall). Easy Install 使用如下：
 
-```
+```py
 easy_install web.py 
 ```
 
 或者 [PIP](http://packages.python.org/distribute/)
 
-```
+```py
 sudo pip install web.py 
 ```
 
@@ -60,7 +60,7 @@ sudo pip install web.py
 
 web.py 内置了 web 服务器。可以按照 [tutorial](http://webpy.org/tutorial2) 学习如何写一个 Web 应用。 写完后，将你的代码放到 `code.py` 并如下面的方法来启动服务器：
 
-```
+```py
  python code.py 
 ```
 
@@ -72,7 +72,7 @@ web.py 内置了 web 服务器。可以按照 [tutorial](http://webpy.org/tutori
 
 对于所有的 CGI 变量， 添加以下到你的 `code.py`:
 
-```
+```py
 #!/usr/bin/env python 
 ```
 
@@ -86,7 +86,7 @@ web.py 内置了 web 服务器。可以按照 [tutorial](http://webpy.org/tutori
 
 lighttpd config 设置参考如下：
 
-```
+```py
  server.modules = ("mod_fastcgi", "mod_rewrite")
  server.document-root = "/path/to/root/"     
  fastcgi.server = ( "/code.py" =>     
@@ -109,7 +109,7 @@ lighttpd config 设置参考如下：
 
 从修订版本 145 开始， 如果你的代码使用了重定向，还需要在 fastcgi 选项下设置 bin-environment 变量。 如果你的代码重定向到[`domain.com/`](http://domain.com/) 而在 url 栏中你会看到 [`domain.com/code.py/，`](http://domain.com/code.py/，) 你可以通过设置这个环境变量来阻止。 这样你的 fastcgi.server 设置将会如下：
 
-```
+```py
 fastcgi.server = ( "/code.py" =>
 ((
    "socket" => "/tmp/fastcgi.socket",
@@ -129,7 +129,7 @@ fastcgi.server = ( "/code.py" =>
 
 添加以下到 `httpd.conf` 或 `apache2.conf`。
 
-```
+```py
 Alias /foo/static/ /path/to/static
 ScriptAlias /foo/ /path/to/code.py 
 ```
@@ -138,7 +138,7 @@ ScriptAlias /foo/ /path/to/code.py
 
 CGI 很容易配置， 但不适合高性能网站。 添加以下到你的 `.htaccess`：
 
-```
+```py
 Options +ExecCGI
 AddHandler cgi-script .py 
 ```
@@ -147,7 +147,7 @@ AddHandler cgi-script .py
 
 注意: `web.py` 的实现破坏了 `cgitb` 模块，因为它截取了 `stdout`。 可以通过以下的方法来解决该问题：
 
-```
+```py
 import cgitb; cgitb.enable()
 import sys
 
@@ -171,14 +171,14 @@ FastCGI 很容易配置，运行方式如同 mod_python。
 
 添加以下到 `.htaccess`：
 
-```
+```py
 <Files code.py>      SetHandler fastcgi-script
 </Files> 
 ```
 
 不幸的是, 不像 lighttpd, Apache 不能够暗示你的 web.py 脚本以 FastCGI 服务器的形式工作，因此你需要明确的告诉 web.py。 添加以下到 `code.py`的 `if __name__ == "__main__":` 行前：
 
-```
+```py
 web.wsgi.runwsgi = lambda func, addr=None: web.wsgi.runfcgi(func, addr) 
 ```
 
@@ -190,14 +190,14 @@ web.wsgi.runwsgi = lambda func, addr=None: web.wsgi.runfcgi(func, addr)
 
 [`www.mems-exchange.org/software/scgi/`](https://www.mems-exchange.org/software/scgi/) 从 [`www.mems-exchange.org/software/files/mod_scgi/`](http://www.mems-exchange.org/software/files/mod_scgi/) 下载 `mod_scgi` 代码 windows apache 用户： 编辑 httpd.conf：
 
-```
+```py
 LoadModule scgi_module Modules/mod_scgi.so
 SCGIMount / 127.0.0.1:8080 
 ```
 
 重启 apache，并在命令行中如下方式启动 code.py：
 
-```
+```py
 python code.py 127.0.0.1:8080 scgi 
 ```
 
@@ -209,7 +209,7 @@ mod_python 运行方式如同 FastCGI， 但不是那么方便配置。
 
 对于 Python 2.5 按照如下：
 
-```
+```py
 cd /usr/lib/python2.5/wsgiref
 # or in windows: cd /python2.5/lib/wsgiref
 wget -O modpython_gateway.py http://projects.amor.org/misc/browser/modpython_gateway.py?format=raw
@@ -218,7 +218,7 @@ wget -O modpython_gateway.py http://projects.amor.org/misc/browser/modpython_gat
 
 对于 Python <2.5 按照如下：
 
-```
+```py
 cd /usr/lib/python2.4/site-packages
 # or in windows: cd /python2.4/lib/site-packages
 svn co svn://svn.eby-sarna.com/svnroot/wsgiref/wsgiref
@@ -229,14 +229,14 @@ wget -O modpython_gateway.py http://projects.amor.org/misc/browser/modpython_gat
 
 重命名 `code.py` 为 `codep.py` 或别的名字， 添加：
 
-```
+```py
 app = web.application(urls, globals())
 main = app.wsgifunc() 
 ```
 
 在 `.htaccess` 中， 添加：
 
-```
+```py
 AddHandler python-program .py
 PythonHandler wsgiref.modpython_gateway::handler
 PythonOption wsgi.application codep::main 
@@ -252,14 +252,14 @@ mod_wsgi 是一个新的 Apache 模块 [通常优于 mod_python](http://code.goo
 
 在 `code.py` 的最后添加：
 
-```
+```py
 app = web.application(urls, globals(), autoreload=False)
 application = app.wsgifunc() 
 ```
 
 mod_wsgi 提供 [许多可行方法](http://code.google.com/p/modwsgi/wiki/ConfigurationDirectives) 来实现 WSGI 应用, 但一种简单的方法是添加以下到 .htaccess：
 
-```
+```py
 <Files code.py>
     SetHandler wsgi-script
     Options ExecCGI FollowSymLinks
@@ -268,7 +268,7 @@ mod_wsgi 提供 [许多可行方法](http://code.google.com/p/modwsgi/wiki/Confi
 
 如果在 apache 的 error.log 文件中出现 "ImportError: No module named web"， 在导入 web 之前，你可能需要在 code.py 中尝试设置绝对路径：
 
-```
+```py
 import sys, os
 abspath = os.path.dirname(__file__)
 sys.path.append(abspath)
@@ -284,7 +284,7 @@ import web
 
 如果希望 web.py 能够通过 '[`example.com`](http://example.com)' 访问，代替使用 '[`example.com/code.py/'，`](http://example.com/code.py/'，) 添加以下法则到 `.htaccess` 文件：
 
-```
+```py
 <IfModule mod_rewrite.c>      
   RewriteEngine on
   RewriteBase /

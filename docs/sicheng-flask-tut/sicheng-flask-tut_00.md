@@ -15,7 +15,7 @@
 
 程序员的经典学习方法，从 Hello World 开始。不要忘了，先安装 python, pip，然后运行”pip install Flask”，环境就装好了。当然本人还是强烈建议使用 virtualenv 来安装环境。细节就不多说了，让我们写个 Hello World 吧：
 
-```
+```py
 from flask import Flask
 app = Flask(__name__)
 
@@ -30,7 +30,7 @@ if __name__ == '__main__':
 
 一个 Web 应用的代码就写完了，对，就是这么简单！保存为”hello.py”，打开控制台，到该文件目录下，运行
 
-```
+```py
 $ python hello.py
 ```
 
@@ -40,7 +40,7 @@ $ python hello.py
 
 1.  首先引入了 Flask 包，并创建一个 Web 应用的实例”app”
 
-```
+```py
 from flask import Flask
 app = Flask(__name__)
 
@@ -50,7 +50,7 @@ app = Flask(__name__)
 
 *   定义路由规则
 
-```
+```py
 @app.route('/')
 
 ```
@@ -59,7 +59,7 @@ app = Flask(__name__)
 
 *   处理请求
 
-```
+```py
 def index():
     return '<h1>Hello World</h1>'
 
@@ -69,7 +69,7 @@ def index():
 
 *   启动 Web 服务器
 
-```
+```py
 if __name__ == '__main__':
     app.run()
 
@@ -77,7 +77,7 @@ if __name__ == '__main__':
 
 当本文件为程序入口（也就是用 python 命令直接执行本文件）时，就会通过”app.run()”启动 Web 服务器。如果不是程序入口，那么该文件就是一个模块。Web 服务器会默认监听本地的 5000 端口，但不支持远程访问。如果你想支持远程，需要在”run()”方法传入”host=0.0.0.0″，想改变监听端口的话，传入”port=端口号”，你还可以设置调试模式。具体例子如下：
 
-```
+```py
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8888, debug=True)
 

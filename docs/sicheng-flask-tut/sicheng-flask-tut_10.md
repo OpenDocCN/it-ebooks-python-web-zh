@@ -18,7 +18,7 @@
 
 Flask 响应流的实现原理就是通过 Python 的生成器，也就是大家所熟知的 yield 的表达式，将 yield 的内容直接发送到客户端。下面就是一个简单的实现：
 
-```
+```py
 from flask import Flask, Response
 
 app = Flask(__name__)
@@ -43,7 +43,7 @@ def generate_large_csv():
 
 我们将上述方法应用到模板中，如果模板的内容很大，怎么采用流的方式呢？这里我们要自己写个流式渲染模板的方法。
 
-```
+```py
 # 流式渲染模板
 def stream_template(template_name, **context):
     # 将 app 中的请求上下文内容更新至传入的上下文对象 context，
@@ -64,7 +64,7 @@ def stream_template(template_name, **context):
 
 现在我们就可以在视图方法中，采用”stream_template()”，而不是以前介绍的”render_template()”来渲染模板了：
 
-```
+```py
 @app.route('/stream.html')
 def render_large_template():
     file = open('server.log')
@@ -77,7 +77,7 @@ def render_large_template():
 
 另外注意，在生成器中是无法访问请求上下文的。不过 Flask 从版本 0.9 开始提供了”stream_with_context()”方法，它允许生成器在运行期间获取请求上下文：
 
-```
+```py
 from flask import request, stream_with_context
 
 @app.route('/method')
@@ -98,7 +98,7 @@ def streamed_response():
 
 1.  首先建立一个让用户上传文件的页面，我们将其放在模板”upload.html”中
 
-```
+```py
 <!DOCTYPE html>
 <title>Upload File</title>
 <h1>Upload new File</h1>
@@ -113,7 +113,7 @@ def streamed_response():
 
 *   定义一个文件合法性检查函数
 
-```
+```py
 # 设置允许上传的文件类型
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg'])
 
@@ -135,7 +135,7 @@ def allowed_file(filename):
 
 我们将第 3 和第 4 步都放在视图函数中，代码如下：
 
-```
+```py
 import os
 from flask import flask, render_template
 from werkzeug import secure_filename
@@ -182,7 +182,7 @@ def upload_file():
 
 另外 Flask 从 0.5 版本开始提供了一个简便的方法来让用户获取已上传的文件：
 
-```
+```py
 from flask import send_from_directory
 
 @app.route('/uploads/<filename>')

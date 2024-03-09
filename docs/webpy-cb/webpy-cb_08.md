@@ -8,7 +8,7 @@ You want to test your web.py application.
 
 ## Solution
 
-```
+```py
 from paste.fixture import TestApp
 from nose.tools import *
 from code import app
@@ -30,7 +30,7 @@ This example makes use of the Paste and Nose libraries. [Paste](http://pythonpas
 
 This code resides in a file called test_code.py. The directory layout of the application looks like this:
 
-```
+```py
 ./
 code.py
 ./test
@@ -39,13 +39,13 @@ code.py
 
 Most of the code example above should be fairly self-explanatory. From our main module, code, we import app, which is defined in the usual way:
 
-```
+```py
 app = web.application(urls, globals()) 
 ```
 
 To set up the test, we pass its wsgifunc() to Paste's TestApp, as you have already seen in the example.
 
-```
+```py
 app = TestApp(app.wsgifunc(*middleware)) 
 ```
 
@@ -55,13 +55,13 @@ assert_equal() is one of the methods provided by nose's utils, and works just li
 
 In order to avoid kicking off web.py's webserver when we run our tests, a change is required to the line which calls run(). It normally looks something like this:
 
-```
+```py
 if __name__ == "__main__": app.run() 
 ```
 
 We can define an environment variable, such as WEBPY_ENV=test, when we run our tests. In that case, the above line becomes the following:
 
-```
+```py
 import os
 
 def is_test():
@@ -73,7 +73,7 @@ if (not is_test()) and __name__ == "__main__": app.run()
 
 Then, it's simply a matter of running nosetests like so:
 
-```
+```py
 WEBPY_ENV=test nosetests 
 ```
 
@@ -81,7 +81,7 @@ The is_test() function comes in handy for other things, such as doing conditiona
 
 # RESTful doctesting using app.request
 
-```
+```py
 ## !/usr/bin/env python
 
 """

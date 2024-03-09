@@ -10,7 +10,7 @@
 
 Django 项目建成后, 默认设置了使用 SQLite 数据库, 在 my_blog/my_blog/setting.py 中可以查看和修改数据库设置:
 
-```
+```py
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -25,7 +25,7 @@ DATABASES = {
 
 在 my_blog/article/models.py 下编写如下程序:
 
-```
+```py
 from django.db import models
 
 # Create your models here.
@@ -51,13 +51,13 @@ class Article(models.Model) :
 
 # 同步数据库
 
-```
+```py
 $ python manage.py migrate #命令行运行该命令 
 ```
 
 因为我们已经执行过该命令会出现如下提示
 
-```
+```py
 Operations to perform:
   Apply all migrations: admin, contenttypes, sessions, auth
 Running migrations:
@@ -68,7 +68,7 @@ Running migrations:
 
 那么现在需要执行下面的命令
 
-```
+```py
 $ python manage.py makemigrations
 #得到如下提示
 Migrations for 'article':
@@ -78,7 +78,7 @@ Migrations for 'article':
 
 现在重新运行以下命令
 
-```
+```py
 $ python manage.py migrate
 #出现如下提示表示操作成功
 Operations to perform:
@@ -93,7 +93,7 @@ Running migrations:
 
 现在我们进入 Django 中的交互式 shell 来进行数据库的增删改查等操作
 
-```
+```py
 $ python manage.py shell
 Python 3.4.2 (v3.4.2:ab2c023a9432, Oct  5 2014, 20:42:22)
 [GCC 4.2.1 (Apple Inc. build 5666) (dot 3)] on darwin
@@ -104,7 +104,7 @@ Type "help", "copyright", "credits" or "license" for more information.
 
 > 这里进入 Django 的 shell 和 python 内置的 shell 是非常类似的
 
-```
+```py
 >>> from article.models import Article
 >>> #create 数据库增加操作
 >>> Article.objects.create(title = 'Hello World', category = 'Python', content = '我们来做一个简单的数据库增加操作')

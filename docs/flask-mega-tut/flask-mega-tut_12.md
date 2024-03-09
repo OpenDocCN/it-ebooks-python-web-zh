@@ -44,13 +44,13 @@ Bootstrap 擅长如下这些东西:
 
 例如，如果我们存储一个名为 *image.png* 文件在 */app/static* 中，我们能够在模板中显示带有如下标签的图片:
 
-```
+```py
 <img src="/static/image.png" /> 
 ```
 
 我们将会根据如下结构来安装 Bootstrap 框架:
 
-```
+```py
 /app
     /static
         /css
@@ -65,7 +65,7 @@ Bootstrap 擅长如下这些东西:
 
 根据 [说明](http://twitter.github.com/bootstrap/getting-started.html#html-template) [http://twitter.github.com/bootstrap/getting-started.html#html-template] ，我们必须在基础模板中的 *head* 部分加入如下内容:
 
-```
+```py
 <!DOCTYPE html>
 <html lang="en">
   <head>

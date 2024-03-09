@@ -13,13 +13,13 @@
 
 如果你还没有安装 Flask-Babel，现在是时候安装。对于 Linux 和 Mac 用户:
 
-```
+```py
 flask/bin/pip install flask-babel 
 ```
 
 对于 Windows 用户:
 
-```
+```py
 flask\Scripts\pip install flask-babel 
 ```
 
@@ -27,14 +27,14 @@ flask\Scripts\pip install flask-babel
 
 Flask-Babel 可以简单地通过创建 *Babel* 类的一个实例并且传入 Flask 应用对象给它来初始化(文件 *app/__init__.py*):
 
-```
+```py
 from flask.ext.babel import Babel
 babel = Babel(app) 
 ```
 
 我们也需要决定我们将要提供翻译的语言种类。现在我们将要开始一个西班牙版本，因为我们有一个西语的翻译器在手上，以后添加其它语言的版本也是很容易的。支持语言的列表被添加到配置文件中(文件 *config.py*):
 
-```
+```py
 # -*- coding: utf-8 -*-
 # ...
 # available languages
@@ -50,7 +50,7 @@ LANGUAGES = {
 
 接下来的一个配置就是我们需要一个 *Babel* 用于决定使用哪种语言的函数(文件 *app/views.py*):
 
-```
+```py
 from app import babel
 from config import LANGUAGES
 
@@ -63,7 +63,7 @@ def get_locale():
 
 *Accept-Languages* 头在大多数浏览器上被默认配置成操作系统层的所选择的语言，但是所有的浏览器给我们机会选择其它的语言。用户可以提供语言列表，每一个都有权重。作为例子，下面是复杂的 *Accept-Languages* 头:
 
-```
+```py
 Accept-Language: da, en-gb;q=0.8, en;q=0.7 
 ```
 
@@ -71,7 +71,7 @@ Accept-Language: da, en-gb;q=0.8, en;q=0.7
 
 最后一项配置是我们需要一个 Babel 配置文件，它告诉 Babel 在我们代码和模板中的哪里去寻找翻译的文本(文件 *babel.cfg*):
 
-```
+```py
 [python: **.py]
 [jinja2: **/templates/**.html]
 extensions=jinja2.ext.autoescape,jinja2.ext.with_ 
@@ -83,7 +83,7 @@ extensions=jinja2.ext.autoescape,jinja2.ext.with_
 
 现在到了这个任务最繁琐的地方。我们需要检查所有的代码和模版标记所有需要翻译的英文文本以便 Babel 能够找到它们。例如，看看从 *after_login* 函数中代码片段:
 
-```
+```py
 if resp.email is None or resp.email == "":
     flash('Invalid login. Please try again.')
     redirect(url_for('login')) 
@@ -91,7 +91,7 @@ if resp.email is None or resp.email == "":
 
 这里有一个闪现消息需要翻译。为了使得 Babel 知道这个文本，只要把这个字符串传入到 *gettext* 函数:
 
-```
+```py
 from flask.ext.babel import gettext
 # ...
 if resp.email is None or resp.email == "":
@@ -101,19 +101,19 @@ if resp.email is None or resp.email == "":
 
 在模板中我们必须做一些类似的工作，但是我们使用 *_()* 来简化 *gettext()*。比如，在我们基础模版中的链接的文本 *Home*:
 
-```
+```py
 <li><a href="{{ url_for('index') }}">Home</a></li> 
 ```
 
 能够被标记翻译如下:
 
-```
+```py
 <li><a href="{{ url_for('index') }}">{{ _('Home') }}</a></li> 
 ```
 
 不幸地是，不是所有我们要翻译的文本像上面一样的简单。作为一个例子，考虑下来自我们的 *post.html* 子模板中的如下的片段:
 
-```
+```py
 <p><a href="{{url_for('user', nickname = post.author.nickname)}}">{{post.author.nickname}}</a> said {{momentjs(post.timestamp).fromNow()}}:</p> 
 ```
 
@@ -121,13 +121,13 @@ if resp.email is None or resp.email == "":
 
 *gettext* 函数是支持使用 *%(name)s* 语法占位符，这也是我们最好的解决办法。下面是一个类似情况的占位符的例子:
 
-```
+```py
 gettext('Hello, %(name)s', name = user.nickname) 
 ```
 
 回到我们的例子，这里是怎样标记文本翻译:
 
-```
+```py
 {% autoescape false %}
 <p>{{ _('%(nickname)s said %(when)s:', nickname = '<a href="%s">%s</a>' % (url_for('user', nickname = post.author.nickname), post.author.nickname), when = momentjs(post.timestamp).fromNow()) }}</p>
 {% endautoescape %} 
@@ -139,7 +139,7 @@ gettext('Hello, %(name)s', name = user.nickname)
 
 最有效的解决方案就是对 *nickname* 字段中使用的字符进行严格的限制。我们开始创建一个函数转换一个无效的 *nickname* 成一个有效(文件 *app/models.py*):
 
-```
+```py
 import re
 
 class User(db.Model):
@@ -153,7 +153,7 @@ class User(db.Model):
 
 当一个用户在页面注册，我们从 OpenID 提供商接收到他或者她的 *nickname*，因此我们必须确保转换这个 *nickname* (文件 *app/views.py*):
 
-```
+```py
 @oid.after_login
 def after_login(resp):
     #...
@@ -165,7 +165,7 @@ def after_login(resp):
 
 同样在编辑用户信息的表单中，那里可以修改 *nickname*，我们需要在那里加强验证不允许非法字符(文件 *app/forms.py*):
 
-```
+```py
 class EditForm(Form):
     #...
     def validate(self):
@@ -191,13 +191,13 @@ class EditForm(Form):
 
 现在我们运行 *pybabel* 提取文本到单独的文件中:
 
-```
+```py
 flask/bin/pybabel extract -F babel.cfg -o messages.pot app 
 ```
 
 Windows 用户使用这个命令:
 
-```
+```py
 flask\Scripts\pybabel extract -F babel.cfg -o messages.pot app 
 ```
 
@@ -209,7 +209,7 @@ flask\Scripts\pybabel extract -F babel.cfg -o messages.pot app
 
 这个过程的下一步就是为一个新语言创建翻译。我们说过我们要做西班牙版本(语言代码为 *es*)，因此这是添加西班牙语到我们应用程序的命令:
 
-```
+```py
 flask/bin/pybabel init -i messages.pot -d app/translations -l es 
 ```
 
@@ -223,7 +223,7 @@ flask/bin/pybabel init -i messages.pot -d app/translations -l es
 
 一旦文本翻译完成并且保存成 *messages.po* 文件，还有另外一个来发布这些文本:
 
-```
+```py
 flask/bin/pybabel compile -d app/translations 
 ```
 
@@ -231,7 +231,7 @@ flask/bin/pybabel compile -d app/translations
 
 翻译已经准备好被使用了。为了验证它你可以修改浏览器上的语言设置让西班牙语为最佳语言，或者你可以直接修改 *get_locale* 函数(文件 *app/views.py*):
 
-```
+```py
 @babel.localeselector
 def get_locale():
     return "es" #request.accept_languages.best_match(LANGUAGES.keys()) 
@@ -243,7 +243,7 @@ def get_locale():
 
 如果在我们的代码或者模版中丢失了一些英文文本的话会发生些什么？任何没有放入 *gettext()* 或者 *_()* 的字符串都不会在翻译文件中，因此 Babel 不会感知这些，它们依然保持英文。一旦我们把丢失的文本添加进 *gettext()*，运行如下命令可以升级翻译文件:
 
-```
+```py
 flask/bin/pybabel extract -F babel.cfg -o messages.pot app
 flask/bin/pybabel update -i messages.pot -d app/translations 
 ```
@@ -262,7 +262,7 @@ flask/bin/pybabel update -i messages.pot -d app/translations
 
 为了能够在模版中加载正确语言版本的 *moment.js*，我们需要把语言的代码加入到 Flask 全局变量，跟记录登录用户是相同的方式(文件 *app/views.py*):
 
-```
+```py
 @app.before_request
 def before_request():
     g.user = current_user
@@ -276,7 +276,7 @@ def before_request():
 
 接着需要在基础模版中修改引用 *moment.js* 的代码(文件 *app/templates/base.html*):
 
-```
+```py
 {% if g.locale != 'en' %}
 <script src="/static/js/moment-{{g.locale}}.min.js"></script>
 {% endif %} 
@@ -288,7 +288,7 @@ def before_request():
 
 Flask-Login 允许用户配置这个消息，因此我们要充分利用不会改变消息只是翻译这一点。因此，我们进行第一次尝试(文件 *app/__init__.py*):
 
-```
+```py
 from flask.ext.babel import gettext
 lm.login_message = gettext('Please log in to access this page.') 
 ```
@@ -297,14 +297,14 @@ lm.login_message = gettext('Please log in to access this page.')
 
 幸好，*Flask-Babel* 提供另外一个函数 *lazy_gettext*，它不会像 *gettext()* 和 *_()* 一样立即翻译，相反它会推迟翻译直到字符串实际上被使用的时候才会翻译。这个函数就可以应用到这里:
 
-```
+```py
 from flask.ext.babel import lazy_gettext
 lm.login_message = lazy_gettext('Please log in to access this page.') 
 ```
 
 最后，当使用 *lazy_gettext* 的时候，*pybabel extract* 命令需要一个额外的 *-k* 的选项指明是 *lazy_gettext* 函数:
 
-```
+```py
 flask/bin/pybabel extract -F babel.cfg -k lazy_gettext -o messages.pot app 
 ```
 
@@ -312,7 +312,7 @@ flask/bin/pybabel extract -F babel.cfg -k lazy_gettext -o messages.pot app
 
 随着 Flask 0.10 的问世，用户会话被序列化成 JSON。这给传入给 *flash()* 的参数的惰性求值带来问题。闪现的消息是被写入到用户会话中，但是用于包裹惰性求值的对象是一个复杂的结构，不能够直接转换成 JSON。Flask 0.9 并不会把用户会话被序列化成 JSON，因此没有这个问题。Flask-Babel 并没有解决这个问题，因此我们必须从我们这一边考虑解决问题。(文件 *app/__init__.py* ):
 
-```
+```py
 from flask.json import JSONEncoder
 
 class CustomJSONEncoder(JSONEncoder):
@@ -336,7 +336,7 @@ app.json_encoder = CustomJSONEncoder
 
 第一个脚本就是添加语言到翻译目录(文件 *tr_init.py*):
 
-```
+```py
 #!flask/bin/python
 import os
 import sys
@@ -354,7 +354,7 @@ os.unlink('messages.pot')
 
 接着一个脚本就是更新语言目录(文件 *tr_update.py*):
 
-```
+```py
 #!flask/bin/python
 import os
 import sys
@@ -369,7 +369,7 @@ os.unlink('messages.pot')
 
 最后，就是编译目录的脚本(文件 *tr_compile.py*):
 
-```
+```py
 #!flask/bin/python
 import os
 import sys

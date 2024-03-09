@@ -27,13 +27,13 @@
 
 如果你暂时没有在虚拟环境上安装 Flask-WhooshAlchemy，请安装它。Windows 用户应该运行这个:
 
-```
+```py
 flask\Scripts\pip install Flask-WhooshAlchemy 
 ```
 
 其它用户必须运行这个:
 
-```
+```py
 flask/bin/pip install Flask-WhooshAlchemy 
 ```
 
@@ -41,7 +41,7 @@ flask/bin/pip install Flask-WhooshAlchemy
 
 非常不幸地是，Flask-WhooshAlchemy 这个包在 Python 3 中存在问题。并且 Flask-WhooshAlchemy 不会兼容 Python 3。我为这个扩展做了一个分支并且做了一些改变以便其兼容 Python 3，因此你们需要卸载官方的版本并且安装我的分支:
 
-```
+```py
 $ flask/bin/pip uninstall flask-whooshalchemy
 $ flask/bin/pip install git+git://github.com/miguelgrinberg/flask-whooshalchemy.git 
 ```
@@ -52,7 +52,7 @@ $ flask/bin/pip install git+git://github.com/miguelgrinberg/flask-whooshalchemy.
 
 配置 Flask-WhooshAlchemy 也是相当简单。我们只需要告诉扩展全文搜索数据库的名称(文件 *config.py*):
 
-```
+```py
 WHOOSH_BASE = os.path.join(basedir, 'search.db') 
 ```
 
@@ -60,7 +60,7 @@ WHOOSH_BASE = os.path.join(basedir, 'search.db')
 
 因为把 Flask-WhooshAlchemy 整合进 Flask-SQLAlchemy，我们需要在模型的类中指明哪些数据需要建立搜索索引(文件 *app/models.py*):
 
-```
+```py
 from app import app
 
 import sys
@@ -93,7 +93,7 @@ if enable_search:
 
 因为之前存储在数据库的 blog 是没有建立索引的。为了保持数据库和全文搜索引擎的同步，我们需要删除之前撰写的 blog:
 
-```
+```py
 >>> from app.models import Post
 >>> from app import db
 >>> for post in Post.query.all():
@@ -107,7 +107,7 @@ if enable_search:
 
 在 Python 提示符下，我们可以按如下的去做:
 
-```
+```py
 >>> from app.models import User, Post
 >>> from app import db
 >>> import datetime
@@ -123,7 +123,7 @@ if enable_search:
 
 现在我们在全文索引中有一些 blog，我们可以这样搜索:
 
-```
+```py
 >>> Post.query.whoosh_search('post').all()
 [<Post u'my second post'>, <Post u'my first post'>, <Post u'my third and last post'>]
 >>> Post.query.whoosh_search('second').all()
@@ -142,7 +142,7 @@ if enable_search:
 
 在配置文件中，我们需要指明搜索结果返回的最大数量(文件 *config.py*):
 
-```
+```py
 MAX_SEARCH_RESULTS = 50 
 ```
 
@@ -152,14 +152,14 @@ MAX_SEARCH_RESULTS = 50
 
 首先，我们添加一个搜索表单类(文件 *app/forms.py*):
 
-```
+```py
 class SearchForm(Form):
     search = StringField('search', validators=[DataRequired()]) 
 ```
 
 接着我们必须创建一个搜索表单对象并且使得它对所有模版中可用，因为我们将搜索表单放在导航栏中，导航栏是所有页面共有的。最容易的方式就是在 *before_request* 函数中创建这个表单对象，接着把它放在全局变量 *g* 中(文件 *app/views.py*):
 
-```
+```py
 from forms import SearchForm
 
 @app.before_request
@@ -174,7 +174,7 @@ def before_request():
 
 我们接着添加表单到模板中(文件 *app/templates/base.html*):
 
-```
+```py
 <div>Microblog:
     <a href="{{ url_for('index') }}">Home</a>
     {% if g.user.is_authenticated() %}
@@ -191,7 +191,7 @@ def before_request():
 
 上面的模版中，我们在 *action* 字段中设置发送搜索请求到 *search* 视图函数。*search* 视图函数如下(文件 *app/views.py*):
 
-```
+```py
 @app.route('/search', methods = ['POST'])
 @login_required
 def search():
@@ -206,7 +206,7 @@ def search():
 
 一旦查询的关键字被接收到，*search_results* 函数就会开始工作(文件 *app/views.py*):
 
-```
+```py
 from config import MAX_SEARCH_RESULTS
 
 @app.route('/search_results/<query>')
@@ -222,7 +222,7 @@ def search_results(query):
 
 最后一部分就是搜索结果的模版(文件 *app/templates/search_results.html*):
 
-```
+```py
 <!-- extend base layout -->
 {% extends "base.html" %}
 

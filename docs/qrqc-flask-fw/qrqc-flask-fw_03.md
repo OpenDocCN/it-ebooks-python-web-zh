@@ -12,7 +12,7 @@
 
 按照以下命令建立 Flask 项目 HelloWorld:
 
-```
+```py
 mkdir HelloWorld
 mkdir HelloWorld/static
 mkdir HelloWorld/templates
@@ -25,7 +25,7 @@ touch HelloWorld/index.py
 
 以用户注册为例子，我们需要向服务器`/register`传送用户名`name`和密码`password`。如下编写`HelloWorld/index.py`。
 
-```
+```py
 from flask import Flask, request
 
 app = Flask(__name__)
@@ -50,7 +50,7 @@ if __name__ == '__main__':
 
 `@app.route('/register', methods=['POST'])`是指 url`/register`只接受 POST 方法。也可以根据需要修改`methods`参数，例如
 
-```
+```py
 @app.route('/register', methods=['GET', 'POST'])  # 接受 GET 和 POST 方法 
 ```
 
@@ -58,7 +58,7 @@ if __name__ == '__main__':
 
 客户端`client.py`内容如下：
 
-```
+```py
 import requests
 
 user_info = {'name': 'letian', 'password': '123'}
@@ -69,13 +69,13 @@ print r.text
 
 运行`HelloWorld/index.py`，然后运行`client.py`。`client.py`将输出：
 
-```
+```py
 welcome 
 ```
 
 而`HelloWorld/index.py`在终端中输出以下调试信息（通过`print`输出）：
 
-```
+```py
 Content-Length: 24
 User-Agent: python-requests/2.2.1 CPython/2.7.6 Windows/8
 Host: 127.0.0.1:5000
@@ -94,7 +94,7 @@ little apple
 
 `print request.form`的结果是：
 
-```
+```py
 ImmutableMultiDict([('password', u'123'), ('name', u'letian')]) 
 ```
 
@@ -102,19 +102,19 @@ ImmutableMultiDict([('password', u'123'), ('name', u'letian')])
 
 `request.form['name']`和`request.form.get('name')`都可以获取`name`对应的值。对于`request.form.get()`可以为参数`default`指定值以作为默认值。所以：
 
-```
+```py
 print request.form.get('nickname', default='little apple') 
 ```
 
 输出的是默认值
 
-```
+```py
 little apple 
 ```
 
 如果`name`有多个值，可以使用`request.form.getlist('name')`，该方法将返回一个列表。我们将 client.py 改一下：
 
-```
+```py
 import requests
 
 user_info = {'name': ['letian', 'letian2'], 'password': '123'}
@@ -125,7 +125,7 @@ print r.text
 
 此时运行`client.py`，`print request.form.getlist('name')`将输出：
 
-```
+```py
 [u'letian', u'letian2'] 
 ```
 
@@ -139,19 +139,19 @@ print r.text
 
 首先在项目`HelloWorld`中创建目录`static/uploads`：
 
-```
+```py
 $ mkdir HelloWorld/static/uploads 
 ```
 
 `werkzeug`库可以判断文件名是否安全，例如防止文件名是`../../../a.png`，安装这个库：
 
-```
+```py
 $ pip install werkzeug 
 ```
 
 修改`HelloWorld/index.py`：
 
-```
+```py
 from flask import Flask, request
 from werkzeug.utils import secure_filename
 import os
@@ -189,7 +189,7 @@ if __name__ == '__main__':
 
 好了，定制客户端`client.py`：
 
-```
+```py
 import requests
 
 files = {'image01': open('01.jpg', 'rb')}
@@ -201,7 +201,7 @@ print r.text
 
 当前目录下的`01.jpg`将上传到服务器。运行`client.py`，结果如下：
 
-```
+```py
 hello, letian. success 
 ```
 
@@ -209,7 +209,7 @@ hello, letian. success
 
 要控制上产文件的大小，可以设置请求实体的大小，例如：
 
-```
+```py
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 #16MB 
 ```
 
@@ -217,7 +217,7 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 #16MB
 
 如果要获取上传文件的内容可以：
 
-```
+```py
 file_content = request.files['image01'].stream.read() 
 ```
 
@@ -229,7 +229,7 @@ file_content = request.files['image01'].stream.read()
 
 修改`HelloWorld/index.py`：
 
-```
+```py
 from flask import Flask, request, Response
 import json
 
@@ -254,7 +254,7 @@ if __name__ == '__main__':
 
 修改`client.py`：
 
-```
+```py
 import requests, json
 
 user_info = {'name': 'letian'}
@@ -266,14 +266,14 @@ print r.json()
 
 运行`client.py`，将显示：
 
-```
+```py
 CaseInsensitiveDict({'date': 'Tue, 24 Jun 2014 12:10:51 GMT', 'content-length': '24', 'content-type': 'application/json', 'server': 'Werkzeug/0.9.6 Python/2.7.6'})
 {u'info': u'hello letian'} 
 ```
 
 而`HelloWorld/index.py`的调试信息为：
 
-```
+```py
 Content-Length: 18
 User-Agent: python-requests/2.2.1 CPython/2.7.6 Windows/8
 Host: 127.0.0.1:5000
@@ -286,7 +286,7 @@ Accept-Encoding: gzip, deflate, compress
 
 这个比较简单，就不多说了。另外，如果需要响应头具有更好的可定制性，可以如下修改`my_json()`函数：
 
-```
+```py
 @app.route('/json', methods=['POST'])
 def my_json():
     print request.headers

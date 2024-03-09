@@ -20,7 +20,7 @@
 
 *myapp/util/security.py*
 
-```
+```py
 from itsdangerous import URLSafeTimedSerializer
 
 from .. import app
@@ -32,7 +32,7 @@ ts = URLSafeTimedSerializer(app.config["SECRET_KEY"])
 
 *myapp/views.py*
 
-```
+```py
 from flask import redirect, render_template, url_for
 
 from . import app, db
@@ -76,7 +76,7 @@ def create_account():
 
 *myapp/templates/email/activate.html*
 
-```
+```py
 你的账户已经成功创建<br>
 请点击打开以下链接来激活你的邮箱：
 
@@ -94,7 +94,7 @@ OK，所以现在我们只需要实现一个处理那个邮件中的验证链接
 
 *myapp/views.py*
 
-```
+```py
 @app.route('/confirm/<token>')
 def confirm_email(token):
     try:
@@ -126,7 +126,7 @@ def confirm_email(token):
 
 myapp/__init__.py
 
-```
+```py
 from flask_bcrypt import Bcrypt
 
 bcrypt = Bcrypt(app) 
@@ -140,7 +140,7 @@ Bcrypt 算法之所以深受欢迎，其中一个原因是它的“未来拓展�
 
 *benchmark.py*
 
-```
+```py
 from flask_bcrypt import generate_password_hash
 
 # 改变 round 的次数（第二个参数），直到运行时间在 0.25 到 0.5 之间。
@@ -149,7 +149,7 @@ generate_password_hash('password1', 12)
 
 现在我们可以用`time`命令测几次看看。
 
-```
+```py
 $ time python test.py
 
 real    0m0.496s
@@ -161,7 +161,7 @@ sys     0m0.024s
 
 config.py
 
-```
+```py
 BCRYPT_LOG_ROUNDS = 12 
 ```
 
@@ -169,7 +169,7 @@ BCRYPT_LOG_ROUNDS = 12
 
 myapp/models.py
 
-```
+```py
 from sqlalchemy.ext.hybrid import hybrid_property
 
 from . import bcrypt, db
@@ -194,7 +194,7 @@ class User(db.Model):
 
 myapp/views.py
 
-```
+```py
 from . import app, db
 from .forms import EmailPasswordForm
 from .models import User
@@ -219,7 +219,7 @@ def signup():
 
 myapp/forms.py
 
-```
+```py
 from flask_wtf import Form
 from wtforms import StringField, PasswordField
 from wtforms.validators import DataRequired
@@ -233,7 +233,7 @@ class UsernamePasswordForm(Form):
 
 myapp/models.py
 
-```
+```py
 from . import db
 
 class User(db.Model):
@@ -257,7 +257,7 @@ class User(db.Model):
 
 *myapp/__init__.py*
 
-```
+```py
 from flask_login import LoginManager
 
 # 创建并配置应用
@@ -282,7 +282,7 @@ def load_user(userid):
 
 *myapp/views.py*
 
-```
+```py
 from flask import redirect, url_for
 
 from flask_login import login_user
@@ -309,7 +309,7 @@ def signin():
 
 *myapp/views.py*
 
-```
+```py
 from flask import redirect, url_for
 from flask_login import logout_user
 
@@ -334,7 +334,7 @@ def signout():
 
 myapp/forms.py
 
-```
+```py
 from flask_wtf import Form
 
 from wtforms import StringField, PasswordField
@@ -360,7 +360,7 @@ class PasswordForm(Form):
 
 myapp/views.py
 
-```
+```py
 from flask import redirect, url_for, render_template
 
 from . import app
@@ -398,7 +398,7 @@ def reset():
 
 myapp/views.py
 
-```
+```py
 from flask import redirect, url_for, render_template
 
 from . import app, db
@@ -432,7 +432,7 @@ def reset_with_token(token):
 
 *myapp/templates/reset_with_token.html*
 
-```
+```py
 {% extends "layout.html" %}
 
 {% block body %}

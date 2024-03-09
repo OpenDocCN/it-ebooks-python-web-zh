@@ -50,13 +50,13 @@
 
 示例代码将以代码块形式来呈现。
 
-```
+```py
 print “Hello world!” 
 ```
 
 目录列表有时会被用来展示一个应用或目录的大致结构。
 
-```
+```py
 static/
   style.css
   logo.png

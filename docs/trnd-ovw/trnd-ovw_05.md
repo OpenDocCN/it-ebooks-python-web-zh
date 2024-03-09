@@ -10,7 +10,7 @@ Tornado 的 Web 程序会将 URL 或者 URL 范式映射到 `tornado.web.Request
 
 下面的代码将 URL 根目录 `/` 映射到 `MainHandler`，还将一个 URL 范式 `/story/([0-9]+)` 映射到 `StoryHandler`。正则表达式匹配的分组会作为参数引入 的相应方法中：
 
-```
+```py
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
         self.write("You requested the main page")
@@ -27,7 +27,7 @@ application = tornado.web.Application([
 
 你可以使用 `get_argument()` 方法来获取查询字符串参数，以及解析 `POST` 的内容：
 
-```
+```py
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
         self.write('<html><body><form action="/" method="post">'
@@ -44,7 +44,7 @@ class MainHandler(tornado.web.RequestHandler):
 
 如果你想要返回一个错误信息给客户端，例如“403 unauthorized”，只需要抛出一个 `tornado.web.HTTPError` 异常：
 
-```
+```py
 if not self.user_is_logged_in():
     raise tornado.web.HTTPError(403) 
 ```
@@ -71,7 +71,7 @@ if not self.user_is_logged_in():
 
 下面是一个示范 `initialize()` 方法的例子：
 
-```
+```py
 class ProfileHandler(RequestHandler):
     def initialize(self, database):
         self.database = database
@@ -104,7 +104,7 @@ Tornado 中的重定向有两种主要方法：`self.redirect`，或者使用 `R
 
 `permanent` 的默认值是 `False`，这是为了适用于常见的操作，例如用户端在成功发送 POST 请求 以后的重定向。
 
-```
+```py
 self.redirect('/some-canonical-page', permanent=True) 
 ```
 
@@ -112,7 +112,7 @@ self.redirect('/some-canonical-page', permanent=True)
 
 例如本站的下载 URL，由较短的 URL 重定向到较长的 URL 的方式是这样的：
 
-```
+```py
 application = tornado.wsgi.WSGIApplication([
     (r"/([a-z]*)", ContentHandler),
     (r"/static/tornado-0.2.tar.gz", tornado.web.RedirectHandler,
@@ -122,7 +122,7 @@ application = tornado.wsgi.WSGIApplication([
 
 `RedirectHandler` 的默认状态码是 `301 Moved Permanently`，不过如果你想使用 `302 Found` 状态码，你需要将 `permanent` 设置为 `False`。
 
-```
+```py
 application = tornado.wsgi.WSGIApplication([
     (r"/foo", tornado.web.RedirectHandler, {"url":"/bar", "permanent":False}),
 ], **settings) 
@@ -138,7 +138,7 @@ application = tornado.wsgi.WSGIApplication([
 
 Tornado 模板其实就是 HTML 文件（也可以是任何文本格式的文件），其中包含了 Python 控制结构和表达式，这些控制结构和表达式需要放在规定的格式标记符(markup)中：
 
-```
+```py
 <html>
    <head>
       <title>{{ title }}</title>
@@ -155,7 +155,7 @@ Tornado 模板其实就是 HTML 文件（也可以是任何文本格式的文件
 
 如果你把上面的代码命名为 "template.html"，保存在 Python 代码的同一目录中，你就可以 这样来渲染它：
 
-```
+```py
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
         items = ["Item 1", "Item 2", "Item 3"]
@@ -198,7 +198,7 @@ Tornado 的模板支持“控制语句”和“表达语句”，控制语句是
 
 你可以使用 `set_cookie` 方法在用户的浏览中设置 cookie：
 
-```
+```py
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
         if not self.get_cookie("mycookie"):
@@ -210,7 +210,7 @@ class MainHandler(tornado.web.RequestHandler):
 
 Cookie 很容易被恶意的客户端伪造。加入你想在 cookie 中保存当前登陆用户的 id 之类的信息，你需要对 cookie 作签名以防止伪造。Tornado 通过 `set_secure_cookie` 和 `get_secure_cookie` 方法直接支持了这种功能。 要使用这些方法，你需要在创建应用时提供一个密钥，名字为 `cookie_secret`。 你可以把它作为一个关键词参数传入应用的设置中：
 
-```
+```py
 application = tornado.web.Application([
     (r"/", MainHandler),
 ], cookie_secret="61oETzKXQAGaYdkL5gEmGeJJFuYh7EQnp2XdTP1o/Vo=") 
@@ -218,7 +218,7 @@ application = tornado.web.Application([
 
 签名过的 cookie 中包含了编码过的 cookie 值，另外还有一个时间戳和一个 [HMAC](http://en.wikipedia.org/wiki/HMAC) 签名。如果 cookie 已经过期或者 签名不匹配，`get_secure_cookie` 将返回 `None`，这和没有设置 cookie 时的 返回值是一样的。上面例子的安全 cookie 版本如下：
 
-```
+```py
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
         if not self.get_secure_cookie("mycookie"):
@@ -236,7 +236,7 @@ class MainHandler(tornado.web.RequestHandler):
 
 要在应用程序实现用户认证的功能，你需要复写请求处理中 `get_current_user()` 这 个方法，在其中判定当前用户的状态，比如通过 cookie。下面的例子让用户简单地使用一个 nickname 登陆应用，该登陆信息将被保存到 cookie 中：
 
-```
+```py
 class BaseHandler(tornado.web.RequestHandler):
     def get_current_user(self):
         return self.get_secure_cookie("user")
@@ -268,7 +268,7 @@ application = tornado.web.Application([
 
 对于那些必须要求用户登陆的操作，可以使用装饰器 `tornado.web.authenticated`。 如果一个方法套上了这个装饰器，但是当前用户并没有登陆的话，页面会被重定向到 `login_url`（应用配置中的一个选项），上面的例子可以被改写成：
 
-```
+```py
 class MainHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
@@ -299,7 +299,7 @@ Tornado 内部集成了对第三方认证形式的支持，比如 Google 的 OAu
 
 Tornado 有内建的 XSRF 的防范机制，要使用此机制，你需要在应用配置中加上 `xsrf_cookies` 设定：
 
-```
+```py
 settings = {
     "cookie_secret": "61oETzKXQAGaYdkL5gEmGeJJFuYh7EQnp2XdTP1o/Vo=",
     "login_url": "/login",
@@ -313,7 +313,7 @@ application = tornado.web.Application([
 
 如果设置了 `xsrf_cookies`，那么 Tornado 的 Web 应用将对所有用户设置一个 `_xsrf` 的 cookie 值，如果 `POST` `PUT` `DELET` 请求中没有这 个 cookie 值，那么这个请求会被直接拒绝。如果你开启了这个机制，那么在所有 被提交的表单中，你都需要加上一个域来提供这个值。你可以通过在模板中使用 专门的函数 `xsrf_form_html()` 来做到这一点：
 
-```
+```py
 <form action="/new_message" method="post">
   {{ xsrf_form_html() }}
   <input type="text" name="message"/>
@@ -323,7 +323,7 @@ application = tornado.web.Application([
 
 如果你提交的是 AJAX 的 `POST` 请求，你还是需要在每一个请求中通过脚本添加上 `_xsrf` 这个值。下面是在 FriendFeed 中的 AJAX 的 `POST` 请求，使用了 [jQuery](http://jquery.com/) 函数来为所有请求组东添加 `_xsrf` 值：
 
-```
+```py
 function getCookie(name) {
     var r = document.cookie.match("\\b" + name + "=([^;]*)\\b");
     return r ? r[1] : undefined;
@@ -348,7 +348,7 @@ jQuery.postJSON = function(url, args, callback) {
 
 你能通过在应用配置中指定 `static_path` 选项来提供静态文件服务：
 
-```
+```py
 settings = {
     "static_path": os.path.join(os.path.dirname(__file__), "static"),
     "cookie_secret": "61oETzKXQAGaYdkL5gEmGeJJFuYh7EQnp2XdTP1o/Vo=",
@@ -370,7 +370,7 @@ application = tornado.web.Application([
 
 要使用这个功能，在模板中就不要直接使用静态文件的 URL 地址了，你需要在 HTML 中使用 `static_url()` 这个方法来提供 URL 地址：
 
-```
+```py
 <html>
    <head>
       <title>FriendFeed - {{ _("Home") }}</title>
@@ -387,7 +387,7 @@ application = tornado.web.Application([
 
 在生产环境下，你可能会使用[nginx](http://nginx.net/)这样的更有利于静态文件 伺服的服务器，你可以将 Tornado 的文件缓存指定到任何静态文件服务器上面，下面 是 FriendFeed 使用的 nginx 的相关配置：
 
-```
+```py
 location /static/ {
     root /var/friendfeed/static;
     if ($query_string) {
@@ -402,13 +402,13 @@ location /static/ {
 
 不管有没有登陆，当前用户的 locale 设置可以通过两种方式访问到：请求处理器的 `self.locale` 对象、以及模板中的 `locale` 值。Locale 的名称（如 `en_US`）可以 通过 `locale.name` 这个变量访问到，你可以使用 `locale.translate` 来进行本地化 翻译。在模板中，有一个全局方法叫 `_()`，它的作用就是进行本地化的翻译。这个 翻译方法有两种使用形式：
 
-```
+```py
 _("Translate this string") 
 ```
 
 它会基于当前 locale 设置直接进行翻译，还有一种是：
 
-```
+```py
 _("A person liked this", "%(num)d people liked this", len(people)) % {"num": len(people)} 
 ```
 
@@ -418,7 +418,7 @@ _("A person liked this", "%(num)d people liked this", len(people)) % {"num": len
 
 一个本地化翻译的模板例子：
 
-```
+```py
 <html>
    <head>
       <title>FriendFeed - {{ _("Sign in") }}</title>
@@ -436,7 +436,7 @@ _("A person liked this", "%(num)d people liked this", len(people)) % {"num": len
 
 默认情况下，我们通过 `Accept-Language` 这个头来判定用户的 locale，如果没有， 则取 `en_US` 这个值。如果希望用户手动设置一个 locale 偏好，可以在处理请求的 类中复写 `get_user_locale` 方法：
 
-```
+```py
 class BaseHandler(tornado.web.RequestHandler):
     def get_current_user(self):
         user_id = self.get_secure_cookie("user")
@@ -454,7 +454,7 @@ class BaseHandler(tornado.web.RequestHandler):
 
 你可以使用 `tornado.locale.load_translations` 方法获取应用中的所有已存在的翻 译。它会找到包含有特定名字的 CSV 文件的目录，如 `es_GT.csv` `fr_CA.csv` 这 些 csv 文件。然后从这些 CSV 文件中读取出所有的与特定语言相关的翻译内容。典型的用例 里面，我们会在 Tornado 服务器的 `main()` 方法中调用一次该函数：
 
-```
+```py
 def main():
     tornado.locale.load_translations(
         os.path.join(os.path.dirname(__file__), "translations"))
@@ -473,7 +473,7 @@ Tornado 支持一些 UI 模块，它们可以帮你创建标准的，易被重�
 
 例如你正在写一个博客的应用，你希望在首页和单篇文章的页面都显示文章列表，你可以创建 一个叫做 `Entry` 的 UI 模块，让他在两个地方分别显示出来。首选需要为你的 UI 模块 创建一个 Python 模组文件，就叫 `uimodules.py` 好了:
 
-```
+```py
 class Entry(tornado.web.UIModule):
     def render(self, entry, show_comments=False):
         return self.render_string(
@@ -482,7 +482,7 @@ class Entry(tornado.web.UIModule):
 
 然后通过 `ui_modules` 配置项告诉 Tornado 在应用当中使用 `uimodules.py`：
 
-```
+```py
 class HomeHandler(tornado.web.RequestHandler):
     def get(self):
         entries = self.db.query("SELECT * FROM entries ORDER BY date DESC")
@@ -505,7 +505,7 @@ application = tornado.web.Application([
 
 在 `home.html` 中，你不需要写繁复的 HTML 代码，只要引用 `Entry` 就可以了：
 
-```
+```py
 {% for entry in entries %}
   {% module Entry(entry) %}
 {% end %} 
@@ -513,13 +513,13 @@ application = tornado.web.Application([
 
 在 `entry.html` 里面，你需要使用 `show_comments` 参数来引用 `Entry` 模块，用来 显示展开的 `Entry` 内容：
 
-```
+```py
 {% module Entry(entry, show_comments=True) %} 
 ```
 
 你可以为 UI 模型配置自己的 CSS 和 JavaScript ，只要复写 `embedded_css`、 `embedded_javascript`、`javascipt_files`、`css_files` 就可以了：
 
-```
+```py
 class Entry(tornado.web.UIModule):
     def embedded_css(self):
         return ".entry { margin-bottom: 1em; }"
@@ -533,14 +533,14 @@ class Entry(tornado.web.UIModule):
 
 在不需要额外 Python 代码的情况下，模板文件也可以当做 UI 模块直接使用。 例如前面的例子可以以下面的方式实现，只要把这几行放到 `module-entry.html` 中就可以了：
 
-```
+```py
 {{ set_resources(embedded_css=".entry { margin-bottom: 1em; }") }}
 <!-- more template html... --> 
 ```
 
 这个修改过的模块式模板可以通过下面的方法调用：
 
-```
+```py
 {% module Template("module-entry.html", show_comments=True) %} 
 ```
 
@@ -554,7 +554,7 @@ class Entry(tornado.web.UIModule):
 
 使用了这个装饰器之后，你必须调用 `self.finish()` 已完成 HTTTP 请求，否则 用户的浏览器会一直处于等待服务器响应的状态：
 
-```
+```py
 class MainHandler(tornado.web.RequestHandler):
     @tornado.web.asynchronous
     def get(self):
@@ -564,7 +564,7 @@ class MainHandler(tornado.web.RequestHandler):
 
 下面是一个使用 Tornado 内置的异步请求 HTTP 客户端去调用 FriendFeed 的 API 的例 子：
 
-```
+```py
 class MainHandler(tornado.web.RequestHandler):
     @tornado.web.asynchronous
     def get(self):
@@ -592,7 +592,7 @@ Tornado 包含了两种非阻塞式 HTTP 客户端实现：`SimpleAsyncHTTPClien
 
 这些客户端都有它们自己的模组(`tornado.simple_httpclient` 和 `tornado.curl_httpclient`)，你可以通过 `tornado.httpclient` 来指定使用哪一种 客户端，默认情况下使用的是 `SimpleAsyncHTTPClient`，如果要修改默认值，只要 在一开始调用 `AsyncHTTPClient.configure` 方法即可：
 
-```
+```py
 AsyncHTTPClient.configure('tornado.curl_httpclient.CurlAsyncHTTPClient') 
 ```
 
@@ -604,7 +604,7 @@ Tornado 的 `auth` 模块实现了现在很多流行站点的用户认证方式�
 
 下面的例子使用了 Google 的账户认证，Google 账户的身份被保存到 cookie 当中，以便 以后的访问使用：
 
-```
+```py
 class GoogleHandler(tornado.web.RequestHandler, tornado.auth.GoogleMixin):
     @tornado.web.asynchronous
     def get(self):

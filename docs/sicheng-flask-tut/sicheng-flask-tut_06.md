@@ -22,7 +22,7 @@ Flask 提供了两种上下文环境，一个是应用上下文(Application Cont
 
 在入门系列第六篇中，出现了上下文装饰器”@app.before_request”和”@app.teardown_request”，用其修饰的函数也可以称为上下文 Hook 函数。此外，Flask 还提供了装饰器”@app.after_request”。看名字就能猜到，被”before_request”修饰的函数会在请求处理之前被调用，”after_request”和”teardown_request”会在请求处理完成后被调用。区别是”after_request”只会在请求正常退出时才会被调用，它必须传入一个参数来接受响应对象，并返回一个响应对象，一般用来统一修改响应的内容。而”teardown_request”在任何情况下都会被调用，它必须传入一个参数来接受异常对象，一般用来统一释放请求所占有的资源。同一种类型的 Hook 函数可以存在多个，程序会按代码中的顺序执行。我们开始看例子吧：
 
-```
+```py
 from flask import Flask, g, request
 
 app = Flask(__name__)
@@ -61,7 +61,7 @@ if __name__ == '__main__':
 
 访问”http://localhost:5000/”后，会在控制台输出：
 
-```
+```py
 before request started
 http://localhost:5000/
 before request started 2
@@ -75,7 +75,7 @@ http://localhost:5000/
 
 由此我们可以看出各函数的调用顺序。如果一个”before_request”函数中有返回 response，则后面的”before_request”以及该请求的处理函数将不再被执行。直接进入”after_request”。我们可以修改上面的”before_request()”函数试试：
 
-```
+```py
 @app.before_request
 def before_request():
     print 'before request started'
@@ -86,7 +86,7 @@ def before_request():
 
 另外，朋友们有没有注意到，在每个请求上下文 Hook 函数中，我们都可以访问”request”对象，然而，没有任何地方传入这个对象。难道它是全局的？那么我们随便声明个函数，并调用 request 对象会怎样？
 
-```
+```py
 def handle_request():
     print 'handle request'
     print request.url
@@ -97,7 +97,7 @@ handle_request()
 
 你会收到运行时错误：
 
-```
+```py
 RuntimeError: working outside of request context
 ```
 
@@ -107,7 +107,7 @@ RuntimeError: working outside of request context
 
 一个请求一般是由客户端发起的，那么我们是否可以在服务器端手动构建请求上下文呢？答案是可以，也正因为如此，Flask 提供了在没有客户端的情况下实现自动测试，可通过”test_request_context()”来模拟客户端请求。关于 Flask 测试，我们会在本系列第九篇中介绍。这里，我们使用 Flask 的内部方法”request_context()”来构建一个请求上下文。
 
-```
+```py
 from werkzeug.test import EnvironBuilder
 
 ctx = app.request_context(EnvironBuilder('/','http://localhost/').get_environ())
@@ -123,7 +123,7 @@ finally:
 
 上例中，我们可以在客户端的请求之外访问 request 对象，其实此时的 request 对象即是刚创建的请求上下文中的一个属性”request == ctx.request”。启动 Flask 时，控制台仍然可以打印出访问地址”http://localhost/”。上面的代码可以用 with 语句来简化：
 
-```
+```py
 from werkzeug.test import EnvironBuilder
 
 with app.request_context(EnvironBuilder('/','http://localhost/').get_environ()):
@@ -147,7 +147,7 @@ Flask 源码中的请求上下文构建方式也同此类似。
 
 介绍完请求级别的上下文环境，我们再来了解应用级别的上下文环境。先来看一段代码：
 
-```
+```py
 from flask import Flask, current_app
 
 app = Flask('SampleApp')
@@ -162,13 +162,13 @@ def index():
 
 既然是 ThreadLocal 对象，那它就只在请求线程内存在，它的生命周期就是在应用上下文里。离开了应用上下文，”current_app”一样无法使用。
 
-```
+```py
 app = Flask('SampleApp')
 print current_app.name
 
 ```
 
-```
+```py
 RuntimeError: working outside of application context
 ```
 
@@ -176,7 +176,7 @@ RuntimeError: working outside of application context
 
 同请求上下文一样，我们也可以手动构建应用上下文环境：
 
-```
+```py
 with app.app_context():
     print current_app.name
 
@@ -194,7 +194,7 @@ with app.app_context():
 
 应用上下文也提供了装饰器来修饰 Hook 函数，不过只有一个”@app.teardown_appcontext”。它会在应用上下文生命周期结束前，也就是从”_app_ctx_stack”出栈时被调用。我们可以加入下面的代码，顺便也验证下，是否应用上下文在每个请求结束时会被销毁。
 
-```
+```py
 @app.teardown_appcontext
 def teardown_db(exception):
     print 'teardown application'
@@ -212,7 +212,7 @@ def teardown_db(exception):
 
 对于第二问题，Web 客户端下，的确是不需要。不过 Flask 支持在离线环境中跑自动测试，这时候，代码可以实现上下文环境的嵌套。比如下例：
 
-```
+```py
 app = Flask('MainApp')
 sub_app = Flask('SubApp')
 

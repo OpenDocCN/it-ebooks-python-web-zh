@@ -21,7 +21,7 @@
 
 考虑如下的例子。我在 2012.12.31 的下午 3:54 写的这篇文章。我的时区是 PST (或者 UTC-8 如果你更喜欢的话)。在 Python 解释器运行能得到如下信息:
 
-```
+```py
 >>> from datetime import datetime
 >>> now = datetime.now()
 >>> print now
@@ -80,13 +80,13 @@
 
 一旦对象被构建，它能够被渲染成各种格式的字符串。例如，根据系统时区进行详细的渲染:
 
-```
+```py
 moment("2012-12-31T23:55:13 Z").format('LLLL'); 
 ```
 
 下面就是结果:
 
-```
+```py
 Tuesday, January 1 2013 7:55 AM 
 ```
 
@@ -102,7 +102,7 @@ Tuesday, January 1 2013 7:55 AM
 
 我们现在缺少的就是让 *moment* 返回的字符串在页面上可见。实现这个最简单的方式就是 Javascript 的 *document.write* 函数:
 
-```
+```py
 <script>
 document.write(moment("2012-12-31T23:55:13 Z").format('LLLL'));
 </script> 
@@ -116,7 +116,7 @@ document.write(moment("2012-12-31T23:55:13 Z").format('LLLL'));
 
 接着，在我们的基础模板中添加对这个库的引用(文件 *app/templates/base.html*):
 
-```
+```py
 <script src="/static/js/moment.min.js"></script> 
 ```
 
@@ -124,7 +124,7 @@ document.write(moment("2012-12-31T23:55:13 Z").format('LLLL'));
 
 我们的封装是一个很简单的 Python 类(文件 *app/momentjs.py*):
 
-```
+```py
 from jinja2 import Markup
 
 class momentjs(object):
@@ -148,7 +148,7 @@ class momentjs(object):
 
 既然我们有了一个封装的类，我们需要跟 Jinja2 绑定，这样模块就可以使用它(文件 *app/__init__.py*):
 
-```
+```py
 from momentjs import momentjs
 app.jinja_env.globals['momentjs'] = momentjs 
 ```
@@ -157,7 +157,7 @@ app.jinja_env.globals['momentjs'] = momentjs
 
 现在我们准备修改模版。在我们应用程序中有两个地方显示日期和时间。一个就是用户信息页，那里有最后一次登录时间。对于这个时间戳，我们将会使用 *calendar()* 格式(文件 *app/templates/user.html*):
 
-```
+```py
 {% if user.last_seen %}
 <p><em>Last seen: {{momentjs(user.last_seen).calendar()}}</em></p>
 {% endif %} 
@@ -165,7 +165,7 @@ app.jinja_env.globals['momentjs'] = momentjs
 
 第二个地方就是在 post 子模板，它是被首页，用户信息页以及搜索页调用。在这里我们将会使用 *fromNow()* 格式，因为一篇 blog 的撰写时间和它离现在有多久了是一样重要的。我们需要修改子模板使得所有使用它的页面都有效(文件 *app/templates/post.html*):
 
-```
+```py
 <p><a href="{{url_for('user', nickname = post.author.nickname)}}">{{post.author.nickname}}</a> said {{momentjs(post.timestamp).fromNow()}}:</p>
 <p><strong>{{post.body}}</strong></p> 
 ```

@@ -31,7 +31,7 @@
 
 首先我們建立一個新的 view function - `home()`：
 
-```
+```py
 # trips/views.py
 
 ...
@@ -52,7 +52,7 @@ def home(request):
 
 接下來，我們修改 **urls.py** ，將首頁（正規表達式 `^$`）指向 **home()** 這個 view function：
 
-```
+```py
 # mysite/urls.py
 from trips.views import hello_world, home
 
@@ -68,7 +68,7 @@ urlpatterns = [
 
 首先，在 templates 資料夾底下新增 `home.html`：
 
-```
+```py
 <!-- home.html -->
 
 {{ post_list }} 
@@ -94,7 +94,7 @@ urlpatterns = [
 
 在 template 中使用類似 Python 的 for 迴圈，使用方法如下：
 
-```
+```py
 {% for <element> in <list> %}
     ...
 {% endfor %} 
@@ -104,7 +104,7 @@ urlpatterns = [
 
 瞭解了 **for** 的用法後，我們試著印出首頁所需的資訊。修改 `home.html` 如下：
 
-```
+```py
 <!-- home.html -->
 
 {% for post in post_list %}
@@ -131,13 +131,13 @@ urlpatterns = [
 
 把 `home.html` 的下面這一行：
 
-```
+```py
 {{ post.photo }} 
 ```
 
 換成下面這樣：
 
-```
+```py
 <div class="thumbnail">
     <img src="{{ post.photo }}" alt="">
 </div> 
@@ -149,7 +149,7 @@ urlpatterns = [
 
 另一個常用的 template tags 是 [{% if %}](https://docs.djangoproject.com/en/1.8/ref/templates/builtins/#if) 判斷式，用法如下：
 
-```
+```py
 {% if post.photo %}
 <div class="thumbnail">
     <img src="{{ post.photo }}" alt="">
@@ -181,7 +181,7 @@ urlpatterns = [
 
 我們試著將 `created_at` 時間顯示成**年 / 月 / 日**：
 
-```
+```py
 {{ post.created_at|date:"Y / m / d" }} 
 ```
 
@@ -193,7 +193,7 @@ urlpatterns = [
 
 最終版 `home.html` 程式碼如下：
 
-```
+```py
 <!-- home.html -->
 
 <!DOCTYPE html>

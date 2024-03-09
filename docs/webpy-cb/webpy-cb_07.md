@@ -8,7 +8,7 @@ web.py 的模板语言叫做 `Templetor`，它能负责将 python 的强大功�
 
 这是一个模板示例:
 
-```
+```py
 $def with (name)
 Hello $name! 
 ```
@@ -21,7 +21,7 @@ Hello $name!
 
 通用渲染模板的方法：
 
-```
+```py
 render = web.template.render('templates')
 return render.hello('world') 
 ```
@@ -30,14 +30,14 @@ return render.hello('world')
 
 除了上面的使用方式，你也可以直接用文件的方式来处理模板 `frender`：
 
-```
+```py
 hello = web.template.frender('templates/hello.html')
 render hello('world') 
 ```
 
 直接使用字符串方式：
 
-```
+```py
 template = "$def with (name)\nHello $name"
 hello = web.template.Template(template)
 return hello('world') 
@@ -49,7 +49,7 @@ return hello('world')
 
 特殊字符 `$` 被用于特殊的 python 表达式。表达式能够被用于一些确定的组合当中 `()` 和 `{}`:
 
-```
+```py
 Look, a $string. 
 Hark, an ${arbitrary + expression}. 
 Gawk, a $dictionary[key].function('argument'). 
@@ -60,7 +60,7 @@ Cool, a $(limit)ing.
 
 有时你可能需要定义一个新变量或给一些变量重新赋值，如下：
 
-```
+```py
 $ bug = get_bug(id)
 <h1>$bug.title</h1>
 <div>
@@ -74,14 +74,14 @@ $ bug = get_bug(id)
 
 模板默认会使用 `web.websafe` 过滤 html 内容(encodeing 处理)。
 
-```
+```py
 >>> render.hello("1 < 2")
 "Hello 1 &lt; 2" 
 ```
 
 不需要过滤可以在 `$` 之后 使用 `:`。示例：
 
-```
+```py
 该 Html 内容不会被义
 $:form.render() 
 ```
@@ -90,7 +90,7 @@ $:form.render()
 
 在行末添加 `\` 代表显示层该内容不会被真实处理成一行。
 
-```
+```py
 If you put a backslash \ 
 at the end of a line \ 
 (like these) \ 
@@ -101,7 +101,7 @@ then there will be no newline.
 
 使用 `$$` 可以在输出的时候显示字符 `$`.
 
-```
+```py
 Can you lend me $$50? 
 ```
 
@@ -109,7 +109,7 @@ Can you lend me $$50?
 
 `$#` 是注释指示符。任何以 `$#` 开始的某行内容都被当做注释。
 
-```
+```py
 $# this is a comment
 Hello $name.title()! $# display the name in title case 
 ```
@@ -118,7 +118,7 @@ Hello $name.title()! $# display the name in title case
 
 模板系统支持 `for`, `while`, `if`, `elif` 和 `else`。像 python 一样，这里是需要缩进的。
 
-```
+```py
 $for i in range(10): 
     I like $i
 
@@ -135,7 +135,7 @@ $else:
 
 `for` 循环内的成员变量只在循环内发生可用：
 
-```
+```py
 loop.index: the iteration of the loop (1-indexed)
 loop.index0: the iteration of the loop (0-indexed)
 loop.first: True if first iteration
@@ -148,7 +148,7 @@ loop.parent: the loop above this in nested loops
 
 有时候，他们使用起来很方便：
 
-```
+```py
 <table>
 $for c in ["a", "b", "c", "d"]:
     <tr class="$loop.parity">
@@ -164,7 +164,7 @@ $for c in ["a", "b", "c", "d"]:
 
 可以使用 `$def` 定义一个新的模板函数，支持使用参数。
 
-```
+```py
 $def say_hello(name='world'):
     Hello $name!
 
@@ -174,7 +174,7 @@ $say_hello()
 
 其他示例：
 
-```
+```py
 $def tr(values):
     <tr>
     $for v in values:
@@ -195,7 +195,7 @@ $:table([tr(d) for d in data])
 
 可以在 `code` 块书写任何 python 代码： $code: x = "you can write any python code here" y = x.title() z = len(x + y)
 
-```
+```py
  def limit(s, width=10):
         """limits a string to the given width"""
         if len(s) >= width:
@@ -212,7 +212,7 @@ For example, $limit(x)
 
 `var` 块可以用来定义模板结果的额外属性：
 
-```
+```py
 $def with (title, body)
 
 $var title: $title
@@ -225,7 +225,7 @@ $body
 
 以上模板内容的输出结果如下：
 
-```
+```py
 >>> out = render.page('hello', 'hello world')
 >>> out.title
 u'hello'
@@ -241,7 +241,7 @@ u'text/html'
 
 全局对象可以使用参数方式传给模板，使用 `web.template.render`：
 
-```
+```py
 import web
 import markdown
 
@@ -251,7 +251,7 @@ render = web.template.render('templates', globals=globals)
 
 内置方法是否可以在模板中也是可以被控制的：
 
-```
+```py
 # 禁用所有内置方法
 render = web.template.render('templates', builtins={}) 
 ```
@@ -273,7 +273,7 @@ render = web.template.render('templates', builtins={})
 *   Template output is always storage like `TemplateResult` object, however converting it to `unicode` or `str` gives the result as unicode/string.
 *   重定义全局变量将无法正常运行，如果 x 是全局变量下面的写法是无法运行的。
 
-    ```
+    ```py
      $ x = x + 1 
     ```
 
@@ -292,7 +292,7 @@ render = web.template.render('templates', builtins={})
 
 我们可以用 base 属性来实现:
 
-```
+```py
 render = web.template.render('templates/', base='layout') 
 ```
 
@@ -300,7 +300,7 @@ render = web.template.render('templates/', base='layout')
 
 "layout.html" 是一个简单模板格式文件，它包含了一个模板变量，如下:
 
-```
+```py
 $def with (content)
 <html>
 <head>
@@ -314,7 +314,7 @@ $:content
 
 在某些情况，如果不想使用基本模板，只需要创建一个没有 base 属性的 reander 对象，如下：
 
-```
+```py
 render_plain = web.template.render('templates/') 
 ```
 
@@ -322,7 +322,7 @@ render_plain = web.template.render('templates/')
 
 ##### templates/index.html
 
-```
+```py
 $var title: This is title.
 
 <h3>Hello, world</h3> 
@@ -330,7 +330,7 @@ $var title: This is title.
 
 ##### templates/layout.html
 
-```
+```py
 $def with (content)
 <html>
 <head>
@@ -346,7 +346,7 @@ $:content
 
 #### templates/login.html
 
-```
+```py
 $var cssfiles: static/login.css static/login2.css
 
 hello, world. 
@@ -354,7 +354,7 @@ hello, world.
 
 #### templates/layout.html
 
-```
+```py
 $def with (content)
 <html>
 <head>
@@ -373,7 +373,7 @@ $:content
 
 输入的 HTML 代码如下:
 
-```
+```py
 <link rel="stylesheet" href="static/login.css" type="text/css" media="screen" charset="utf-8"/>
 <link rel="stylesheet" href="static/login2.css" type="text/css" media="screen" charset="utf-8"/> 
 ```
@@ -390,13 +390,13 @@ Give templetor access to the `int` built-in and use modulo to test.
 
 ## code.py
 
-```
+```py
 web.template.Template.globals['int'] = int 
 ```
 
 ## template.html
 
-```
+```py
 <ul>
 $var i: 0
 $for track in tracks:
@@ -414,7 +414,7 @@ $for track in tracks:
 
 In the new implementation of templetor (which will be the default when version .3 is released), within any template loop you have access to a $loop variable. This works like so:
 
-```
+```py
 <ul>
 $for foo in foos:
     <li class="$loop.parity">
@@ -431,7 +431,7 @@ $for foo in foos:
 
 While you write templates, inevitably you will need to write some functions which is related to display logic only. web.py gives you the flexibility to write large blocks of code, including defining functions, directly in the template using `$code` blocks (if you don't know what is $code block, please read the tutorial for Templator first). For example, the following code block will translate a status code from database to a human readable status message:
 
-```
+```py
 def status(c):
     st = {}
     st[0] = 'Not Started'
@@ -444,7 +444,7 @@ As you do more web.py development, you will write more such functions here and t
 
 Naturally, you will want to write a module, say *displayLogic.py* and import that module into every templates that needs such functionalities. Unfortunately, `import` is disabled in template for security reason. However, it is easy to solve this problem, you can import any function via the global namespace into the template:
 
-```
+```py
 #in your application.py:
 def status(c):
     st = {}
@@ -475,7 +475,7 @@ Remember that you can import more than one name into the *globals* dict. This tr
 
 项目目录结构:
 
-```
+```py
 proj/
    |- code.py
    |- i18n/
@@ -490,7 +490,7 @@ proj/
 
 文件: proj/code.py
 
-```
+```py
 #!/usr/bin/env python
 # encoding: utf-8
 
@@ -523,13 +523,13 @@ if __name__ == "__main__":
 
 模板文件: proj/templates/hello.html.
 
-```
+```py
 $_("Message") 
 ```
 
 创建一个 locale 目录并使用 python2.6 内建的 pygettext.py 从 python 脚本和模板文件中导出翻译:
 
-```
+```py
 shell> cd /path/to/proj/
 shell> mkdir -p i18n/en_US/LC_MESSAGES/
 shell> python /path/to/pygettext.py -a -v -d messages -o i18n/messages.po *.py templates/*.html
@@ -539,7 +539,7 @@ Working on templates/hello.html
 
 你将会得到 pot file: i18n/messages.po. 它的内容和下面的差不多 ('msgstr'包含了翻译后的信息):
 
-```
+```py
  # 文件 code.py:40
 msgid "Message"
 msgstr "This is translated message in file: code.py." 
@@ -547,13 +547,13 @@ msgstr "This is translated message in file: code.py."
 
 拷贝文件'i18n/messages.po'到目录'i18n/en_US/LC_MESSAGES/'下, 然后翻译它. 使用 gettext 包的 msgfmt 工具或者使用 python2.6 内建的'msgfmt.py'文件将一个 pot 文件编译称 mo 文件:
 
-```
+```py
 shell> msgfmt -o i18n/en_US/LC_MESSAGES/messages.mo i18n/en_US/LC_MESSAGES/messages.po 
 ```
 
 运行 web.py 的服务器:
 
-```
+```py
 shell> cd /path/to/proj/
 shell> python code.py
 http://0.0.0.0:8000/ 
@@ -571,7 +571,7 @@ http://0.0.0.0:8000/
 
 首先需要安装 Mako 和 web.py(0.3):[`www.makotemplates.org/`](http://www.makotemplates.org/) 然后尝试下面的代码:
 
-```
+```py
 # encoding: utf-8
 # File: code.py
 import web
@@ -601,7 +601,7 @@ if __name__ == "__main__":
 
 ### 模板文件
 
-```
+```py
 ## File: templates/hello.html
 
 Hello, ${name}. 
@@ -613,7 +613,7 @@ Hello, ${name}.
 
 你必须使用绝对路径指出模板的位置. 你也可以使用相对路径来让它更简单一些:
 
-```
+```py
 import os
 
 render = render_mako(
@@ -637,7 +637,7 @@ render = render_mako(
 
 您需要先安装 webpy(0.3)和 Cheetah：[`www.cheetahtemplate.org/`](http://www.cheetahtemplate.org/). 然后尝试使用下面的代码段：
 
-```
+```py
 # encoding: utf-8
 # File: code.py
 
@@ -672,7 +672,7 @@ if __name__ == "__main__":
 
 模板文件
 
-```
+```py
 ## File: templates/first.html
 
 hello, $name. 
@@ -688,7 +688,7 @@ hello, $name.
 
 首先需要安装 Jinja2 和 webpy(0.3), 然后使用下面的代码做测试:
 
-```
+```py
 import web
 from web.contrib.template import render_jinja
 
@@ -719,7 +719,7 @@ if __name__ == "__main__":
 
 ### 模板文件: templates/hello.html
 
-```
+```py
 Hello, . 
 ```
 
@@ -737,7 +737,7 @@ web.py templetor 把模板编译成 python 字节码，这需要访问标准库�
 
 为了编译一个文件夹中所有的模板（一旦有模板改动，就需要重新运行），运行：
 
-```
+```py
 $ python web/template.py --compile templates 
 ```
 

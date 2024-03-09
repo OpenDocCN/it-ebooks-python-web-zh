@@ -8,7 +8,7 @@
 
 下面是 nginx 配置文件的一个示例，整体上与我们在 FriendFeed 中使用的差不多。 它假设 nginx 和 Tornado 是跑在同一台机器上的，四个 Tornado 服务跑在 8000-8003 端口上：
 
-```
+```py
 user nginx;
 worker_processes 1;
 

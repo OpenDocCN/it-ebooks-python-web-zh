@@ -6,13 +6,13 @@
 
 **创建项目的指令如下:**
 
-```
+```py
 $ django-admin.py startproject my_blog 
 ```
 
 现在来看一下整个项目的文件结构
 
-```
+```py
 $ tree my_blog   #打印树形文件结构
 
 my_blog
@@ -32,13 +32,13 @@ my_blog
 
 建立一个`article` app
 
-```
+```py
 $ python manage.py startapp article 
 ```
 
 现在让我们重新看一下整个项目的结构
 
-```
+```py
 ── article
 │   ├── __init__.py
 │   ├── admin.py
@@ -63,7 +63,7 @@ $ python manage.py startapp article
 
 并在 my_blog/my_blog/setting.py 下添加新建 app
 
-```
+```py
 INSTALLED_APPS = (
     ...
     'article',  #这里填写的是 app 的名称
@@ -72,11 +72,11 @@ INSTALLED_APPS = (
 
 # 运行程序
 
-```
+```py
 $ python manage.py runserver   #启动 Django 中的开发服务器 
 ```
 
-```
+```py
 #如果运行上面命令出现以下提示
 You have unapplied migrations; your app may not work properly until they are applied.
 Run 'python manage.py migrate' to apply them.
@@ -94,7 +94,7 @@ Running migrations:
 
 运行成功后,会显示如下信息
 
-```
+```py
 #重新运行启动 Django 中的开发服务器
 $ python manage.py runserver
 
@@ -114,7 +114,7 @@ Quit the server with CONTROL-C.
 
 命令梳理:
 
-```
+```py
 python manage.py <command> [options]  #Django Command python manange.py -h 帮助文档
 django-admin.py startproject my_blog  #创建项目
 python manage.py startapp article  #创建 app 

@@ -6,7 +6,7 @@ Flask 的安装很简单，可以全局安装，也可以使用虚拟环境安�
 
 全局安装可以直接使用以下命令：
 
-```
+```py
 $ sudo pip install flask 
 ```
 
@@ -20,7 +20,7 @@ $ sudo pip install flask
 
 *   第 4 步，安装 flask
 
-```
+```py
 (env1) $ pip install flask 
 ```
 
@@ -28,7 +28,7 @@ $ sudo pip install flask
 
 新建一个脚本文件，比如 `hello.py`。
 
-```
+```py
 $ cat hello.py
 
 from flask import Flask
@@ -45,7 +45,7 @@ if __name__ == "__main__":
 
 在终端运行：
 
-```
+```py
 $ python hello.py
 * Running on http://localhost:5000/ 
 ```

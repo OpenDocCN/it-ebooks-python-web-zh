@@ -23,7 +23,7 @@ Web 表单是在任何一个 web 应用程序中最基本的一部分。我们�
 
 许多 Flask 扩展需要大量的配置，因此我们将要在 *microblog* 文件夹的根目录下创建一个配置文件以至于容易被编辑。这就是我们将要开始的(文件 *config.py*):
 
-```
+```py
 CSRF_ENABLED = True
 SECRET_KEY = 'you-will-never-guess' 
 ```
@@ -34,7 +34,7 @@ SECRET_KEY = 'you-will-never-guess'
 
 既然我们有了配置文件，我们需要告诉 Flask 去读取以及使用它。我们可以在 Flask 应用程序对象被创建后去做，方式如下(文件 *app/__init__.py*):
 
-```
+```py
 from flask import Flask
 
 app = Flask(__name__)
@@ -53,7 +53,7 @@ OpenID 登录仅仅需要一个字符串，被称为 OpenID。我们将在表单
 
 所以让我们编写第一个表单(文件 *app/forms.py*):
 
-```
+```py
 from flask.ext.wtf import Form
 from wtforms import StringField, BooleanField
 from wtforms.validators import DataRequired
@@ -71,7 +71,7 @@ class LoginForm(Form):
 
 我们同样需要一个包含生成表单的 HTML 的模板。好消息是我们刚刚创建的 *LoginForm* 类知道如何呈现为 HTML 表单字段，所以我们只需要集中精力在布局上。这里就是我们登录的模板(文件 *app/templates/login.html*):
 
-```
+```py
 <!-- extend from base layout -->
 {% extends "base.html" %}
 
@@ -105,7 +105,7 @@ class LoginForm(Form):
 
 实际上这是十分简单因为我们只需要把一个表单对象传入模板中。这就是我们新的视图函数(文件 *app/views.py*):
 
-```
+```py
 from flask import render_template, flash, redirect
 from app import app
 from .forms import LoginForm
@@ -134,7 +134,7 @@ def login():
 
 Flask-WTF 使得工作变得简单的另外一点就是处理提交的数据。这里是我们登录视图函数更新的版本，它验证并且存储表单数据 (文件 *app/views.py*):
 
-```
+```py
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -156,7 +156,7 @@ def login():
 
 闪现的消息将不会自动地出现在我们的页面上，我们的模板需要加入展示消息的内容。我们将添加这些消息到我们的基础模板中，这样所有的模板都能继承这个函数。这是更新后的基础模板(文件 *app/templates/base.html*):
 
-```
+```py
 <html>
   <head>
     {% if title %}
@@ -198,7 +198,7 @@ def login():
 
 这就是我们含有字段验证信息的登录模板(文件 *app/templates/login.html*):
 
-```
+```py
 <!-- extend base layout -->
 {% extends "base.html" %}
 
@@ -229,7 +229,7 @@ def login():
 
 我首先开始定义一个 OpenID 提供者的列表。我们可以把它们写入我们的配置文件中(文件 *config* ):
 
-```
+```py
 CSRF_ENABLED = True
 SECRET_KEY = 'you-will-never-guess'
 
@@ -243,7 +243,7 @@ OPENID_PROVIDERS = [
 
 现在让我们看看如何在我们登录视图函数中使用它们:
 
-```
+```py
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -260,7 +260,7 @@ def login():
 
 我敢确信你们已经猜到了，我们还需要多做一步来达到目的。我们现在就来说明如何在登录模板中渲染这些提供商的链接(文件 *app/templates/login.html*):
 
-```
+```py
 <!-- extend base layout -->
 {% extends "base.html" %}
 

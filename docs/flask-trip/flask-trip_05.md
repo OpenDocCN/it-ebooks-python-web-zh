@@ -12,7 +12,7 @@
 
 *config.py*的每一行中应该是某一个变量的赋值语句。一旦*config.py*在稍后被加载，这个配置变量可以通过`app.config`字典来获取，比如`app.config["DEBUG"]`。 以下是一个小项目的*config.py*文件的范例：
 
-```
+```py
 DEBUG = True # 启动 Flask 的 Debug 模式
 BCRYPT_LEVEL = 13 # 配置 Flask-Bcrypt 拓展
 MAIL_FROM_EMAIL = "robert@example.com" # 设置邮件来源 
@@ -22,7 +22,7 @@ MAIL_FROM_EMAIL = "robert@example.com" # 设置邮件来源
 
 为了加载这些配置变量，我通常使用`app.config.from_object()`。如果是单一模块应用中，是在*app.py*；或者在*yourapp/__init__.py*，如果是基于包的应用。 无论在哪种情况下，代码看上去像这样：
 
-```
+```py
 from flask import Flask
 
 app = Flask(__name__)
@@ -46,7 +46,7 @@ app.config.from_object('config')
 
 这是一个使用了 instance 文件夹的简单 Flask 应用的结构:
 
-```
+```py
 config.py
 requirements.txt
 run.py
@@ -64,7 +64,7 @@ yourapp/
 
 要想加载定义在 instance 文件夹中的配置变量，你可以使用`app.config.from_pyfile()`。 如果在调用`Flask()`创建应用时设置了`instance_relative_config=True`，`app.config.from_pyfile()`将查看在*instance*文件夹的特殊文件。
 
-```
+```py
 app = Flask(__name__, instance_relative_config=True)
 app.config.from_object('config')
 app.config.from_pyfile('config.py') 
@@ -76,7 +76,7 @@ app.config.from_pyfile('config.py')
 
 instance 文件夹的隐秘属性使得它成为藏匿密钥的好地方。 你可以在放入应用的密钥或第三方的 API 密钥。假如你的应用是开源的，或者将会是开源的，这会很重要。我们希望其他人去使用他们自己申请的密钥。
 
-```
+```py
 # instance/config.py
 
 SECRET_KEY = 'Sm9obiBTY2hyb20ga2lja3MgYXNz'
@@ -91,14 +91,14 @@ SQLALCHEMY_DATABASE_URI= \
 
 config.py
 
-```
+```py
 DEBUG = False
 SQLALCHEMY_ECHO = False 
 ```
 
 instance/config.py
 
-```
+```py
 DEBUG = True
 SQLALCHEMY_ECHO = True 
 ```
@@ -117,7 +117,7 @@ Flask 给我们提供了根据环境变量选择一个配置文件的能力。 �
 
 当我们到了有多个配置文件共存的境况，是时候把文件都移动到`config`包之下。 下面是在这样的一个版本库中大致的样子:
 
-```
+```py
 requirements.txt
 run.py
 config/
@@ -147,7 +147,7 @@ yourapp/
 
 要在不同的环境中指定所需的变量，你可以调用`app.config.from_envvar()`:
 
-```
+```py
 # yourapp/__init__.py
 
 app = Flask(__name__, instance_relative_config=True)
@@ -162,7 +162,7 @@ app.config.from_envvar('APP_CONFIG_FILE')
 
 start.sh
 
-```
+```py
 APP_CONFIG_FILE=/var/www/yourapp/config/production.py
 python run.py 
 ```

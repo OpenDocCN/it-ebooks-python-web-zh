@@ -19,7 +19,7 @@
 
 像以前章节一样，我们从配置将会使用到的 Flask 扩展开始入手。对于登录系统，我们将会使用到两个扩展，Flask-Login 和 Flask-OpenID。配置情况如下(文件 *app/__init__.py*):
 
-```
+```py
 import os
 from flask.ext.login import LoginManager
 from flask.ext.openid import OpenID
@@ -38,7 +38,7 @@ Flask-Login 扩展需要在我们的 *User* 类中实现一些特定的方法。
 
 下面就是我们为 Flask-Login 实现的 *User* 类(文件 *app/models.py*):
 
-```
+```py
 class User(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     nickname = db.Column(db.String(64), unique = True)
@@ -78,7 +78,7 @@ class User(db.Model):
 
 首先，我们必须编写一个函数用于从数据库加载用户。这个函数将会被 Flask-Login 使用(文件 *app/views.py*):
 
-```
+```py
 @lm.user_loader
 def load_user(id):
     return User.query.get(int(id)) 
@@ -90,7 +90,7 @@ def load_user(id):
 
 接下来我们需要更新我们的登录视图函数(文件 *app/views.py*):
 
-```
+```py
 from flask import render_template, flash, redirect, session, url_for, request, g
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from app import app, db, lm, oid
@@ -132,7 +132,7 @@ OpenID 认证异步发生。如果认证成功的话，Flask-OpenID 将会调用
 
 这里就是我们的 *after_login* 函数的实现(文件 *app/views.py*):
 
-```
+```py
 @oid.after_login
 def after_login(resp):
     if resp.email is None or resp.email == "":
@@ -168,7 +168,7 @@ def after_login(resp):
 
 如果要让这些都起作用的话，Flask-Login 需要知道哪个视图允许用户登录。我们在应用程序模块初始化中配置(文件 *app/__init__.py*):
 
-```
+```py
 lm = LoginManager()
 lm.init_app(app)
 lm.login_view = 'login' 
@@ -178,7 +178,7 @@ lm.login_view = 'login'
 
 如果你观察仔细的话，你会记得在登录视图函数中我们检查 *g.user* 为了决定用户是否已经登录。为了实现这个我们用 Flask 的 *before_request* 装饰器。任何使用了 *before_request* 装饰器的函数在接收请求之前都会运行。 因此这就是我们设置我们 *g.user* 的地方(文件 *app/views.py*):
 
-```
+```py
 @app.before_request
 def before_request():
     g.user = current_user 
@@ -190,7 +190,7 @@ def before_request():
 
 在前面的章节中，我们的 *index* 视图函数使用了伪造的对象，因为那时候我们并没有用户或者 blog。好了，现在我们有用户了，让我们使用它:
 
-```
+```py
 @app.route('/')
 @app.route('/index')
 @login_required
@@ -224,7 +224,7 @@ def index():
 
 登出的视图函数是相当地简单(文件 *app/views.py*):
 
-```
+```py
 @app.route('/logout')
 def logout():
     logout_user()
@@ -233,7 +233,7 @@ def logout():
 
 但是我们还没有在模版中添加登出的链接。我们将要把这个链接放在基础层中的导航栏里(文件 *app/templates/base.html*):
 
-```
+```py
 <html>
   <head>
     {% if title %}

@@ -8,7 +8,7 @@
 
 ## 解决方法
 
-```
+```py
 import web
 
 urls = ('/upload', 'Upload')
@@ -50,7 +50,7 @@ if __name__ == "__main__":
 
 ## 方法
 
-```
+```py
 import web
 
 urls = ('/upload', 'Upload')
@@ -102,7 +102,7 @@ web.py 使用`cgi` 模块来解析用户的输入， 而 `cgi` 模块对最大�
 
 下面的代码限制了最大数据输入为 10MB.
 
-```
+```py
 import cgi
 
 # Maximum input we will accept when REQUEST_METHOD is POST
@@ -114,7 +114,7 @@ cgi.maxlen = 10 * 1024 * 1024 # 10MB
 
 `cgi` 模块将会抛出 `ValueError`异常，如果数据输入的大小超过了 `cgi.maxlen`。我们可以捕捉该异常而避免显示不友好的错误信息。
 
-```
+```py
 class upload:
     def POST(self):
         try:
@@ -135,7 +135,7 @@ class upload:
 
 web.input()方法返回一个包含从 url(GET 方法)或 http header(POST 方法,即表单 POST)获取的变量的 web.storage 对象(类似字典).举个例子,如果你访问页面[`example.com/test?id=10,在 Python 后台你想取得`](http://example.com/test?id=10,在 Python 后台你想取得) id=10 ,那么通过 web.input()那就是小菜一碟:
 
-```
+```py
 class SomePage:
     def GET(self):
         user_data = web.input()
@@ -144,7 +144,7 @@ class SomePage:
 
 有时你想指定一个默认变量,而不想使用 None.参考下面的代码:
 
-```
+```py
 class SomePage:
     def GET(self):
         user_data = web.input(id="no data")
@@ -159,7 +159,7 @@ class SomePage:
 
 你需要让 web.input 知道这是一个多值变量,否则会变成一串而不是一个变量 .传递一个 list 给 web.input 作为默认值,就会正常工作.举个例子, 访问 [`example.com?id=10&id=20`](http://example.com?id=10&id=20):
 
-```
+```py
 class SomePage:
     def GET(self):
         user_data = web.input(id=[])
@@ -184,7 +184,7 @@ class SomePage:
 
 这里是一个新用户注册的表单的示例：
 
-```
+```py
 import web
 from web import form
 
@@ -220,7 +220,7 @@ class register:
 
 然后注册的模板应该像是这样：
 
-```
+```py
 $def with(form)
 
 <h1>Register</h1>
@@ -241,7 +241,7 @@ $def with(form)
 
 假设你想创建一个名字/姓氏表单。很简单，只有两个字段，不需要验证，只是为了测试目的。
 
-```
+```py
 from web import form
 simple_form = form.Form(
     form.Textbox('name', description='Name'),
@@ -253,7 +253,7 @@ simple_form = form.Form(
 
 我们定义了两个字段名称为`name`和`surname`。这些名称将自动成为`simple_form`对象的属性。
 
-```
+```py
 >>> simple_form.name.render()
 '<input type="text" name="name" id="name" />'
 >>> simple_form.surname.render()
@@ -262,14 +262,14 @@ simple_form = form.Form(
 
 你同样可以通过类似的方法显示个别的描述：
 
-```
+```py
 >>> simple_form.surname.description
 'Surname' 
 ```
 
 如果你有一个小模板片段（局部模板），你想统一的使用你所定义的所有表单字段？你可以使用表单对象的`inputs`属性迭代每个字段。下面是一个示例：
 
-```
+```py
 >>> for input in simple_form.inputs:
 ...     print input.description
 ...     print input.render()

@@ -31,7 +31,7 @@
 
 为了方便，这里使用 shell 脚本生成项目基础骨架：
 
-```
+```py
 # !/bin/bash
 
 dirname=$1
@@ -53,13 +53,13 @@ fi
 
 将上面的脚本保存为文件 `generate_flask_boilerplate.sh`，使用如下命令生成项目骨架：
 
-```
+```py
 $ sh generate_flask_boilerplate.sh flask-todo-app 
 ```
 
 生成的项目骨架如下所示：
 
-```
+```py
 flask-todo-app
 ├── application
 │   ├── __init__.py
@@ -104,7 +104,7 @@ flask-todo-app
 
 因此，我们的数据模型定义如下 (完整代码参考[这里](https://github.com/ethan-funny/flask-todo-app))：
 
-```
+```py
 # -*- coding: utf-8 -*-
 
 from application.extensions import db
@@ -134,7 +134,7 @@ class Todo(db.Model):
 
 在项目的根目录下按顺序执行如下命令，生成 migratios 文件夹、数据迁移脚本和更新数据库。
 
-```
+```py
 $ python manage.py db init   # 初始化，生成 migratios 文件夹
   Creating directory /Users/admin/flask-todo/migrations ... done
   Creating directory /Users/admin/flask-todo/migrations/versions ... done
@@ -162,7 +162,7 @@ INFO  [alembic.runtime.migration] Running upgrade  -> 70215a3905e0, empty messag
 
 我们的业务逻辑代码主要在 controllers 目录中，新建一个 `todo.py` 文件, 核心代码如下 (完整代码参考[这里](https://github.com/ethan-funny/flask-todo-app))，代码说明可以参考注释：
 
-```
+```py
 # -*- coding: utf-8 -*-
 
 import flask

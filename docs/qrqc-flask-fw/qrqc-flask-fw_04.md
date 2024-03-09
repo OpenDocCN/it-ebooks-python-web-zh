@@ -12,7 +12,7 @@
 
 按照以下命令建立 Flask 项目 HelloWorld:
 
-```
+```py
 mkdir HelloWorld
 mkdir HelloWorld/static
 mkdir HelloWorld/templates
@@ -23,7 +23,7 @@ touch HelloWorld/index.py
 
 编辑 HelloWorld/index.py：
 
-```
+```py
 from flask import Flask
 
 app = Flask(__name__)
@@ -50,7 +50,7 @@ if __name__ == '__main__':
 
 运行 HelloWorld/index.py。使用浏览器访问`http://127.0.0.1:5000/user/letian`，HelloWorld/index.py 将输出：
 
-```
+```py
 letian
 <type 'unicode'> 
 ```
@@ -59,7 +59,7 @@ letian
 
 访问`http://127.0.0.1:5000/user/letian/friends`，能够得到期望的结果。HelloWorld/index.py 输出：
 
-```
+```py
 letian
 <type 'unicode'> 
 ```
@@ -70,7 +70,7 @@ letian
 
 由上面的示例可以看出，使用 restful url 得到的变量默认为 unicode 对象。如果我们需要通过分页显示查询结果，那么需要在 url 中有数字来指定页数。按照上面方法，可以在获取 unicode 类型页数变量后，将其转换为 int 类型。不过，还有更方面的方法，就是在 route 中指定该如何转换。将 HelloWorld/index.py 修改如下：
 
-```
+```py
 from flask import Flask
 
 app = Flask(__name__)
@@ -93,7 +93,7 @@ if __name__ == '__main__':
 
 运行上面的程序，在浏览器中访问`http://127.0.0.1:5000/page/1`，HelloWorld/index.py 将输出如下内容：
 
-```
+```py
 1
 <type 'int'> 
 ```
@@ -102,7 +102,7 @@ if __name__ == '__main__':
 
 在官方资料中，说是有 3 个默认的转换器：
 
-```
+```py
 int     accepts integers
 float     like int but for floating point values
 path     like the default but also accepts slashes 
@@ -116,7 +116,7 @@ path     like the default but also accepts slashes
 
 如下编写`HelloWorld/index.py`：
 
-```
+```py
 from flask import Flask
 
 app = Flask(__name__)
@@ -137,7 +137,7 @@ if __name__ == '__main__':
 
 在浏览器中访问`http://127.0.0.1:5000/page/11-22`，`HelloWorld/index.py`会输出：
 
-```
+```py
 11
 22 
 ```
@@ -150,7 +150,7 @@ if __name__ == '__main__':
 
 下面是一个示例，将`HelloWorld/index.py`修改如下：
 
-```
+```py
 from flask import Flask, url_for
 
 from werkzeug.routing import BaseConverter
@@ -186,7 +186,7 @@ if __name__ == '__main__':
 
 浏览器访问`http://127.0.0.1:5000/page/123`后，`HelloWorld/index.py`的输出信息是：
 
-```
+```py
 123
 /page/hi 
 ```

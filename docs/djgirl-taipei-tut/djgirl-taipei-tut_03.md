@@ -23,13 +23,13 @@
 
 首先，使用 `django-admin.py` 來建立第一個 Django project `mysite`:
 
-```
+```py
 (djangogirls_venv) ~/djangogirls$ django-admin.py startproject mysite 
 ```
 
 此時會多了一個 **mysite** 資料夾。我們切換進去：
 
-```
+```py
 (djangogirls_venv) ~/djangogirls$ cd mysite 
 ```
 
@@ -37,7 +37,7 @@
 
 目前 project 的檔案結構如下:
 
-```
+```py
 mysite/
 ├── manage.py
 └── mysite
@@ -51,19 +51,19 @@ mysite/
 
 `manage.py` 是 Django 提供的命令列工具，我們可以利用它執行很多工作，例如同步資料庫、建立 app 等等，指令的使用方式如下：
 
-```
+```py
 python manage.py <command> [options] 
 ```
 
 如果你想要了解有什麼指令可以使用，輸入 `help` 或 `-h` 指令會列出所有指令列表:
 
-```
+```py
 python manage.py -h 
 ```
 
 而如果想了解其中一個指令，可以在指令名字後輸入 `-h`，你會看到簡單的的指令介紹以及用法說明。以 `runserver` 為例：
 
-```
+```py
 (djangogirls_venv) ~/djangogirls/mysite$ python manage.py runserver -h
 usage: manage.py runserver [-h] [--version] [-v {0,1,2,3}]
                            [--settings SETTINGS] [--pythonpath PYTHONPATH]
@@ -103,7 +103,7 @@ optional arguments:
 
 從說明中可以知道，`runserver` 會啟動一個簡單的 web server，方便於在開發階段使用：
 
-```
+```py
 (djangogirls_venv) ~/djangogirls/mysite$ python manage.py runserver
 ...
 Django version 1.8.5, using settings 'mysite.settings'
@@ -121,7 +121,7 @@ Quit the server with CONTROL-C.
 
 如果無法看到成功畫面，瀏覽器上顯示錯誤訊息 - *A server error occurred. Please contact the administrator.*，請輸入：
 
-```
+```py
 (djangogirls_venv) ~/djangogirls/mysite$ python manage.py migrate 
 ```
 
@@ -133,13 +133,13 @@ Quit the server with CONTROL-C.
 
 讓我們利用 `startapp` 建立第一個 Django app -- **trips**:
 
-```
+```py
 (djangogirls_venv) ~/djangogirls/mysite$ python manage.py startapp trips 
 ```
 
 `startapp` 會按照你的命名建立一個同名資料夾和 app 預設的檔案結構如下：
 
-```
+```py
 trips
 ├── __init__.py
 ├── admin.py
@@ -157,7 +157,7 @@ trips
 
 打開 *mysite/settings.py*，找到 [INSTALLED_APPS](https://docs.djangoproject.com/en/1.8/ref/settings/#std:setting-INSTALLED_APPS)，調整如下：
 
-```
+```py
 # mysite/settings.py
 
 ...
@@ -189,7 +189,7 @@ Django 已將常用的 app 設定為 `INSTALLED_APPS` 。例如，`auth`（使�
 
 目前為止，我們使用 `startproject` 建立了一個名為 **mysite** 的 Django 專案，和一個名為 **trips** 的 Django app。
 
-```
+```py
 mysite
 ├── manage.py
 ├── mysite

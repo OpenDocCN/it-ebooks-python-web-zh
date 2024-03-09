@@ -12,7 +12,7 @@
 
 首先建立單篇文章所使用的 view function。在 *trips/views.py* 中，新增 **post_detail** 這個 view 如下：
 
-```
+```py
 # trips/views.py
 
 def post_detail(request, pk):
@@ -27,7 +27,7 @@ def post_detail(request, pk):
     *   URL 與 pk 的對應，會在稍後設定。這裡只需知道 view 中傳入的，會是當前瀏覽文章 pk 即可。
 *   **取得傳入 pk 的那篇 Post 資料：** 當傳入的 pk=3，代表訪客想看到 pk=3 那篇文章。我們可以利用之前學過的 ORM 語法 `get`， 取得該篇日記的 **Post** 物件：
 
-    ```
+    ```py
      post = Post.objects.get(pk=pk)  # 此時 pk = 3 
     ```
 
@@ -37,7 +37,7 @@ def post_detail(request, pk):
 
 日記單頁的 view function 完成後，我們來設定網址與 view 的對應。修改 *mysite/urls.py* ，加入以下內容：
 
-```
+```py
 # mysite/urls.py
 from trips.views import hello_world, home, post_detail
 
@@ -55,7 +55,7 @@ urlpatterns = [
 
 我們前面提過，Django 的 URL 是一個 *regular expression (regex)*。Regular expression 語法可用來描述一個字串的樣式。 除了可以表示固定字串之外，還可以用來表示不確定的內容。我們一步一步解釋文章單頁所使用的 URL 設定：
 
-```
+```py
 (?P<pk>\d+) 
 ```
 
@@ -85,13 +85,13 @@ urlpatterns = [
 
 回顧一下前面寫的 view function（*post_detail*）內容
 
-```
+```py
 return render(request, 'post.html', {'post': post}) 
 ```
 
 我們取得所需 post 物件後，傳入 `post.html` 這個 template 中 render。現在我們就來完成這個 template。建立 *post.html* 如下：
 
-```
+```py
 <!-- templates/post.html -->
 
 <!DOCTYPE html>
@@ -148,7 +148,7 @@ return render(request, 'post.html', {'post': post})
 
 也可以傳入參數，如：
 
-```
+```py
 {% url '<view_name>' arg1=<var1> arg2=<var2> ...%} 
 ```
 
@@ -167,7 +167,7 @@ return render(request, 'post.html', {'post': post})
 
 打開 *home.html*，找到下面的內容：
 
-```
+```py
 <!-- home.html -->
 
 <h2 class="title">
@@ -177,7 +177,7 @@ return render(request, 'post.html', {'post': post})
 
 將它改成
 
-```
+```py
 <!-- home.html -->
 
 <h2 class="title">
@@ -189,7 +189,7 @@ return render(request, 'post.html', {'post': post})
 
 在 *home.html* 中找到以下內容：
 
-```
+```py
 <!-- home.html -->
 
 <a class="read-more" href="#">
@@ -199,7 +199,7 @@ return render(request, 'post.html', {'post': post})
 
 修改如下：
 
-```
+```py
 <!-- home.html -->
 
 <a class="read-more" href="{% url 'post_detail' pk=post.pk %}">

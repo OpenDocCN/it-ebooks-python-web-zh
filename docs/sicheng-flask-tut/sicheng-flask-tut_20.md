@@ -19,7 +19,7 @@
 
 在使用 Flask-Cache 扩展实现缓存功能之前，我们先来自己写个视图缓存装饰器，方便我们来理解视图缓存的实现。首先，我们要有一个缓存，Werkzeug 框架中的提供了一个简单的缓存对象[SimpleCache](http://werkzeug.pocoo.org/docs/0.11/contrib/cache/#werkzeug.contrib.cache.SimpleCache)，它是将缓存项存放在 Python 解释器的内存中，我们可以用下面的代码获取 SimpleCache 的缓存对象：
 
-```
+```py
 from werkzeug.contrib.cache import SimpleCache
 cache = SimpleCache()
 
@@ -27,7 +27,7 @@ cache = SimpleCache()
 
 如果你要使用第三方的缓存服务器，比如 Memcached，Werkzeug 框架也提供了它的 wrapper：
 
-```
+```py
 from werkzeug.contrib.cache import MemcachedCache
 cache = MemcachedCache(['127.0.0.1:11211'])
 
@@ -37,7 +37,7 @@ cache = MemcachedCache(['127.0.0.1:11211'])
 
 接下来，我们就开始写个缓存装饰器用来装饰视图函数：
 
-```
+```py
 def cached(timeout=5 * 60, key='view_%s'):
     def decorator(f):
         @wraps(f)
@@ -55,7 +55,7 @@ def cached(timeout=5 * 60, key='view_%s'):
 
 这段装饰器代码还是很好理解吧，如果大家对装饰器不熟悉，可以看下这篇文章。装饰器的两个参数分别是缓存的过期时间，默认是 5 分钟；缓存项键值的前缀，默认是”view_”。然后我们写个视图，并使用此装饰器：
 
-```
+```py
 @app.route('/hello')
 @app.route('/hello/<name>')
 @cached()
@@ -71,13 +71,13 @@ def hello(name=None):
 
 了解了缓存装饰器的内部实现，我们就可以开始介绍 Flask 的缓存扩展，Flask-Cache。首先使用 pip 将其安装上：
 
-```
+```py
 $ pip install Flask-Cache
 ```
 
 然后创建一个 Flask-Cache 的实例：
 
-```
+```py
 from flask import Flask
 from flask.ext.cache import Cache
 
@@ -88,7 +88,7 @@ cache = Cache(app, config={'CACHE_TYPE': 'simple'})
 
 上例中，我们使用了’simple’类型缓存，其内部实现就是 Werkzeug 中的 SimpleCache。我们也可以使用第三方的缓存服务器，比如 Redis，代码如下：
 
-```
+```py
 cache = Cache(app, config={'CACHE_TYPE': 'redis',          # Use Redis
                            'CACHE_REDIS_HOST': 'abc.com',  # Host, default 'localhost'
                            'CACHE_REDIS_PORT': 6379,       # Port, default 6379
@@ -103,7 +103,7 @@ cache = Cache(app, config={'CACHE_TYPE': 'redis',          # Use Redis
 
 同自定义缓存装饰器一样，我们可以用 cache 对象的”cached()”方法来装饰视图函数，以达到缓存视图的目的：
 
-```
+```py
 @app.route('/hello')
 @app.route('/hello/<name>')
 @cache.cached(timeout=300, key_prefix='view_%s', unless=None)
@@ -121,7 +121,7 @@ def hello(name=None):
 
 除了装饰视图函数，”cache.cached()”装饰器也可以用来装饰普通函数：
 
-```
+```py
 @cache.cached(timeout=50, key_prefix='get_list')
 def get_list():
     print 'method get_list called'
@@ -135,7 +135,7 @@ def list():
 
 我们访问”/list”地址时，第一次控制台上会有”method called”输出，第二次就不会了，说明缓存起效了。装饰普通函数时必须指定明确的”key_prefix”参数，因为它不像视图函数，可以使用请求路径”request.path”作为缓存项的键值。另外，如果函数带参数，对于不同的参数调用，都会使用同一缓存项，即返回结果一样。但大部分时候，对于不同的输入，输出结果是不一样的，那使用缓存岂不是有问题？是的，所以 Flask-Cache 还提供了另一个装饰器方法”cache.memoize()”，它与”cache.cached()”的区别就是它会将函数的参数也放在缓存项的键值中：
 
-```
+```py
 @cache.memoize(timeout=50)
 def create_list(num):
     print 'method create_list called'
@@ -156,7 +156,7 @@ def list(num):
 
 对于普通缓存，你可以使用”delete()”方法来删除缓存项，而对于”memoize”缓存，你需要使用”delete_memoized”方法。如果想清除所有缓存，可以使用”clear()”方法。
 
-```
+```py
 cache.delete('get_list')                     # 删除'get_list'缓存项
 cache.delete_many('get_list', 'view_hello')  # 同时删除'get_list'和'view_hello'缓存项
 cache.delete_memoized('create_list', 5)      # 删除调用'create_list'函数并且参数为 5 的缓存项
@@ -168,7 +168,7 @@ cache.clear()                                # �
 
 上面介绍的缓存功能都是在应用代码中使用，其实在 Jinja2 模板中，我们还可以使用”{% cache %}”语句来缓存模板代码块：
 
-```
+```py
 {% cache 50, 'temp' %}
 <p>This is under cache</p>
 {% endcache %}
@@ -177,7 +177,7 @@ cache.clear()                                # �
 
 这样”{% cache %}”和”{% endcache %}”语句中所包括的内容就会被缓存起来。”{% cache %}”语句的第一个参数是”timeout”过期时间，默认为永不过期；第二个参数指定了缓存项的键值，如果不设，键值就是”模板文件路径”+”缓存块的第一行”。上例中，我们设了键值是”temp”，然后在代码中，我们可以这样获取缓存项实际的键值：
 
-```
+```py
 from flask.ext.cache import make_template_fragment_key
 key = make_template_fragment_key('temp')
 

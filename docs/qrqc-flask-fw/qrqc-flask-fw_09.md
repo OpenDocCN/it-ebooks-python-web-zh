@@ -10,7 +10,7 @@ session 用来记录用户的登录状态，一般基于 cookie 实现。
 
 按照以下命令建立 Flask 项目 HelloWorld:
 
-```
+```py
 mkdir HelloWorld
 mkdir HelloWorld/static
 mkdir HelloWorld/templates
@@ -21,7 +21,7 @@ touch HelloWorld/index.py
 
 内容如下：
 
-```
+```py
 from flask import Flask, render_template_string, \
     session, request, redirect, url_for
 
@@ -78,7 +78,7 @@ if __name__ == '__main__':
 
 下面这段代码来自[Is there an easy way to make sessions timeout in flask?](http://stackoverflow.com/questions/11783025/is-there-an-easy-way-to-make-sessions-timeout-in-flask)：
 
-```
+```py
 from datetime import timedelta
 from flask import session, app
 

@@ -32,7 +32,7 @@ Django view 其實是一個 function，**處理 `HttpRequest` 物件，並回傳
 
 在 `trips/views.py` 輸入下列程式碼：
 
-```
+```py
 # trips/views.py
 
 from django.http import HttpResponse
@@ -71,13 +71,13 @@ def hello_world(request):
 
 首先打開 `mysite/urls.py`，先 import 剛剛寫的 view function，然後在 `urlpatterns` 中加入下面這行：
 
-```
+```py
 url(r'^hello/$', hello_world), 
 ```
 
 現在 `mysite/urls.py` 的內容應該會像下面這樣：
 
-```
+```py
 # mysite/urls.py
 
 from django.conf.urls import include, url
@@ -93,7 +93,7 @@ urlpatterns = [
 
 以上程式透過 [url()](https://docs.djangoproject.com/en/1.8/ref/urls/#django.conf.urls.url) function 傳入兩個參數 `regex`, `view`：
 
-```
+```py
 url(regex, view) 
 ```
 
@@ -107,7 +107,7 @@ url(regex, view)
 
 現在啟動你的 web server。 (如果剛剛沒關閉的話，通常 Django 會在你修改程式碼後，自動重新啟動 web server)
 
-```
+```py
 (djangogirls_venv) ~/djangogirls/mysite$ python manage.py runserver 
 ```
 

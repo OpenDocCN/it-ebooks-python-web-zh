@@ -18,7 +18,7 @@
 
 首先，你要了解基本的使用 setuptools 打包分发 Python 应用程序的方法。接下来，就让我们开始写一个”setup.py”文件：
 
-```
+```py
 from setuptools import setup
 
 setup(
@@ -39,7 +39,7 @@ setup(
 
 把文件放在项目的根目录下。另外，别忘了，还要写一个”MANIFEST.in”文件：
 
-```
+```py
 recursive-include myapp/templates *
 recursive-include myapp/static *
 
@@ -47,7 +47,7 @@ recursive-include myapp/static *
 
 编写完毕后，你可以创建一个干净的虚拟环境，然后运行安装命令试下效果。
 
-```
+```py
 $ python setup.py install
 ```
 
@@ -55,7 +55,7 @@ $ python setup.py install
 
 同样，你需要先了解如何使用 Fabric 来远程部署 Python 应用。然后，我们来编写”fabfile.py”文件：
 
-```
+```py
 from fabric.api import *
 
 env.hosts = ['example1.com', 'example2.com']
@@ -80,7 +80,7 @@ def deploy():
 
 编写完后，运行部署脚本测试下：
 
-```
+```py
 $ fab package deploy
 ```
 
@@ -88,7 +88,7 @@ $ fab package deploy
 
 Flask 应用是基于 WSGI 规范的，所以它可以运行在任何一个支持 WSGI 协议的 Web 应用服务器中，最常用的就是 Apache+mod_wsgi 的方式。上面的 Fabric 脚本已经完成了将 Flask 应用部署到远程服务器上，接下来要做的就是编写 WSGI 的入口文件”myapp.wsgi”，我们假设将其放在 Apache 的文档根目录在”/var/www”下。
 
-```
+```py
 activate_this = '/home/bjhee/virtualenv/bin/activate_this.py'
 execfile(activate_this, dict(__file__=activate_this))
 
@@ -108,7 +108,7 @@ application = create_app('config')
 
 在 Apache 的”httpd.conf”中加上脚本更新自动重载和 URL 路径映射：
 
-```
+```py
 WSGIScriptReloading On
 WSGIScriptAlias /myapp /var/www/myapp.wsgi
 
@@ -120,7 +120,7 @@ WSGIScriptAlias /myapp /var/www/myapp.wsgi
 
 你要先准备好 Nginx+uWSGI 的运行环境，然后编写 uWSGI 的启动文件”myapp.ini”：
 
-```
+```py
 [uwsgi]
 socket=127.0.0.1:3031
 callable=app
@@ -136,7 +136,7 @@ virtualenv=/home/bjhee/virtualenv
 
 再修改 Nginx 的配置文件，Linux 上默认是”/etc/nginx/sites-enabled/default”，加上目录配置：
 
-```
+```py
 location /myapp {
     include uwsgi_params;
     uwsgi_param SCRIPT_NAME /myapp;
@@ -153,7 +153,7 @@ location /myapp {
 
 Tornado 的强大之处在于它是非阻塞式异步 IO 及 Epoll 模型，采用 Tornado 的可以支持数以万计的并发连接，对于高并发的应用有着很好的性能。本文不会展开 Tornado 的介绍，感兴趣的朋友们可以参阅其[官方文档](http://www.tornadoweb.org/en/stable/)。使用 Tornado 来运行 Flask 应用很简单，只要编写下面的运行程序，并执行它即可：
 
-```
+```py
 from tornado.wsgi import WSGIContainer
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
@@ -176,7 +176,7 @@ Gunicorn 是一个 Python 的 WSGI Web 应用服务器，是从 Ruby 的 Unicorn
 
 让我们先将应用安装到远程服务器上，然后采用 Gunicorn 启动应用，使用下面的命令即可：
 
-```
+```py
 $ gunicorn run:app
 ```
 
@@ -184,7 +184,7 @@ $ gunicorn run:app
 
 假设我们想预先开启 4 个工作进程，并监听本地的 5000 端口，我们可以将启动命令改为：
 
-```
+```py
 $ gunicorn -w 4 -b 127.0.0.1:5000 run:app
 ```
 

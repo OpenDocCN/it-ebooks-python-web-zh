@@ -26,7 +26,7 @@
 
 在开始你的 web.py 程序之前,打开一个文本文件（文件名为 code.py）输入:
 
-```
+```py
 import web 
 ```
 
@@ -34,7 +34,7 @@ import web
 
 现在我们需要把我们的 URL 结构告诉 web.py。让我从下面这个简单的例子开始:
 
-```
+```py
 urls = (
   '/', 'index'
 ) 
@@ -46,7 +46,7 @@ urls = (
 
 现在我们需要创建一个列举这些 url 的 application。
 
-```
+```py
 app = web.application(urls, globals()) 
 ```
 
@@ -60,7 +60,7 @@ app = web.application(urls, globals())
 
 在我们 web.py 的代码中，我们将这两个方法明确区分:
 
-```
+```py
 class index:
     def GET(self):
         return "Hello, world!" 
@@ -70,7 +70,7 @@ class index:
 
 好了，限制我们只需要最后一句就写完了。这行会告诉 web.py 开始提供 web 页面:
 
-```
+```py
 if __name__ == "__main__": app.run() 
 ```
 
@@ -78,7 +78,7 @@ if __name__ == "__main__": app.run()
 
 现在注意，即使我已经在这里说了很多，但我们真正有 5 行这些代码。这就是你需要编写的一个完整的 web.py 应用。 为了更方便的使用，你的完整代码应该像下面这样:
 
-```
+```py
 import web
 
 urls = (
@@ -102,7 +102,7 @@ if __name__ == "__main__":
 
 **注意:** 如果你不能或者不想使用默认端口，你可以使用这样的命令来指定端口号:
 
-```
+```py
 $ python code.py 1234 
 ```
 
@@ -114,13 +114,13 @@ $ python code.py 1234
 
 给模板新建一个目录（命名为 `templates`），在该目录下新建一个以 `.html` 结尾的文件，内容如下：
 
-```
+```py
 <em>Hello</em>, world! 
 ```
 
 你也可以在模板中使用 `web.py` 模板支持代码：
 
-```
+```py
 $def with (name)
 
 $if name:
@@ -133,13 +133,13 @@ $else:
 
 回看再看 `code.py`。在第一行之下添加：
 
-```
+```py
 render = web.template.render('templates/') 
 ```
 
 这会告诉 web.py 到你的模板目录中去查找模板。然后把 `index.GET`改成: 告诉 `web.py` 在你的模板目录下查找模板文件。修改 `index.GET` ：
 
-```
+```py
 name = 'Bob'    
 return render.index(name) 
 ```
@@ -150,7 +150,7 @@ return render.index(name)
 
 但是如果我们想让用户自行输入他的名字，么办？如下：
 
-```
+```py
 i = web.input(name=None)
 return render.index(i.name) 
 ```
@@ -159,13 +159,13 @@ return render.index(i.name)
 
 URL 的后面的 `?` 看起来不好看？修改下 URL 配置：
 
-```
+```py
 '/(.*)', 'index' 
 ```
 
 然后修改下 `index.GET`：
 
-```
+```py
 def GET(self, name):
     return render.index(name) 
 ```
@@ -184,7 +184,7 @@ web.py 的 form 模块能够帮助你生成 HTML 表单；获取用户的输入�
 
 首先你需要创建一个数据库对象。
 
-```
+```py
 db = web.database(dbn='postgres', user='username', pw='password', db='dbname') 
 ```
 
@@ -194,7 +194,7 @@ db = web.database(dbn='postgres', user='username', pw='password', db='dbname')
 
 使用的的数据库引擎管理工具，在你的库中创建一个简单的表:
 
-```
+```py
 CREATE TABLE todo (
   id serial primary key,
   title text,
@@ -204,13 +204,13 @@ CREATE TABLE todo (
 
 然后初始化行:
 
-```
+```py
 INSERT INTO todo (title) VALUES ('Learn web.py'); 
 ```
 
 我们回来继续编辑 `code.py` ，把 `index.GET` 改成下面的样子，替换整个函数:
 
-```
+```py
 def GET(self):
     todos = db.select('todo')
     return render.index(todos) 
@@ -218,13 +218,13 @@ def GET(self):
 
 然后把 URL 列表改回来，只保留 `/`:
 
-```
+```py
 '/', 'index', 
 ```
 
 像这样编辑并替换 `index.html` 的全部内容:
 
-```
+```py
 $def with (todos)
 <ul>
 $for todo in todos:
@@ -236,7 +236,7 @@ $for todo in todos:
 
 在 `index.html`尾部添加:
 
-```
+```py
 <form method="post" action="add">
 <p><input type="text" name="title" /> <input type="submit" value="Add" /></p>
 </form> 
@@ -244,7 +244,7 @@ $for todo in todos:
 
 然后把你的 URL 列表改为:
 
-```
+```py
 '/', 'index',
 '/add', 'add' 
 ```
@@ -253,7 +253,7 @@ $for todo in todos:
 
 现在添加另一个类:
 
-```
+```py
 class add:
     def POST(self):
         i = web.input()
@@ -267,7 +267,7 @@ class add:
 
 注意: 如果要访问多个相同名字的字段，请使用 list 的格式(比如:一串 name="name"的多选框):
 
-```
+```py
 post_data=web.input(name=[]) 
 ```
 
@@ -285,7 +285,7 @@ web.py 还有一些帮助我们 debug 的工具。当它在内建的服务器中
 
 只有在生产环境中 debug 模式是关闭的。如果你想禁用 debug 模式，你可以在创建程序/模板前添加像这样的行。
 
-```
+```py
 web.config.debug = False 
 ```
 

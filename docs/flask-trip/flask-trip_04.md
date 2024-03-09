@@ -29,7 +29,7 @@ Flask 会把项目组织的职责托付给你。 这是我喜欢使用 Flask 开
 
 单一模块的应用的版本库看起来像这样：
 
-```
+```py
 app.py
 config.py
 requirements.txt
@@ -45,7 +45,7 @@ templates/
 
 基于包的应用的版本库看起来就像是这样：
 
-```
+```py
 config.py
 requirements.txt
 run.py

@@ -20,7 +20,7 @@
 
 所以要将模板放进我们的应用的哪里呢？如果你是从头开始阅读的本文，你可能注意到了 Flask 在对待你如何组织项目结构的事情上十分随意。模板也不例外。你大概也已经注意到，总会有一个放置文件的推荐位置。记住两点。对于模板，这个最佳位置是放在包文件夹下。
 
-```
+```py
 myapp/
     __init__.py
     models.py
@@ -33,7 +33,7 @@ requirements.txt
 
 让我们打开模板文件夹看看。
 
-```
+```py
 templates/
     layout.html
     index.html
@@ -60,7 +60,7 @@ templates/
 
 *myapp/templates/layout.html*
 
-```
+```py
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -78,7 +78,7 @@ templates/
 
 *myapp/templates/index.html*
 
-```
+```py
 {% extends "layout.html" %}
 {% block title %}Hello world!{% endblock %}
 {% block body %}
@@ -99,7 +99,7 @@ templates/
 
 myapp/templates/layout.html
 
-```
+```py
 {% from "macros.html" import nav_link with context %}
 <!DOCTYPE html>
 <html lang="en">
@@ -135,7 +135,7 @@ myapp/templates/layout.html
 
 myapp/templates/macros.html
 
-```
+```py
 {% macro nav_link(endpoint, text) %}
 {% if request.endpoint.endswith(endpoint) %}
     <li class="active"><a href="{{ url_for(endpoint) }}">{{text}}</a></li>
@@ -153,7 +153,7 @@ myapp/templates/macros.html
 
 Jinja 过滤器是在渲染成模板之前，作用于`{{ ... }}`中的表达式的值的函数。
 
-```
+```py
 <h2>{{ article.title|title }}</h2> 
 ```
 
@@ -169,7 +169,7 @@ Jinja 过滤器是在渲染成模板之前，作用于`{{ ... }}`中的表达式
 
 myapp/util/filters.py
 
-```
+```py
 from .. import app
 
 @app.template_filter()
@@ -180,7 +180,7 @@ def caps(text):
 
 在上面的代码中，通过`@app.template_filter()`装饰器，我们能将某个函数注册成 Jinja 过滤器。默认的过滤器名字就是函数的名字，但是通过传递一个参数给装饰器，你可以改变它：
 
-```
+```py
 @app.template_filter('make_caps')
 def caps(text):
     """Convert a string to all caps."""
@@ -193,7 +193,7 @@ def caps(text):
 
 myapp/__init__.py
 
-```
+```py
 # 确保 app 已经被初始化以免导致循环 import
 from .util import filters 
 ```

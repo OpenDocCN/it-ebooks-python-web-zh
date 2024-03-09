@@ -19,7 +19,7 @@
 
 怎么安装 SQLite 这里就不说了。我们先写个数据库表的初始化 SQL，保存在”init.sql”文件中：
 
-```
+```py
 drop table if exists users;
 create table users (
   id integer primary key autoincrement,
@@ -34,7 +34,7 @@ insert into users (name, password) values ('admin', '123');
 
 运行 sqlite3 命令，初始化数据库。我们的数据库文件就放在”db”子目录下的”user.db”文件中。
 
-```
+```py
 $ sqlite3 db/user.db < init.sql
 ```
 
@@ -42,7 +42,7 @@ $ sqlite3 db/user.db < init.sql
 
 创建配置文件"config.py"，保存配置信息：
 
-```
+```py
 #coding:utf8
 DATABASE = 'db/user.db'       # 数据库文件位置
 DEBUG = True                  # 调试模式
@@ -52,7 +52,7 @@ SECRET_KEY = 'secret_key_1'   # 会话密钥
 
 在创建 Flask 应用时，导入配置信息：
 
-```
+```py
 from flask import Flask
 import config
 
@@ -67,7 +67,7 @@ app.config.from_object('config')
 
 这里要用到请求的上下文装饰器，我们会在进阶系列的第一篇里详细介绍上下文。
 
-```
+```py
 @app.before_request
 def before_request():
     g.db = sqlite3.connect(app.config['DATABASE'])
@@ -86,7 +86,7 @@ def teardown_request(exception):
 
 让我们取回上一篇登录部分的代码，"index()"和"logout()"请求不用修改，在"login()"请求中，我们会查询数据库，验证客户端输入的用户名和密码是否存在：
 
-```
+```py
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     if request.method == 'POST':
@@ -107,7 +107,7 @@ def login():
 
 模板中加上"login.html"文件
 
-```
+```py
 {% extends "layout.html" %}
 {% block body %}
 <form name="login" action="/login" method="post">

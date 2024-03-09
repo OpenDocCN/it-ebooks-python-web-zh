@@ -11,7 +11,7 @@
 
 如果你依照 Hello World 这一章的话，你应当有一个完全工作的简单的 web 应用程序，它有着如下的文件结构:
 
-```
+```py
 microblog\
 flask\
         <virtual environment files>
@@ -38,7 +38,7 @@ run.py
 
 输出一个漂亮的大标题的一个容易的选择就是改变我们的视图功能，输出 HTML，也许像这个样子:
 
-```
+```py
 from app import app
 
 @app.route('/')
@@ -69,7 +69,7 @@ def index():
 
 让我们编写第一个我们的模板(文件 *app/templates/index.html*):
 
-```
+```py
 <html>
   <head>
     <title>{{title}} - microblog</title>
@@ -84,7 +84,7 @@ def index():
 
 现在看看怎样在我们的视图函数(文件 *app/views.py*)中使用这些模板:
 
-```
+```py
 from flask import render_template
 from app import app
 
@@ -107,7 +107,7 @@ def index():
 
 Jinja2 模板同样支持控制语句，像在 *{%...%}* 块中。让我们在我们的模板中添加一个 if 声明(文件 *app/templates/index.html*):
 
-```
+```py
 <html>
   <head>
     {% if title %}
@@ -130,7 +130,7 @@ Jinja2 模板同样支持控制语句，像在 *{%...%}* 块中。让我们在�
 
 首先我们先创建一些用户以及他们的文章用来展示(文件 *app/views.py*):
 
-```
+```py
 def index():
     user = { 'nickname': 'Miguel' } # fake user
     posts = [ # fake array of posts
@@ -155,7 +155,7 @@ def index():
 
 因此让我们来看看怎么使用 *for* 来做到这一点(文件 *app/templates/index.html*):
 
-```
+```py
 <html>
   <head>
     {% if title %}
@@ -187,7 +187,7 @@ def index():
 
 所以让我们定义一个基础模板，该模板包含导航栏以及上面谈论的标题(文件 *app/templates/base.html*):
 
-```
+```py
 <html>
   <head>
     {% if title %}
@@ -208,7 +208,7 @@ def index():
 
 接着现在剩下的就是修改我们的 *index.html* 模板继承自 *base.html* (文件 *app/templates/index.html*):
 
-```
+```py
 {% extends "base.html" %}
 {% block content %}
 <h1>Hi, {{user.nickname}}!</h1>

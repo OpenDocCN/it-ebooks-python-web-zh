@@ -21,13 +21,13 @@
 
 我们依然通过 pip 安装：
 
-```
+```py
 $ pip install Flask-SQLAlchemy
 ```
 
 PyPI 自动会将其所依赖的 SQLAlchemy 包装上。我们可以采用下面的方法初始化一个 Flask-SQLAlchemy 的实例：
 
-```
+```py
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
 
@@ -43,7 +43,7 @@ db = SQLAlchemy(app)
 
 一个模型即对应数据库中的一个表，这里我们来定义一个用户模型：
 
-```
+```py
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), unique=True)
@@ -66,26 +66,26 @@ class User(db.Model):
 
 这三个属性将分别对应”user”表中”id”主键, “name”和”age”字段。写好”__init__()”和”__repr__”()方法，我们的模型就定义完成了。现在你就可以通过下面的代码来创建数据库和表：
 
-```
+```py
     db.create_all()
 
 ```
 
 让我们来验证下，”user”表是否创建成功。首先打开数据库文件：
 
-```
+```py
 $ sqlite3 db/users.db
 ```
 
 查询下”user”表的 schema：
 
-```
+```py
 sqlite> .schema user
 ```
 
 你应该可以看到下面的信息：
 
-```
+```py
 CREATE TABLE user (
 	id INTEGER NOT NULL,
 	name VARCHAR(50),
@@ -102,7 +102,7 @@ CREATE TABLE user (
 
 数据表创建完后，让我们添加些数据进去：
 
-```
+```py
     db.session.add(User('Michael', 18))
     db.session.add(User('Tom', 21))
     db.session.add(User('Jane', 17))
@@ -116,14 +116,14 @@ CREATE TABLE user (
 
 每个数据模型都有”query”接口可以用来查询模型所对应的表的记录。比如，查询”user”表中的所有记录：
 
-```
+```py
     users = User.query.all()
 
 ```
 
 返回的 users 是一个列表，其中每个元素都是一个 User 类型的对象，对应于”user”表中的一条记录。该方法相当于执行了 SQL 语句：
 
-```
+```py
 SELECT * FROM user
 
 ```
@@ -132,7 +132,7 @@ SELECT * FROM user
 
 1.  “filter_by()”方法，对查询结果过滤，参数必须是键值对”key=value”
 
-```
+```py
     # WHERE name='Tom'
     users = User.query.filter_by(name='Tom')
     # WHERE name='Tom' AND age=17
@@ -144,7 +144,7 @@ SELECT * FROM user
 
 *   “filter()”方法，对查询结果过滤，比”filter_by()”方法更强大，参数是布尔表达式
 
-```
+```py
     # WHERE age<20
     users = User.query.filter(User.age<20)
     # WHERE name LIKE 'J%' AND age<20
@@ -156,14 +156,14 @@ SELECT * FROM user
 
 *   “first()”方法，取返回列表中的第一个元素，当我们只查询一条记录时非常有用
 
-```
+```py
     user = User.query.filter_by(name='Michael').first()
 
 ```
 
 *   “order_by()”方法，排序
 
-```
+```py
     from sqlalchemy import desc
 
     # ORDER BY name
@@ -175,7 +175,7 @@ SELECT * FROM user
 
 *   “limit()”和”offset()”方法，分页
 
-```
+```py
     # LIMIT 10 OFFSET 10
     user = User.query.limit(10).offset(10)
 
@@ -185,7 +185,7 @@ SELECT * FROM user
 
 *   “slice(start, stop)”，分页
 
-```
+```py
     # LIMIT 2 OFFSET 1
     user = User.query.slice(1, 3)
 
@@ -197,7 +197,7 @@ SELECT * FROM user
 
 在添加数据时，我们使用了”add()”方法，其实它一样可以用来更新数据：
 
-```
+```py
     user = User.query.filter_by(name='Tom').first()
     if user is not None:
         user.age += 1
@@ -210,7 +210,7 @@ SQLAlchemy 会自动判断，如果对象对应的记录已存在，就更新而
 
 SQLAlchemy 还支持批量更新，比如我们要将所有岁数小于 20 的人都加 1 岁：
 
-```
+```py
     User.query.filter(User.age<20).update({'age': User.age+1})
     db.session.commit()
 
@@ -222,7 +222,7 @@ SQLAlchemy 还支持批量更新，比如我们要将所有岁数小于 20 的�
 
 只需调用”delete()”方法即可，传入的参数是对应数据库中记录的对象。记得同”add()”一样，要调用”commit()”来提交事务：
 
-```
+```py
     user = User.query.filter_by(name='Michael').first()
     if user is not None:
         db.session.delete(user)
@@ -234,7 +234,7 @@ SQLAlchemy 还支持批量更新，比如我们要将所有岁数小于 20 的�
 
 现在让我们再添加一个模型，成绩单。每个用户对于不同的课程，会有不同的分数，这样用户同成绩单之前就是一对多的关系。怎么在模型类的定义中体现这个一对多关系呢。保持 User 类不变，现在让我们添加一个 Score 类：
 
-```
+```py
 from datetime import datetime
 
 class Score(db.Model):
@@ -278,7 +278,7 @@ Score 模型中有这些属性：
 
 现在查询下”score”表的 schema，你会看到下面的结果：
 
-```
+```py
 CREATE TABLE score (
 	id INTEGER NOT NULL,
 	course VARCHAR(50),
@@ -295,7 +295,7 @@ CREATE TABLE score (
 
 让我们添加些 score 记录：
 
-```
+```py
     user = User.query.filter_by(name='Tom').first()
     if user is not None:
         db.session.add(Score('Math', 80.5, user))
@@ -309,7 +309,7 @@ CREATE TABLE score (
 
 然后试试通过”User.scores”查询某个用户的成绩：
 
-```
+```py
 def scores(name):
     user = User.query.filter_by(name=name).first()
     if user is not None:

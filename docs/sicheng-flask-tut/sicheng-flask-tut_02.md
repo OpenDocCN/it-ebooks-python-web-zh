@@ -15,7 +15,7 @@
 
 Flask 的模板功能是基于[Jinja2 模板引擎](http://jinja.pocoo.org/)实现的。让我们来实现一个例子吧。创建一个新的 Flask 运行文件（你应该不会忘了怎么写吧），代码如下：
 
-```
+```py
 from flask import Flask
 from flask import render_template
 
@@ -35,7 +35,7 @@ if __name__ == '__main__':
 
 那么这个模板”hello.html”在哪儿呢，变量参数又该怎么用呢？别急，接下来我们创建模板文件。在当前目录下，创建一个子目录”templates”（注意，一定要使用这个名字）。然后在”templates”目录下创建文件”hello.html”，内容如下：
 
-```
+```py
 <!doctype html>
 <title>Hello Sample</title>
 {% if name %}
@@ -50,7 +50,7 @@ if __name__ == '__main__':
 
 让我们打开浏览器，输入”http://localhost:5000/hello/man”，页面上即显示大标题”Hello man!”。我们再看下页面源代码
 
-```
+```py
 <!doctype html>
 <title>Hello from Flask</title>
 
@@ -64,7 +64,7 @@ if __name__ == '__main__':
 
 一般我们的网站虽然页面多，但是很多部分是重用的，比如页首，页脚，导航栏之类的。对于每个页面，都要写这些代码，很麻烦。Flask 的 Jinja2 模板支持模板继承功能，省去了这些重复代码。让我们基于上面的例子，在”templates”目录下，创建一个名为”layout.html”的模板：
 
-```
+```py
 <!doctype html>
 <title>Hello Sample</title>
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
@@ -77,7 +77,7 @@ if __name__ == '__main__':
 
 再修改之前的”hello.html”，把原来的代码定义在”block body”中，并在代码一开始”继承”上面的”layout.html”：
 
-```
+```py
 {% extends "layout.html" %}
 {% block body %}
 {% if name %}
@@ -91,7 +91,7 @@ if __name__ == '__main__':
 
 打开浏览器，再看下”http://localhost:5000/hello/man”页面的源码。
 
-```
+```py
 <!doctype html>
 <title>Hello Sample</title>
 <link rel="stylesheet" type="text/css" href="/static/style.css">
@@ -109,7 +109,7 @@ if __name__ == '__main__':
 
 我们看下下面的代码：
 
-```
+```py
 @app.route('/')
 def index():
     return '<div>Hello %s</div>' % '<em>Flask</em>'
@@ -118,7 +118,7 @@ def index():
 
 打开页面，你会看到”Hello Flask”字样，而且”Flask”是斜体的，因为我们加了”em”标签。但有时我们并不想让这些 HTML 标签自动转义，特别是传递表单参数时，很容易导致 HTML 注入的漏洞。我们把上面的代码改下，引入”Markup”类：
 
-```
+```py
 from flask import Flask, Markup
 
 app = Flask(__name__)

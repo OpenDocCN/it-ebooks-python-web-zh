@@ -10,7 +10,7 @@ Python 装饰器让我们可以用其他函数包装特定函数。 当一个函
 
 装饰器的语法看上去像这样:
 
-```
+```py
 @decorator_function
 def decorated():
     pass 
@@ -26,7 +26,7 @@ Flask-Login 使得用户认证系统的实现不再困难。 除了处理用户�
 
 下面是从一个用到 Flask-Login 和`@login_required`装饰器的一个示范应用中获取的例子:
 
-```
+```py
 from flask import render_template
 from flask_login import login_required, current_user
 
@@ -54,7 +54,7 @@ def account():
 
 你可以将 Flask-Cache 配置成跟你想用的后台缓存一起使用。一个普遍的选择是[Redis](http://redis.io/)，一个容易配置和使用的软件。 假设 Flask-Cache 已经配置好了，下面是我们的被装饰的视图的例子:
 
-```
+```py
 from flask_cache import Cache
 from flask import Flask
 
@@ -85,7 +85,7 @@ def index():
 
 myapp/util.py
 
-```
+```py
 from functools import wraps
 from datetime import datetime
 
@@ -111,7 +111,7 @@ def check_expired(func):
 
 位于最顶部的装饰器将最先运行，然后调用下一个函数：一个视图函数或下一个装饰器。装饰器语法只是一个语法糖而已。
 
-```
+```py
 # 这样
 @foo
 @bar
@@ -119,7 +119,7 @@ def one():
     pass 
 ```
 
-```
+```py
 # 等同于这样:
 def two():
     pass
@@ -133,7 +133,7 @@ r1 == r2 # True
 
 myapp/views.py
 
-```
+```py
 from flask import render_template
 
 from flask_login import login_required
@@ -167,7 +167,7 @@ def account_billing():
 
 当你在 Flask 中定义一个路由时，你可以将指定的一部分转换成 Python 变量并传递给视图函数。
 
-```
+```py
 @app.route('/user/<username>')
 def profile(username):
     pass 
@@ -175,7 +175,7 @@ def profile(username):
 
 在 URL 中作为<username class="calibre30">的那一部分内容将作为`username`参数传递给视图函数。你也可以指定一个转换器过滤出特定的类型。</username>
 
-```
+```py
 @app.route('/user/id/<int:user_id>')
 def profile(user_id):
     pass 
@@ -202,7 +202,7 @@ def profile(user_id):
 
 util.py
 
-```
+```py
 from werkzeug.routing import BaseConverter
 
 class ListConverter(BaseConverter):
@@ -221,7 +221,7 @@ class ListConverter(BaseConverter):
 
 /myapp/__init__.py
 
-```
+```py
 from flask import Flask
 
 app = Flask(__name__)
@@ -237,7 +237,7 @@ app.url_map.converters['list'] = ListConverter
 
 views.py
 
-```
+```py
 from . import app
 
 @app.route('/r/<list:subreddits>')

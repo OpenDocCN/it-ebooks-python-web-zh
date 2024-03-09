@@ -38,7 +38,7 @@
 
 代码清单 5-1 同步 HTTP 请求：tweet_rate.py
 
-```
+```py
 import tornado.httpserver
 import tornado.ioloop
 import tornado.options
@@ -86,7 +86,7 @@ if __name__ == "__main__":
 
 这个程序的结构现在对你而言应该已经很熟悉了：我们有一个 RequestHandler 类和一个处理到应用根路径请求的 IndexHandler。在 IndexHandler 的 get 方法中，我们从查询字符串中抓取参数 q，然后用它执行一个到 Twitter 搜索 API 的请求。下面是最相关的一部分代码：
 
-```
+```py
 client = tornado.httpclient.HTTPClient()
 response = client.fetch("http://search.twitter.com/search.json?" + \
         urllib.urlencode({"q": query, "result_type": "recent", "rpp": 100}))
@@ -106,7 +106,7 @@ fetch 方法返回的 HTTPResponse 对象允许你访问 HTTP 响应的任何部
 
 为了更具体的看出这个问题，我们对刚编写的例子进行基准测试。你可以使用任何基准测试工具来验证这个应用的性能，不过在这个例子中我们使用优秀的[Siege utility](http://www.joedog.org/siege-home/)工具进行测试。它可以这样使用：
 
-```
+```py
 $ siege http://localhost:8000/?q=pants -c10 -t10s
 
 ```
@@ -125,7 +125,7 @@ $ siege http://localhost:8000/?q=pants -c10 -t10s
 
 代码清单 5-2 异步 HTTP 请求：tweet_rate_async.py
 
-```
+```py
 import tornado.httpserver
 import tornado.ioloop
 import tornado.options
@@ -178,7 +178,7 @@ if __name__ == "__main__":
 
 AsyncHTTPClient 的 fetch 方法并不返回调用的结果。取而代之的是它指定了一个 callback 参数；你指定的方法或函数将在 HTTP 请求完成时被调用，并使用 HTTPResponse 作为其参数。
 
-```
+```py
 client = tornado.httpclient.AsyncHTTPClient()
 client.fetch("http://search.twitter.com/search.json?" + »
 urllib.urlencode({"q": query, "result_type": "recent", "rpp": 100}),
@@ -200,7 +200,7 @@ urllib.urlencode({"q": query, "result_type": "recent", "rpp": 100}),
 
 Tornado 默认在函数处理返回时关闭客户端的连接。在通常情况下，这正是你想要的。但是当我们处理一个需要回调函数的异步请求时，我们需要连接保持开启状态直到回调函数执行完毕。你可以在你想改变其行为的方法上面使用@tornado.web.asynchronous 装饰器来告诉 Tornado 保持连接开启，正如我们在异步版本的推率例子中 IndexHandler 的 get 方法中所做的。下面是相关的代码片段：
 
-```
+```py
 class IndexHandler(tornado.web.RequestHandler):
     @tornado.web.asynchronous
     def get(self):
@@ -211,7 +211,7 @@ class IndexHandler(tornado.web.RequestHandler):
 
 记住当你使用@tornado.web.asynchonous 装饰器时，Tornado 永远不会自己关闭连接。你必须在你的 RequestHandler 对象中调用 finish 方法来显式地告诉 Tornado 关闭连接。（否则，请求将可能挂起，浏览器可能不会显示我们已经发送给客户端的数据。）在前面的异步示例中，我们在 on_response 函数的 write 后面调用了 finish 方法：
 
-```
+```py
     [... other callback code ...]
         self.write("""
 <div style="text-align: center">
@@ -227,7 +227,7 @@ class IndexHandler(tornado.web.RequestHandler):
 
 现在，我们的推率程序的异步版本运转的不错并且性能也很好。不幸的是，它有点麻烦：为了处理请求 ，我们不得不把我们的代码分割成两个不同的方法。当我们有两个或更多的异步请求要执行的时候，编码和维护都显得非常困难，每个都依赖于前面的调用：不久你就会发现自己调用了一个回调函数的回调函数的回调函数。下面就是一个构想出来的（但不是不可能的）例子：
 
-```
+```py
 def get(self):
     client = AsyncHTTPClient()
     client.fetch("http://example.com", callback=on_response)
@@ -249,7 +249,7 @@ def on_response3(self, response):
 
 代码清单 5-3 使用生成器模式的异步请求：tweet_rate_gen.py
 
-```
+```py
 import tornado.httpserver
 import tornado.ioloop
 import tornado.options
@@ -302,7 +302,7 @@ if __name__ == "__main__":
 
 正如你所看到的，这个代码和前面两个版本的代码非常相似。主要的不同点是我们如何调用 Asynchronous 对象的 fetch 方法。下面是相关的代码部分：
 
-```
+```py
 client = tornado.httpclient.AsyncHTTPClient()
 response = yield tornado.gen.Task(client.fetch,
         "http://search.twitter.com/search.json?" + \
@@ -361,7 +361,7 @@ HTTP 长轮询的主要吸引力在于其极大地减少了 Web 服务器的负�
 
 代码清单 5-4 长轮询：shopping_cart.py
 
-```
+```py
 import tornado.web
 import tornado.httpserver
 import tornado.ioloop
@@ -464,7 +464,7 @@ if __name__ == '__main__':
 
 DetailHandler 为每个页面请求产生一个唯一标识符，在每次请求时提供库存数量，并向浏览器渲染 index.html 模板。CartHandler 为浏览器提供了一个 API 来请求从访客的购物车中添加或删除物品。浏览器中运行的 JavaScript 提交 POST 请求来操作访客的购物车。我们将在下面的 StatusHandler 和 ShoppingCart 类的讲解中看到这些方法是如何作用域库存数量查询的。
 
-```
+```py
 class StatusHandler(tornado.web.RequestHandler):
     @tornado.web.asynchronous
     def get(self):
@@ -476,7 +476,7 @@ class StatusHandler(tornado.web.RequestHandler):
 
 在 Tornado 1.1 之前的版本中，回调函数必须被包在 self.async_callback()方法中来捕获被包住的函数可能会产生的异常。不过，在 Tornado 1.1 或更新版本中，这不再是显式必须的了。
 
-```
+```py
 def on_message(self, count):
     self.write('{"inventoryCount":"%d"}' % count)
     self.finish()
@@ -487,7 +487,7 @@ def on_message(self, count):
 
 最后，ShoppingCart 控制器管理库存分批和状态回调。StatusHandler 通过 register 方法注册回调函数，即添加这个方法到内部的 callbacks 数组。
 
-```
+```py
 def moveItemToCart(self, session):
     if session in self.carts:
         return
@@ -506,7 +506,7 @@ def removeItemFromCart(self, session):
 
 此外，ShoppingCart 控制器还实现了 CartHandler 中的 addItemToCart 和 removeItemFromCart。当 CartHandler 调用这些方法，请求页面的唯一标识符（传给这些方法的 session 变量）被用于在调用 notifyCallbacks 之前标记库存。[2]
 
-```
+```py
 def notifyCallbacks(self):
     for c in self.callbacks:
         self.callbackHelper(c)
@@ -524,7 +524,7 @@ def callbackHelper(self, callback):
 
 代码清单 5-5 长轮询：index.html
 
-```
+```py
 <html>
     <head>
         <title>Burt's Books – Book Detail</title>
@@ -568,7 +568,7 @@ def callbackHelper(self, callback):
 
 代码清单 5-6 长轮询：inventory.js
 
-```
+```py
 $(document).ready(function() {
     document.session = $('#session').val();
 
@@ -628,7 +628,7 @@ function requestInventory() {
 
 当文档完成加载时，我们为"Add to Cart"按钮添加了点击事件处理函数，并隐藏了"Remove form Cart"按钮。这些事件处理函数关联服务器的 API 调用，并交换添加到购物车接口和从购物车移除接口。
 
-```
+```py
 function requestInventory() {
     jQuery.getJSON('//localhost:8000/cart/status', {session: document.session},
         function(data, status, xhr) {
@@ -676,7 +676,7 @@ Tornado 在 websocket 模块中提供了一个 WebSocketHandler 类。这个类�
 
 此外，WebSocketHandler 类还提供了 write_message 方法用于向客户端发送消息，close 方法用于关闭连接。
 
-```
+```py
 class EchoHandler(tornado.websocket.WebSocketHandler):
     def open(self):
         self.write_message('connected!')
@@ -696,7 +696,7 @@ class EchoHandler(tornado.websocket.WebSocketHandler):
 
 代码清单 5-7 WebSockets：shopping_cart.py
 
-```
+```py
 import tornado.web
 import tornado.websocket
 import tornado.httpserver
@@ -802,7 +802,7 @@ if __name__ == '__main__':
 
 在 ShoppingCart 类中，我们只需要在通知回调函数的方式上做一个轻微的改变。因为 WebSOckets 在一个消息发送后保持打开状态，我们不需要在它们被通知后移除内部的回调函数列表。我们只需要迭代列表并调用带有当前库存量的回调函数：
 
-```
+```py
 def notifyCallbacks(self):
     for callback in self.callbacks:
         callback(self.getInventoryCount())
@@ -811,7 +811,7 @@ def notifyCallbacks(self):
 
 另一个改变是添加了 unregisted 方法。StatusHandler 会在 WebSocket 连接关闭时调用该方法移除一个回调函数。
 
-```
+```py
 def unregister(self, callback):
     self.callbacks.remove(callback)
 
@@ -819,7 +819,7 @@ def unregister(self, callback):
 
 大部分改变是在继承自 tornado.websocket.WebSocketHandler 的 StatusHandler 类中的。WebSocket 处理函数实现了 open 和 on_message 方法，分别在连接打开和接收到消息时被调用，而不是为每个 HTTP 方法实现处理函数。此外，on_close 方法在连接被远程主机关闭时被调用。
 
-```
+```py
 class StatusHandler(tornado.websocket.WebSocketHandler):
     def open(self):
         self.application.shoppingCart.register(self.callback)
@@ -841,7 +841,7 @@ class StatusHandler(tornado.websocket.WebSocketHandler):
 
 代码清单 5-8 WebSockets：inventory.js 中新的 requestInventory 函数
 
-```
+```py
 function requestInventory() {
     var host = 'ws://localhost:8000/cart/status';
 

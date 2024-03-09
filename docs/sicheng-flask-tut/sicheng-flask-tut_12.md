@@ -18,7 +18,7 @@
 
 假定我们的应用主目录是”flask-demo”，首先我们建议每个应用都放在一个独立的包下，假设包名是”myapp”。所以，整个应用的目录结构如下：
 
-```
+```py
 flask-demo/
   ├ run.py           # 应用启动程序
   ├ config.py        # 环境配置
@@ -42,7 +42,7 @@ flask-demo/
 
 应用的创建代码放在”__init__.py”中：
 
-```
+```py
 from flask import Flask
 from myapp.admin import admin
 import config
@@ -57,7 +57,7 @@ from myapp import views
 
 我们把创建应用的代码与应用的启动剥离开，并且在应用对象创建之后，再导入视图模块，因为此时视图函数上的”@app.route()”才有效。视图模块包括了所有的视图函数及路由，如果有多个视图模块，则一并导入。在主目录下的”run.py”内，我们才放入应用的启动代码：
 
-```
+```py
 from myapp import app
 
 app.run(host='0.0.0.0')
@@ -66,7 +66,7 @@ app.run(host='0.0.0.0')
 
 此后，应用的启动都是通过执行”run.py”来完成。蓝图里的目录结构跟应用基本上一样，也是”static”目录放所有静态文件，”templates”目录放所有模板文件，”views.py”存放所有视图，”forms.py”存放所有表单，”models.py”存放所有数据模型，我就不画了。蓝图对象的初始化也放在”__init__.py”里，并在初始化后导入蓝图中的视图模块，这样风格可以跟应用保持一致：
 
-```
+```py
 from flask import Blueprint
 
 admin = Blueprint('admin', __name__, url_prefix='/admin')
@@ -77,7 +77,7 @@ from myapp.admin import views
 
 还有一种风格，就是将蓝图的模板和静态文件也放在 myapp 的”templates”和”static”目录下，只是在这些目录下创建与蓝图同名的子目录，比如：
 
-```
+```py
 flask-demo/
   ...
   └ myapp/
@@ -100,7 +100,7 @@ flask-demo/
 
 Flask 官方建议采用工厂的模式来创建应用。什么是应用工厂呢？让我们对上例中”myapp”下的”__init__.py”文件作如下修改：
 
-```
+```py
 from flask import Flask
 from flask.ext.mail import Mail
 from flask.ext.sqlalchemy import SQLAlchemy
@@ -133,7 +133,7 @@ def create_app(config):
 
 我们不在代码中直接创建应用，而是通过调用”create_app()”方法来返回一个应用对象，这个”create_app()”就是应用工厂方法。在工厂方法里，我们分别加载了配置，扩展和蓝图。这里要注意，因为没有一个全局的 app 对象，所以上一节例子中的应用视图就无法工作，因为无法执行”@app.route()”。怎么办？还好 Flask 有个蓝图功能，我们将主程序里的视图，数据模型，表单等也放到一个蓝图下，这里起名为”main”。创建蓝图时不指定”url_prefix”，这样它的 URL 前缀就是根路径。
 
-```
+```py
 from flask import Blueprint
 
 main = Blueprint('main', __name__)
@@ -144,7 +144,7 @@ from myapp.main import views
 
 然后在视图函数里用蓝图对象路由即可，这个对象在蓝图创建后就可见了：
 
-```
+```py
 from myapp.main import main
 
 @main.route('/')
@@ -155,7 +155,7 @@ def index():
 
 有了应用工厂后，我们怎么启动应用呢。这个就简单了，我们修改下主目录下的”run.py”文件：
 
-```
+```py
 from myapp import create_app
 import config
 
@@ -174,7 +174,7 @@ app.run(host='0.0.0.0', debug=True)
 
 上节最后说到了多个应用（在同一 Python 进程中）同时启用。这个怎么做到？我们先来深入下 Flask 中的”app.run()”方法。这个方法本质上是调用了 Werkzeug 中的”werkzeug.serving.run_simple()”方法来启动一个 WSGI 服务器，前面例子中”app.run(host=’0.0.0.0′, debug=True)”等同于调用：
 
-```
+```py
 from werkzeug.serving import run_simple
 
 # debug=True means use_reloader=True and use_debugger=True
@@ -184,7 +184,7 @@ run_simple('0.0.0.0', 5000, app, use_reloader=True, use_debugger=True)
 
 我们曾经说过 Flask 就是基于 Werkzeug 和 Jinja2 建立起来的，Werkzeug 帮助 Flask 封装了很多 WSGI 层面的操作。所以，要同时启用多个应用，就要利用 Werkzeug 的方法，大家看下面的例子：
 
-```
+```py
 from werkzeug.wsgi import DispatcherMiddleware
 from werkzeug.serving import run_simple
 from myapp import create_app

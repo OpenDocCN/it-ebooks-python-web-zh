@@ -8,7 +8,7 @@
 
 现在修改 my_blog/article/views.py 代码:
 
-```
+```py
 # -*- coding: utf-8 -*-
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -33,7 +33,7 @@ def detail(request, id):
 
 在 my_blog/my_blog/urls.py 中修改 url 设置:
 
-```
+```py
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 
@@ -50,7 +50,7 @@ urlpatterns = patterns('',
 
 然后在 templates 下建立一个用于显示单页博文的界面:
 
-```
+```py
 #post.html
 {% extends "base.html" %}
 
@@ -79,7 +79,7 @@ urlpatterns = patterns('',
 
 修改 home.html 和 base.html, 加入动态链接和主页, 归档, 专题和 About Me 按钮
 
-```
+```py
 <!--home.html-->
 {% extends "base.html" %}
 
@@ -107,7 +107,7 @@ urlpatterns = patterns('',
 {% endblock %} 
 ```
 
-```
+```py
 <!--base.html-->
 <!doctype html>
 <html lang="en">
@@ -176,7 +176,7 @@ urlpatterns = patterns('',
 
 其中主要改动
 
-```
+```py
 - 添加了几个导航按钮, 方便以后添加功能(暂时不添加登陆功能)
 - 添加 read more 按钮
 - 在博客文章的增加一个链接, 链接的 href 属性为`{% url "detail" id=post.id %}`, 当点击这个文章题目时, 会将对应的数据库对象的 id 传入的 url 中, 类似于 url 传参, 不记得的同学可以重新回到前几页翻一下. 这里将数据库对象唯一的 id 传送给 url 设置, url 取出这个 id 给对应的 view 中的函数逻辑当做参数. 这样这个 id 就传入对应的参数中被使用 

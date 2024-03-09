@@ -20,7 +20,7 @@ Note: 较早版本的 lighttpd 可能会按照不同的方式组织.conf 文件�
 
 ### ligghttpd 在 Debian GNU/Linux 下的配置文件
 
-```
+```py
 Files and Directories in /etc/lighttpd:
 ---------------------------------------
 
@@ -54,7 +54,7 @@ Enabling and disabling modules could be done by provided
 
 `/etc/lighttpd/lighttpd.conf`
 
-```
+```py
 server.modules              = (
             "mod_access",
             "mod_alias",
@@ -66,13 +66,13 @@ server.document-root       = "/path-to/webpy-app"
 
 对我来说，我使用 postgresql，因此需要授予对的数据库权限，可以添加行如下（如果不使用则不需要）。
 
-```
+```py
 server.username = "postgres" 
 ```
 
 `/etc/lighttpd/conf-available/10-fastcgi.conf`
 
-```
+```py
 server.modules   += ( "mod_fastcgi" )
 server.modules   += ( "mod_rewrite" )
 
@@ -98,13 +98,13 @@ server.modules   += ( "mod_rewrite" )
 
 `/code.py` 在代码头部添加以下代码，让系统环境使用系统环境中当前的 python
 
-```
+```py
 #!/usr/bin/env python 
 ```
 
 最后不要忘记了要对需要执行的 py 代码设置执行权限，否则你可能会遇到“permission denied”错误。
 
-```
+```py
 $ chmod 755 /path-to/webpy-app/code.py 
 ```
 
@@ -137,7 +137,7 @@ $ chmod 755 /path-to/webpy-app/code.py
 
 ## Nginx 配置文件
 
-```
+```py
 location / {
     include fastcgi_params;
     fastcgi_param SCRIPT_FILENAME $fastcgi_script_name;  # [1]
@@ -148,7 +148,7 @@ location / {
 
 对于静态文件可以添加如下配置:
 
-```
+```py
 location /static/ {
     if (-f $request_filename) {
     rewrite ^/static/(.*)$  /static/$1 break;
@@ -162,7 +162,7 @@ location /static/ {
 
 可以通过一下命令启动一个 Spawn-fcgi 进程:
 
-```
+```py
 spawn-fcgi -d /path/to/www -f /path/to/www/index.py -a 127.0.0.1 -p 9002 
 ```
 
@@ -170,14 +170,14 @@ spawn-fcgi -d /path/to/www -f /path/to/www/index.py -a 127.0.0.1 -p 9002
 
 启动:
 
-```
+```py
 #!/bin/sh
 spawn-fcgi -d /path/to/www -f /path/to/www/index.py -a 127.0.0.1 -p 9002 
 ```
 
 关闭:
 
-```
+```py
 #!/bin/sh
 kill `pgrep -f "python /path/to/www/index.py"` 
 ```
@@ -188,7 +188,7 @@ kill `pgrep -f "python /path/to/www/index.py"`
 
 讲下面的代码保存为 index.py（或者任何你喜欢的），注意，使用 Nginx 配置的话，`web.wsgi.runwsgi = lambda func, addr=None: web.wsgi.runfcgi(func, addr)`这一行代码是必须的。
 
-```
+```py
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
@@ -217,13 +217,13 @@ if __name__ == "__main__":
 
 重启 nginx 配置:
 
-```
+```py
 /path/to/nginx/sbin/nginx -s reload 
 ```
 
 停止 nginx:
 
-```
+```py
 /path/to/nginx/sbin/nginx -s stop 
 ```
 
@@ -237,7 +237,7 @@ Here are the simple steps needed to create and run an web.py application.
 
 *   Create the application as documented
 
-    ```
+    ```py
      if __name__ == "__main__":
           web.run(urls, globals()) 
     ```
@@ -246,7 +246,7 @@ For our example, let it be named `app.py`, located in `/www/app` and we need it 
 
 *   Configure Apache (version 2.2 in this example)
 
-    ```
+    ```py
      ScriptAlias /app "/www/app/"
       &lt;Directory "/www/app/"&gt;
               Options +ExecCGI +FollowSymLinks
@@ -259,7 +259,7 @@ That's it. Your application is accessible via `http://server/app/app.py/`. Addit
 
 *   .htaccess configuration
 
-    ```
+    ```py
      Options +ExecCGI
             AddHandler cgi-script .py
             DirectoryIndex index.py
@@ -293,13 +293,13 @@ Here it is assumed that your application is called index.py. The above htaccess 
 
 [`code.google.com/p/modwsgi/`](http://code.google.com/p/modwsgi/). 它将安装一个'.so'的模块到您的 apache 模块文件夹，例如：
 
-```
+```py
  /usr/lib64/httpd/modules/ 
 ```
 
 *   在 httpd.conf 中配置 Apache 加载 mod_wsgi 模块和您的项目：
 
-    ```
+    ```py
      LoadModule wsgi_module modules/mod_wsgi.so
 
       WSGIScriptAlias /appname /var/www/webpy-app/code.py/
@@ -315,7 +315,7 @@ Here it is assumed that your application is called index.py. The above htaccess 
 
 *   演示文件 'code.py':
 
-    ```
+    ```py
      import web
 
       urls = (
@@ -335,7 +335,7 @@ Here it is assumed that your application is called index.py. The above htaccess 
 
 如果您需要在 mod_wsgi 中使用 sessions，您可以改变您的代码如下：
 
-```
+```py
 app = web.application(urls, globals())
 
 curdir = os.path.dirname(__file__)
@@ -354,7 +354,7 @@ It is possible to deploy web.py with nginx using a mod_wsgi similar to the modul
 
 After compiling and installing nginx with mod_wsgi, you can easily get a web.py app up and running with the following config* (edit the paths and settings with your own):
 
-```
+```py
 wsgi_python_executable  /usr/bin/python;
 
 server {
@@ -402,7 +402,7 @@ Helpful links: [nginx website](http://nginx.net/) [wiki page on mod_wsgi](http:/
 
 ## Nginx 配置文件
 
-```
+```py
 location / {
     include fastcgi_params;
     fastcgi_param SCRIPT_FILENAME $fastcgi_script_name;  # [1]
@@ -413,7 +413,7 @@ location / {
 
 对于静态文件可以添加如下配置:
 
-```
+```py
 location /static/ {
     if (-f $request_filename) {
     rewrite ^/static/(.*)$  /static/$1 break;
@@ -427,7 +427,7 @@ location /static/ {
 
 可以通过一下命令启动一个 Spawn-fcgi 进程:
 
-```
+```py
 spawn-fcgi -d /path/to/www -f /path/to/www/index.py -a 127.0.0.1 -p 9002 
 ```
 
@@ -435,14 +435,14 @@ spawn-fcgi -d /path/to/www -f /path/to/www/index.py -a 127.0.0.1 -p 9002
 
 启动:
 
-```
+```py
 #!/bin/sh
 spawn-fcgi -d /path/to/www -f /path/to/www/index.py -a 127.0.0.1 -p 9002 
 ```
 
 关闭:
 
-```
+```py
 #!/bin/sh
 kill `pgrep -f "python /path/to/www/index.py"` 
 ```
@@ -453,7 +453,7 @@ kill `pgrep -f "python /path/to/www/index.py"`
 
 讲下面的代码保存为 index.py（或者任何你喜欢的），注意，使用 Nginx 配置的话，`web.wsgi.runwsgi = lambda func, addr=None: web.wsgi.runfcgi(func, addr)`这一行代码是必须的。
 
-```
+```py
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
@@ -482,13 +482,13 @@ if __name__ == "__main__":
 
 重启 nginx 配置:
 
-```
+```py
 /path/to/nginx/sbin/nginx -s reload 
 ```
 
 停止 nginx:
 
-```
+```py
 /path/to/nginx/sbin/nginx -s stop 
 ```
 

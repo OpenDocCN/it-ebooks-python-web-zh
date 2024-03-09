@@ -20,7 +20,7 @@
 
 熟悉自动化测试的朋友们知道，几乎每个测试框架都有 Set Up 和 Tear Down 方法。Set Up 方法会在每个测试用例执行前被调用，一般用来初始化测试用例的运行环境，而 Tear Down 方法会在每个测试用例执行完后被调用，一般用来销毁该测试用例的运行环境。这样做，就可以保证测试用例之间互相不影响。让我们先创建一个测试代码文件，并写入测试类，及 Set Up 和 Tear Down 方法：
 
-```
+```py
 import os
 import unittest
 import tempfile
@@ -58,7 +58,7 @@ if __name__ == '__main__':
 
 下面是一个测试用户成功登录的测试用例，”setUp()”和”tearDown()”方法我们就略去了：
 
-```
+```py
 from flask import session
 
 class SampleTestCase(unittest.TestCase):
@@ -80,13 +80,13 @@ class SampleTestCase(unittest.TestCase):
 
 大家运行下这个测试，假设测试的代码写在了”sample_test.py”，我们可以执行 python 命令：
 
-```
+```py
 $ python sample_test.py
 ```
 
 然后应该可以在命令行看到如下结果：
 
-```
+```py
 .
 ----------------------------------------------------------------------
 Ran 1 test in 0.035s
@@ -101,7 +101,7 @@ OK
 
 上面的测试用例中，我们成功将 admin 用户登录，所以 session 中的 user 值为 admin。如果这时我们想修改这个值，怎么做？笨办法是先登出，再换个用户登录。Flask 其实提供了方法让我们修改当前测试用例中的 session 值。我们在上面的测试用例函数中，加上下一段代码：
 
-```
+```py
             # Modify session
             with client.session_transaction() as sess:
                 sess['user'] = 'guest'
@@ -119,7 +119,7 @@ OK
 
 更进一步，有时候我们不想模拟客户端访问一个已有的 URL 来创建请求。我们想创建一个虚拟的请求，并且建立虚拟的请求上下文环境，看看下面的例子：
 
-```
+```py
 from flask import make_response, render_template, request
 
 class SampleTestCase(unittest.TestCase):
@@ -138,7 +138,7 @@ class SampleTestCase(unittest.TestCase):
 
 这里，我们使用”with app.test_request_context()”语句构建了一个虚拟的”/?user=admin”请求上下文环境，因此我们可以在其中访问到请求对象 request。在使用”with app.test_request_context()”时，离开 with 语句会调用上下文 Hook 函数”teardown_request()”，但是”before_request()”和”after_request()”的 Hook 函数都不会被调用。你必须使用”app.preprocess_request()”和”app.process_response()”来显式地调用它们，比如基于上面的例子，我们可以这样调用”before_request()”和”after_request()”的上下文 Hook 函数：
 
-```
+```py
     def test_home_with_context(self):
         with app.test_request_context('/?user=admin'):
             # All before_request hooks will be called here
@@ -159,7 +159,7 @@ class SampleTestCase(unittest.TestCase):
 
 上面我们介绍了如何自己构建一个请求上下文，如果我们想往应用上下文添加或修改内容呢？方法是定义你要修改应用上下文的函数，并将它作为订阅”appcontext_pushed”信号的回调函数。这样，函数会在应用上下文压入栈时被执行。
 
-```
+```py
 from contextlib import contextmanager
 from flask import appcontext_pushed, g
 
@@ -174,7 +174,7 @@ def name_set(app, name):
 
 “@contextmanager”装饰器表明可以针对”name_set()”函数使用 with 语句来限制其上下文作用域，即离开了”with name_set()”语句块后，”appcontext_pushed”信号的订阅就无效了。现在我们可以在测试用例中这样使用这个”name_set()”函数：
 
-```
+```py
 from contextlib import contextmanager
 from flask import appcontext_pushed, g
 

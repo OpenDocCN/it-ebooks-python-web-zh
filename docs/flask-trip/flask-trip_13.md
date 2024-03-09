@@ -47,7 +47,7 @@ Digital Ocean 是最近出现的 EC2 的竞争对手。一如 EC2，Digital Ocea
 
 *app.py*
 
-```
+```py
 from flask import Flask
 
 app = Flask(__name__)
@@ -59,7 +59,7 @@ def index():
 
 哦，这真简明扼要。现在，使用 Gunicorn 来运行它吧，我们只需执行这个命令：
 
-```
+```py
 (ourapp)$ gunicorn rocket:app
 2014-03-19 16:28:54 [62924] [INFO] Starting gunicorn 18.0
 2014-03-19 16:28:54 [62924] [INFO] Listening at: http://127.0.0.1:8000 (62924)
@@ -73,7 +73,7 @@ def index():
 
 如果我们这么做了，当我们想要关闭服务器时就会困惑于到底应该关闭哪个进程。我们可以让 Gunicorn 把进程 ID 储存到文件中，这样如果想要停止或者重启服务器时，我们可以不用在一大串运行中的进程中搜索它。我们使用`-p <file>`选项来这么做。现在，我们的 Gunicorn 部署命令是这样：
 
-```
+```py
 (ourapp)$ gunicorn rocket:app -p rocket.pid -D
 (ourapp)$ cat rocket.pid
 63101 
@@ -81,14 +81,14 @@ def index():
 
 要想重新启动或者关闭服务器，我们可以运行对应的命令：
 
-```
+```py
 (ourapp)$ kill -HUP `cat rocket.pid` # 发送一个 SIGHUP 信号，终止进程
 (ourapp)$ kill `cat rocket.pid` 
 ```
 
 默认下 Gunicorn 会运行在 8000 端口。如果这已经被另外的应用占用了，你可以通过添加`-b`选项来指定端口。
 
-```
+```py
 (ourapp)$ gunicorn rocket:app -p rocket.pid -b 127.0.0.1:7999 -D 
 ```
 
@@ -98,7 +98,7 @@ def index():
 
 如果你像前面说的那样在服务器上运行 Gunicorn，将不能从本地系统中访问到它。这是因为默认情况下 Gunicorn 绑定在 127.0.0.1。这意味着它仅仅监听来自服务器自身的连接。所以通常使用一个反向代理来作为外网和 Gunicorn 服务器的中介。不过，假如为了 debug，你需要直接从外网发送请求给 Gunicorn，可以告诉 Gunicorn 绑定 0.0.0.0。这样它就会监听所有请求。
 
-```
+```py
 (ourapp)$ gunicorn rocket:app -p rocket.pid -b 0.0.0.0:8000 -D 
 ```
 
@@ -115,7 +115,7 @@ def index():
 
 */etc/nginx/sites-available/exploreflask.com*
 
-```
+```py
 # Redirect www.exploreflask.com to exploreflask.com
 server {
         server_name www.exploreflask.com;
@@ -142,7 +142,7 @@ server {
 
 现在在*/etc/nginx/sites-enabled*下创建该文件的符号链接，接着重启 Nginx。
 
-```
+```py
 $ sudo ln -s \
 /etc/nginx/sites-available/exploreflask.com \
 /etc/nginx/sites-enabled/exploreflask.com 
@@ -158,7 +158,7 @@ $ sudo ln -s \
 
 *app.py*
 
-```
+```py
 from flask import Flask
 
 # Import the fixer

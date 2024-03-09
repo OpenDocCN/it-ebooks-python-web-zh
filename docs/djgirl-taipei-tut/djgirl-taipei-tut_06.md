@@ -18,7 +18,7 @@
 
 為了開發方便，我們使用 Python 預設的資料庫引擎 - SQLite。打開 `mysite/settings.py`，看看 `DATABASES` 的設定。它應該長得像下面這樣：
 
-```
+```py
 # mysite/settings.py
 
 ...
@@ -45,7 +45,7 @@ DATABASES = {
 
 我們在 `trips/models.py` 宣告一個 `Post` 類別，並定義裡面的屬性，而 Django 會依據這個建立資料表，以及資料表裡的欄位設定：
 
-```
+```py
 # trips/models.py
 
 from django.db import models
@@ -87,7 +87,7 @@ class Post(models.Model):
 
 首先執行 [`makemigrations`](https://docs.djangoproject.com/en/1.8/ref/django-admin/#django-admin-makemigrations) 指令：
 
-```
+```py
 (djangogirls_venv) ~/djangogirls/mysite$ python manage.py makemigrations
 Migrations for 'trips':
   0001_initial.py:
@@ -98,13 +98,13 @@ Migrations for 'trips':
 
 接著用以下的指令，讓 Django 根據上面的紀錄，把 `models.py` 中的欄位寫入資料庫：
 
-```
+```py
 (djangogirls_venv) ~/djangogirls/mysite$ python manage.py migrate 
 ```
 
 結果應該類似下面這樣：
 
-```
+```py
 Operations to perform:
   Synchronize unmigrated apps: staticfiles, messages
   Apply all migrations: sessions, admin, auth, contenttypes

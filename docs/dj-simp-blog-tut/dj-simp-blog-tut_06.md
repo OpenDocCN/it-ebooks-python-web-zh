@@ -14,7 +14,7 @@ Django 中 views 里面的代码就是一个一个函数逻辑, 处理客户端(
 
 那么那么开始在 my_blog/article/views.py 中编写简单的逻辑
 
-```
+```py
 #现在你的 views.py 应该是这样
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -26,7 +26,7 @@ def home(request):
 
 那么如何使这个逻辑在 http 请求进入时, 被调用呢, 这里需要在`my_blog/my_blog/urls.py`中进行 url 设置
 
-```
+```py
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 
@@ -60,14 +60,14 @@ urlpatterns = patterns('',
 
 现在我们这样做, 在 my_blog/article/views.py 加入如下代码:
 
-```
+```py
 def detail(request, my_args):
     return HttpResponse("You're looking at my_args %s." % my_args) 
 ```
 
 在 my_blog/my_blog/urls.py 中设置对应的 url,
 
-```
+```py
 urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'my_blog.views.home', name='home'),
@@ -90,7 +90,7 @@ urlpatterns = patterns('',
 
 修改在 my_blog/article/views.py 代码:
 
-```
+```py
 from django.shortcuts import render
 from django.http import HttpResponse
 from article.models import Article

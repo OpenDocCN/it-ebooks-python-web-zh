@@ -10,7 +10,7 @@
 
 我们将在应用的包中创建一个叫*static*的文件夹放置我们的静态文件。
 
-```
+```py
 myapp/
     __init__.py
     static/
@@ -22,7 +22,7 @@ run.py
 
 *static/*里面的文件组织方式取决于个人的爱好。就我个人来说，如果第三方库（比如 jQuery, Bootstrap 等等）跟自己的 Javascript 和 CSS 文件混起来，我会因此而不爽。所以，我要将第三方库全放到一个*lib/*文件夹中。有时会用*vendor/*来代替*lib/*。
 
-```
+```py
 static/
     css/
         lib/
@@ -44,7 +44,7 @@ static/
 
 用户将通过 yourapp.com/static/访问你的静态文件夹中的文件。默认下浏览器和其他软件认为你的 favicon 位于 yourapp.com/favicon.ico。要想解决这种不一致。你可以在站点模板的`<head>`部分添加下面内容。
 
-```
+```py
 <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}"> 
 ```
 
@@ -56,7 +56,7 @@ Flask-Assets 是一个管理静态文件的插件。它提供了两种非常有�
 
 *myapp/static/*
 
-```
+```py
 static/
     css/
         lib/
@@ -81,7 +81,7 @@ static/
 
 *myapp/util/assets.py*
 
-```
+```py
 from flask_assets import Bundle, Environment
 from .. import app
 
@@ -126,7 +126,7 @@ Flask-Assets 按照被列出来的顺序合并你的文件。如果*admin.js*依
 
 myapp/__init__.py
 
-```
+```py
 # [...] Initialize the app
 
 from .util import assets 
@@ -138,7 +138,7 @@ from .util import assets
 
 *myapp/templates/*
 
-```
+```py
 templates/
     home/
         layout.html
@@ -154,7 +154,7 @@ templates/
 
 myapp/templates/admin/layout.html
 
-```
+```py
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -180,7 +180,7 @@ myapp/templates/admin/layout.html
 
 myapp/util/assets.py
 
-```
+```py
 # [...]
 
 bundles = {

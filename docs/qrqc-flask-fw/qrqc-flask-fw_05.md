@@ -12,7 +12,7 @@
 
 按照以下命令建立 Flask 项目 HelloWorld:
 
-```
+```py
 mkdir HelloWorld
 mkdir HelloWorld/static
 mkdir HelloWorld/templates
@@ -25,7 +25,7 @@ touch HelloWorld/index.py
 
 编辑`HelloWorld/index.py`：
 
-```
+```py
 from flask import Flask, url_for
 
 app = Flask(__name__)
@@ -56,7 +56,7 @@ if __name__ == '__main__':
 
 运行`HelloWorld/index.py`。然后在浏览器中访问`http://127.0.0.1:5000/test`，`HelloWorld/index.py`将输出以下信息：
 
-```
+```py
 /
 /user/letian
 /page/1?q=hadoop+mapreduce+10%253

@@ -6,7 +6,7 @@ Tornado 对 [WSGI](http://wsgi.org/) 只提供了有限的支持，即使如此�
 
 你可以通过 `wsgi` 模块中的 `WSGIApplication` 创建一个有效的 WSGI 应用（区别于 我们用过的 `tornado.web.Application`）。下面的例子展示了使用内置的 WSGI `CGIHandler` 来创建一个有效的 [Google AppEngine](http://code.google.com/appengine/) 应用。
 
-```
+```py
 import tornado.web
 import tornado.wsgi
 import wsgiref.handlers

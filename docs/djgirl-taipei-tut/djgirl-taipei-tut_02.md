@@ -10,13 +10,13 @@
 
 我們先建立一個名為 `djangogirls` 的資料夾
 
-```
+```py
 mkdir djangogirls 
 ```
 
 並切換至剛剛建立的目錄
 
-```
+```py
 cd djangogirls 
 ```
 
@@ -41,7 +41,7 @@ cd djangogirls
 
 如果有按照安裝教學，使用 **Django Environment** 開啟終端機後，輸入以下指令：
 
-```
+```py
 C:\Users\YOUR_NAME\djangogirls> python -m venv djangogirls_venv 
 ```
 
@@ -49,7 +49,7 @@ C:\Users\YOUR_NAME\djangogirls> python -m venv djangogirls_venv
 
 Linux 或 OS X 需要使用 `python3` 來建立虛擬環境，指令如下：
 
-```
+```py
 ~/djangogirls$ python3 -m venv djangogirls_venv 
 ```
 
@@ -61,19 +61,19 @@ Linux 或 OS X 需要使用 `python3` 來建立虛擬環境，指令如下：
 
 #### Windows
 
-```
+```py
 C:\Users\YOUR_NAME\djangogirls> djangogirls_venv\Scripts\activate 
 ```
 
 #### Linux / OS X
 
-```
+```py
 ~/djangogirls$ source djangogirls_venv/bin/activate 
 ```
 
 如果無法使用 `source` 的話，可以用下列指令替代：
 
-```
+```py
 ~/djangogirls$ . djangogirls_venv/bin/activate 
 ```
 
@@ -83,13 +83,13 @@ C:\Users\YOUR_NAME\djangogirls> djangogirls_venv\Scripts\activate
 
 #### Windows
 
-```
+```py
 (djangogirls_venv) C:\Users\YOUR_NAME\djangogirls> 
 ```
 
 #### Linux / OS X
 
-```
+```py
 (djangogirls_venv) ~/djangogirls$ 
 ```
 
@@ -99,7 +99,7 @@ C:\Users\YOUR_NAME\djangogirls> djangogirls_venv\Scripts\activate
 
 Python 3.4 預先安裝了 `pip` 這個強大的套件管理工具，我們將使用它來安裝 Django：
 
-```
+```py
 (djangogirls_venv) ~/djangogirls$ pip install "django<1.9" 
 ```
 
@@ -107,7 +107,7 @@ Python 3.4 預先安裝了 `pip` 這個強大的套件管理工具，我們將�
 
 輸入了應該會看到如下的訊息，表示安裝成功
 
-```
+```py
 Installing collected packages: django
 Successfully installed django-1.8.6 
 ```
@@ -120,13 +120,13 @@ Successfully installed django-1.8.6
 
 請在虛擬環境下指令輸入 `python`，進入**互動式命令列**環境
 
-```
+```py
 (djangogirls_venv) ~/djangogirls$ python 
 ```
 
 輸入以下的指令取得 Django 版本資訊：
 
-```
+```py
 >>> import django
 >>> django.VERSION
 (1, 8, 6, 'final, 0') 

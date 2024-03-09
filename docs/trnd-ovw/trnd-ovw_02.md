@@ -6,7 +6,7 @@
 
 **手动安装：** 下载 [tornado-2.0.tar.gz](http://github.com/downloads/facebook/tornado/tornado-2.0.tar.gz)
 
-```
+```py
 tar xvzf tornado-2.0.tar.gz
 cd tornado-2.0
 python setup.py build

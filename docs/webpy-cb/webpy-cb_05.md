@@ -12,7 +12,7 @@
 
 `web.session`模块提供 session 支持。下面是一个简单的例子－－统计有多少人正在使用 session(session 计数器)：
 
-```
+```py
 import web
 web.config.debug = False
 urls = (
@@ -42,7 +42,7 @@ web.py 在处理请求之前，就加载 session 对象及其数据；在请求�
 
 如果用数据库代替磁盘文件来存储 session 信息，只要用`DBStore`代替`DiskStore`即可。使用 DBStore 需要建立一个表，结构如下：
 
-```
+```py
  create table sessions (
     session_id char(128) UNIQUE NOT NULL,
     atime timestamp NOT NULL default current_timestamp,
@@ -52,7 +52,7 @@ web.py 在处理请求之前，就加载 session 对象及其数据；在请求�
 
 `DBStore`被创建要传入两个参数：`db`对象和 session 的表名。
 
-```
+```py
 db = web.database(dbn='postgres', db='mydatabase', user='myname', pw='')
 store = web.session.DBStore(db, 'sessions')
 session = web.session.Session(app, store, initializer={'count': 0}) 
@@ -60,7 +60,7 @@ session = web.session.Session(app, store, initializer={'count': 0})
 
 ｀web.config｀中的`sessions_parameters`保存着 session 的相关设置，`sessions_parameters`本身是一个字典，可以对其修改。默认设置如下：
 
-```
+```py
 web.config.session_parameters['cookie_name'] = 'webpy_session_id'
 web.config.session_parameters['cookie_domain'] = None
 web.config.session_parameters['timeout'] = 86400, #24 * 60 * 60, # 24 hours   in seconds
@@ -88,7 +88,7 @@ web.config.session_parameters['expired_message'] = 'Session expired'
 
 使用 web.py 自带的 webserver 提供 web 服务时，web.py 就运行在调试模式下。当然最简单的办法就是禁用调试，只要令`web.config.debug = False`即可。
 
-```
+```py
 import web
 web.config.debug = False
 
@@ -101,7 +101,7 @@ web.config.debug = False
 
 下面这个例子就是把 session 保存在 `web.config`中：
 
-```
+```py
 import web
 urls = ("/", "hello")
 
@@ -131,13 +131,13 @@ if __name__ == "__main__":
 
 在应用程序中的代码:
 
-```
+```py
 render = web.template.render('templates', globals={'context': session}) 
 ```
 
 在模板中的代码:
 
-```
+```py
 <span>You are logged in as <b>$context.username</b></span> 
 ```
 
@@ -157,7 +157,7 @@ render = web.template.render('templates', globals={'context': session})
 
 #### 概述
 
-```
+```py
 setcookie(name, value, expires="", domain=None, secure=False): 
 ```
 
@@ -171,7 +171,7 @@ setcookie(name, value, expires="", domain=None, secure=False):
 
 用`web.setcookie()` 设置 cookie,如下:
 
-```
+```py
 class CookieSet:
     def GET(self):
         i = web.input(age='25')
@@ -191,21 +191,21 @@ class CookieSet:
 
 ##### 方法 1（如果找不到 cookie，就返回 None）：
 
-```
+```py
 web.cookies().get(cookieName)  
     #cookieName is the name of the cookie submitted by the browser 
 ```
 
 ##### 方法 2（如果找不到 cookie，就抛出 AttributeError 异常）：
 
-```
+```py
 foo = web.cookies()
 foo.cookieName 
 ```
 
 ##### 方法 3（如果找不到 cookie，可以设置默认值来避免抛出异常）：
 
-```
+```py
 foo = web.cookies(cookieName=defaultValue)
 foo.cookieName   # return the value (which could be default)
     #cookieName is the name of the cookie submitted by the browser 
@@ -215,7 +215,7 @@ foo.cookieName   # return the value (which could be default)
 
 用`web.cookies()` 访问 cookie. 如果已经用`web.setcookie()`设置了 Cookie, 就可以象下面这样获得 Cookie:
 
-```
+```py
 class CookieGet:
     def GET(self):
         c = web.cookies(age="25")
@@ -226,7 +226,7 @@ class CookieGet:
 
 如果要确认 cookie 值是否存在，可以这样做：
 
-```
+```py
 class CookieGet:
     def GET(self):
         try: 
@@ -238,7 +238,7 @@ class CookieGet:
 
 或
 
-```
+```py
 class CookieGet:
     def GET(self):
         age=web.cookies().get('age')
@@ -262,7 +262,7 @@ class CookieGet:
 
 ## #
 
-```
+```py
 import hashlib
 import web    
 
@@ -301,7 +301,7 @@ def POST(self):
 
 首先，为创建一个用户表。虽然这个表结构非常简单，但对于大部分项目来说都足够用了。
 
-```
+```py
 CREATE TABLE example_users
 (
   id serial NOT NULL,
@@ -321,7 +321,7 @@ CREATE TABLE example_users
 
 *   "Reset" 对应注销页
 
-```
+```py
 urls = (
     '/login', 'login',
     '/reset', 'reset',
@@ -332,7 +332,7 @@ urls = (
 
 要判断用户是否已登录，是非常简单的，只要有个变量记录用户登录的状态即可。在 login/reset 类中使用这段代码:
 
-```
+```py
 def logged():
     if session.login==1:
         return True
@@ -344,7 +344,7 @@ def logged():
 
 我把我的用户划为四类：管理员，用户，读者（已登录），访客（未登录）。根据 example_users 表中定义的不同权限，选择不同的模板路径。
 
-```
+```py
 def create_render(privilege):
     if logged():
         if privilege==0:
@@ -378,7 +378,7 @@ def create_render(privilege):
 
 现在，让我们用个轻松的方法来解决： - 如果你已登录，就直接重定向到 login_double.html 模板文件 - 否则，还是到 login.html。
 
-```
+```py
 class login:
     def GET(self):
         if logged():
@@ -396,7 +396,7 @@ class login:
 *   如果登录通过了，就重定向到 login_ok.html。
 *   如果没通过，就重定向到 login_error.html。
 
-```
+```py
  def POST(self):
         user, passwd = web.input().user, web.input().passwd
         ident = db.query("select * from example_users where user = '%s'" % (user)).getresult()
@@ -426,7 +426,7 @@ class login:
 
 对于 reset 方法，只要清除用户 session，再重定向到 logout.html 模板页即可。
 
-```
+```py
 class reset:
     def GET(self):
         session.login=0
@@ -441,7 +441,7 @@ class reset:
 
 嗯，我认为没有人想看这个，但我喜欢把所有的信息都提供出来。最重要的就是 login.html。
 
-```
+```py
 <FORM action=/login method=POST>
     <table id="login">
         <tr>
@@ -480,14 +480,14 @@ class reset:
 
 web.py 默认 session 信息只能在主应用中共享，即便在其他模块中 import Session 都不行。在 app.py（或 main.py）可以这样初始化 session：
 
-```
+```py
 session = web.session.Session(app, web.session.DiskStore('sessions'),
 initializer = {'test': 'woot', 'foo':''}) 
 ```
 
 .. 接下来创建一个被 web.loadhook 加载的处理器(processor)
 
-```
+```py
 def session_hook():
     web.ctx.session = session
 
@@ -496,7 +496,7 @@ app.add_processor(web.loadhook(session_hook))
 
 .. 在子应用(假设是 sub-app.py)中，可以这样操作 session:
 
-```
+```py
 print web.ctx.session.test
 web.ctx.session.foo = 'bar' 
 ```

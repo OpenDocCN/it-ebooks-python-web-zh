@@ -8,7 +8,7 @@
 
 > 请一定要把短名换成自己的多说短名, 非常感谢
 
-```
+```py
 <!-- 多说评论框 start -->
     <div class="ds-thread" data-thread-key="请将此处替换成文章在你的站点中的 ID" data-title="请替换成文章的标题" data-url="请替换成文章的网址"></div>
 <!-- 多说评论框 end -->
@@ -29,7 +29,7 @@ var duoshuoQuery = {short_name:"请在此处替换成自己的短名"};
 
 在 templates 中新建一个 duoshuo.html 并将代码放入其中, 并做一些修改
 
-```
+```py
 <!-- 多说评论框 start -->
     <div class="ds-thread" data-thread-key="{{ post.id }}" data-title="{{ post.title }}" data-url="{{ post.get_absolute_url }}"></div>
 <!-- 多说评论框 end -->
@@ -48,7 +48,7 @@ var duoshuoQuery = {short_name:"请在此处替换成自己的短名"};
 
 然后在 my_blog/article/models.py 中重写`get_absolute_url`方法
 
-```
+```py
 from django.db import models
 from django.core.urlresolvers import reverse
 
@@ -73,7 +73,7 @@ class Article(models.Model) :
 
 然后修改`post.html`
 
-```
+```py
 {% extends "base.html" %}
 {% load custom_markdown %}
 
@@ -111,14 +111,14 @@ class Article(models.Model) :
 
 现在我们就来 markdown 自己的博客吗, 首先是安装`markdown`库, 使用下面命令
 
-```
+```py
 #首先是安装 markdown
 $ pip install markdown  #记得激活虚拟环境 
 ```
 
 现在说说怎么 markdown 你的博文, 在 article 下建立新文件夹`templatetags`,然后我们来定义的自己的 template filter, 然后在 templatetags 中建立`__init__.py`, 让文件夹可以被看做一个包, 然后在文件夹中新建`custom_markdown.py`文件, 添加代码
 
-```
+```py
 import markdown
 
 from django import template
@@ -139,7 +139,7 @@ def custom_markdown(value):
 
 然后只需要对需要进行 markdown 化的地方进行简单的修改,
 
-```
+```py
 {% extends "base.html" %}
 {% load custom_markdown %}
 
@@ -177,7 +177,7 @@ def custom_markdown(value):
 
 修改`base.html`的头部
 
-```
+```py
 <!doctype html>
 <html lang="en">
 <head>

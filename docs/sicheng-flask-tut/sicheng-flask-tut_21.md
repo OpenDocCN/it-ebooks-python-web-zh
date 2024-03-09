@@ -21,7 +21,7 @@
 
 同之前的例子一样，我们还是通过 pip 来安装扩展：
 
-```
+```py
 $ pip install Flask-WTF
 ```
 
@@ -31,7 +31,7 @@ $ pip install Flask-WTF
 
 我们来仿照入门系列第四篇中的登录表单，用 Flask-WTF 实现它。这个表单只有一个文字输入框，并且当输入用户名为”admin”时才返回成功。WTForms 让我们在后端代码中定义表单类，并列出表单的字段和相应的验证规则。现在让我们先定义一个 MyForm 类：
 
-```
+```py
 from flask_wtf import Form
 from wtforms import StringField
 from wtforms.validators import DataRequired
@@ -45,7 +45,7 @@ class MyForm(Form):
 
 下一步，我们写个视图函数 login 来使用 MyForm 表单：
 
-```
+```py
 from flask import Flask, render_template
 app = Flask(__name__)
 app.secret_key = '1234567'
@@ -67,7 +67,7 @@ def login():
 
 最后让我们写”login.html”模板来显示这个表单：
 
-```
+```py
 <form method="POST" action="{{ url_for('login') }}">
     {{ form.hidden_tag() }}
     {{ form.user.label }}: {{ form.user(size=20) }}
@@ -80,7 +80,7 @@ def login():
 
 “form.user.label”会输出”user”字段的显示名，即上例中的”Username”；”form.user”会输出一个”text”类型的”<input>”标签，它的参数”size=20″会成为这个”<input>”标签里的属性。所以上面的模板内容在渲染后，会被转换为下面这段 HTML 代码：
 
-```
+```py
 <form method="POST" action="/login">
     <div style="display:none;"><input id="csrf_token" name="csrf_token" type="hidden" value="1458707165##33a1f1384d3c12dca29cce5e8ccf6e4d21f5f28f"></div>
     <label for="user">Username</label>: <input id="user" name="user" size="20" type="text" value="">
@@ -97,7 +97,7 @@ def login():
 
 上例中的表单只包含了一个字符类型的字段，WTForms 提供了大量内置的字段类型，来便于我们创建表单项，它们都放在”wtforms.fields”包下。下面，我们创建一个用户注册表单类，并将常用的字段类型都包括在其中，为了方便理解，描述就直接写在注释里：
 
-```
+```py
 from wtforms.fields import (StringField, PasswordField, DateField, BooleanField,
                             SelectField, SelectMultipleField, TextAreaField,
                             RadioField, IntegerField, DecimalField, SubmitField)
@@ -163,7 +163,7 @@ class RegisterForm(Form):
 
 接下来，让我们编写模板，因为字段比较多，我们先写一个宏来渲染单个字段，并存放在模板文件”_field.html”中：
 
-```
+```py
 {% macro render_field(field) %}
 <tr>
   <td>{{ field.label }}</td>
@@ -183,7 +183,7 @@ class RegisterForm(Form):
 
 这个”render_field”宏用来渲染表格中的一个行，它有三个列，分别是字段显示名，字段值，和错误信息（如果有错误的话）。然后，我们写”register.html”模板：
 
-```
+```py
 <!doctype html>
 <title>Registration Form Sample</title>
 <h1>User Registration</h1>
@@ -211,7 +211,7 @@ class RegisterForm(Form):
 
 模板中导入”render_field”宏，并依次渲染用户注册表单里的每一个字段。最后，我们写个视图函数来显示这个表单：
 
-```
+```py
 @app.route('/register', methods=('GET', 'POST'))
 def register():
     form = RegisterForm()
@@ -260,7 +260,7 @@ Flask-WTF 还提供了”RecaptchaField”字段来方便我们生成验证码�
 
 WTForms 本身有一个”FileField”用来处理文件上传功能，Flask-WTF 扩展对其作了封装，使得我们可以更方便的在 Flask 应用中实现文件上传。现在就让我们来定义一个文件上传的表单类：
 
-```
+```py
 class AttachForm(Form):
 from flask_wtf.file import FileField, FileAllowed, FileRequired
 
@@ -276,7 +276,7 @@ class AttachForm(Form):
 
 模板文件很简单，只要记得在”<form>”标签里加上属性’enctype=”multipart/form-data”‘即可：
 
-```
+```py
 <form method="POST" action="{{ url_for('upload') }}" enctype="multipart/form-data">
     {{ form.hidden_tag() }}
     {{ form.attach.label }} {{ form.attach }}
@@ -287,7 +287,7 @@ class AttachForm(Form):
 
 最后，写上视图函数：
 
-```
+```py
 from werkzeug import secure_filename
 
 @app.route('/upload', methods=('GET', 'POST'))

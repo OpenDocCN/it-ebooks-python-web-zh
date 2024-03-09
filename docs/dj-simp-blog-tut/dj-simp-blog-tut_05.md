@@ -8,7 +8,7 @@ Django 有一个优秀的特性, 内置了 Django admin 后台管理界面, 方�
 
 可以在 my_blog/my_blog/setting.py 中查看
 
-```
+```py
 INSTALLED_APPS = (
     'django.contrib.admin',  #默认添加后台管理功能
     'django.contrib.auth',
@@ -22,7 +22,7 @@ INSTALLED_APPS = (
 
 同时也已经添加了进入后天管理的 url, 可以在 my_blog/my_blog/urls.py 中查看
 
-```
+```py
 # -*- coding: utf-8 -*-
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
@@ -41,7 +41,7 @@ urlpatterns = patterns('',
 
 使用如下命令账号创建超级用户(如果使用了`python manage.py syncdb`会要求你创建一个超级用户, `该命令已经过时, 不再推荐使用`)
 
-```
+```py
 $ python manage.py createsuperuser
 Username (leave blank to use 'andrew_liu'): root
 Email address:
@@ -58,7 +58,7 @@ Superuser created successfully.
 
 但是你会发现并没有数据库信息的增加和删除, 现在我们在 my_blog/article/admin.py 中增加代码:
 
-```
+```py
 from django.contrib import admin
 from article.models import Article
 
@@ -80,7 +80,7 @@ Django 现在已经相对成熟, 已经有许多不错的可以使用的第三�
 
 ## 安装
 
-```
+```py
 $ pip install bootstrap-admin 
 ```
 
@@ -88,7 +88,7 @@ $ pip install bootstrap-admin
 
 然后在 my_blog/my_blog/setting.py 中修改`INSTALLED_APPS`
 
-```
+```py
  INSTALLED_APPS = (
     'bootstrap_admin',  #一定要放在`django.contrib.admin`前面
     'django.contrib.admin',

@@ -21,19 +21,19 @@ MongoDB 是一个文档型数据库，它灵活的 Schema，多层次的数据�
 
 我们通过 pip 安装 Flask-PyMongo 扩展：
 
-```
+```py
 $ pip install Flask-PyMongo
 ```
 
 安装完后，查看下 PyMongo 的版本，本文中的例子必须跑在 PyMongo 3.0.x 以上：
 
-```
+```py
 $ pip list | grep pymongo
 ```
 
 然后采用下面的方法初始化一个 Flask-PyMongo 的实例：
 
-```
+```py
 from flask import Flask
 from flask.ext.pymongo import PyMongo
 
@@ -52,7 +52,7 @@ mongo = PyMongo(app)
 
 在应用配置中，我们指定了 MongoDB 的服务器地址，端口，数据库名，用户名和密码。对于上面的配置，我们也可以简化为：
 
-```
+```py
 app.config.update(
     MONGO_URI='mongodb://localhost:27017/flask',
     MONGO_USERNAME='bjhee',
@@ -63,7 +63,7 @@ app.config.update(
 
 在同一应用中，我们还可以初始化两个以上的 Flask-PyMongo 实例，分别基于不同的配置项：
 
-```
+```py
 app.config.update(
     MONGO_URI='mongodb://localhost:27017/flask',
     MONGO_USERNAME='bjhee',
@@ -82,7 +82,7 @@ mongo_test = PyMongo(app, config_prefix='MONGO_TEST')
 
 MongoDB 中的表叫做集合(Collection)，表中的记录叫做文档(Document)。一个文档记录就是一个 JSON 对象，对于 Python 来说，就是一个字典。下面的代码就会在”users”集合中添加一条文档记录：
 
-```
+```py
     user = {'name':'Michael', 'age':18, 'scores':[{'course': 'Math', 'score': 76}]}
     mongo.db.users.insert_one(user)
 
@@ -90,7 +90,7 @@ MongoDB 中的表叫做集合(Collection)，表中的记录叫做文档(Document
 
 如果”users”集合不存在，PyMongo 会自动创建。让我们打开 MongoDB 的控制台，查询下刚才添加的文档：
 
-```
+```py
 > use flask
 > db.users.find()
 
@@ -98,7 +98,7 @@ MongoDB 中的表叫做集合(Collection)，表中的记录叫做文档(Document
 
 你应该会看到类似下面的信息：
 
-```
+```py
 { "_id" : ObjectId("56f00d13d35208259846a893"), "age" : 18, "name" : "Michael", 
 "scores" : [ { "course" : "Math", "score" : 76 } ] }
 
@@ -106,7 +106,7 @@ MongoDB 中的表叫做集合(Collection)，表中的记录叫做文档(Document
 
 MongoDB 会自动为文档记录创建一个主键”_id”，它的值是一个 uuid。你也可以在创建文档时获取这个值：
 
-```
+```py
     user = {'name':'Tom', 'age':21, 'scores':[{'course': 'Math', 'score': 85.5},
                                               {'course': 'Politics', 'score': 58}]}
     user_id = mongo.db.users.insert_one(user).inserted_id
@@ -116,7 +116,7 @@ MongoDB 会自动为文档记录创建一个主键”_id”，它的值是一个
 
 “mongo.db.users”用来获取名为”users”集合对象，类型是”pymongo.collection.Collection”，该对象上的”insert_one()”方法用来创建一条记录。相应的，集合对象上的”insert_many()”方法可以同时创建多条记录，比如：
 
-```
+```py
     result = mongo.db.tests.insert_many([{'num': i} for i in range(3)])
     print result.inserted_ids
 
@@ -124,7 +124,7 @@ MongoDB 会自动为文档记录创建一个主键”_id”，它的值是一个
 
 查询下 tests 的集合，你会看到类似下面的信息：
 
-```
+```py
 { "_id" : ObjectId("56f01209d3520825eee9844c"), "num" : 0 }
 { "_id" : ObjectId("56f01209d3520825eee9844d"), "num" : 1 }
 { "_id" : ObjectId("56f01209d3520825eee9844e"), "num" : 2 }
@@ -135,7 +135,7 @@ MongoDB 会自动为文档记录创建一个主键”_id”，它的值是一个
 
 集合对象提供了”find_one()”和”find()”方法分别用来获取一条和多条文档记录，两个方法都可以传入查询条件作为参数：
 
-```
+```py
 @app.route('/user')
 @app.route('/user/<string:name>')
 def user(name=None):
@@ -153,7 +153,7 @@ def user(name=None):
 
 上例中的模板文件”users.html”如下：
 
-```
+```py
 <!doctype html>
 <title>PyMongo Sample</title>
 <h1>Users:</h1>
@@ -176,7 +176,7 @@ Cursor 类还提供了很多功能接口来强化查询功能，这里列举一�
 
 1.  “count()”方法, 获取返回数据集的大小
 
-```
+```py
     users = mongo.db.users.find({'age':{'$lt':20}})
     print users.count()    # 打印年龄小于 20 的用户个数
 
@@ -184,7 +184,7 @@ Cursor 类还提供了很多功能接口来强化查询功能，这里列举一�
 
 *   “sort()”方法, 排序
 
-```
+```py
     from flask.ext.pymongo import DESCENDING
 
     # 返回所有用户，并按名字升序排序
@@ -196,7 +196,7 @@ Cursor 类还提供了很多功能接口来强化查询功能，这里列举一�
 
 *   “limit()”和”skip()”方法, 分页
 
-```
+```py
     # 最多只返回 5 条记录，并且忽略开始的 2 条
     # 即返回第三到第七（如果存在的话）条记录
     users = mongo.db.users.find().limit(5).skip(2)
@@ -205,7 +205,7 @@ Cursor 类还提供了很多功能接口来强化查询功能，这里列举一�
 
 *   “distinct()”方法, 获取某一字段的唯一值
 
-```
+```py
     ages = mongo.db.users.find().distinct('age')
     print ages    # 打印 [18, 21, 17]
 
@@ -219,7 +219,7 @@ Cursor 类还提供了很多功能接口来强化查询功能，这里列举一�
 
 “pymongo.collection.Collection”提供了两种更新数据的方法，一种是 update，可以更新指定文档中某个字段的值，同关系型数据库中的 update 类似。update 有两个函数，”update_one()”更新一条记录，”update_many()”更新多条记录：
 
-```
+```py
     # 找到名为 Tom 的第一条记录，将其年龄加 3
     result = mongo.db.users.update_one({'name': 'Tom'}, {'$inc': {'age': 3}})
     # 打印被改动过的记录数
@@ -233,7 +233,7 @@ Cursor 类还提供了很多功能接口来强化查询功能，这里列举一�
 
 另一种更新数据的方法是 replace，它不是用来更新某一字段，而是把整条记录替换掉。它就一个函数”replace_one()”：
 
-```
+```py
     user = {'name':'Lisa', 'age':23, 'scores':[{'course': 'Politics', 'score': 95}]}
     # 找到名为 Jane 的第一条记录，将其替换为上面的名为 Lisa 的记录
     result = mongo.db.users.replace_one({'name': 'Jane'}, user)
@@ -246,7 +246,7 @@ Cursor 类还提供了很多功能接口来强化查询功能，这里列举一�
 
 删除数据可以使用集合对象上的 delete 方法，它也有两个函数，”delete_one()”删除一条记录，”delete_many()”删除多条记录：
 
-```
+```py
     # 删除名为 Michael 的第一条记录
     result = mongo.db.users.delete_one({'name': 'Michael'})
     # 打印被删除的记录数
@@ -260,7 +260,7 @@ Cursor 类还提供了很多功能接口来强化查询功能，这里列举一�
 
 如果你想将集合整个删除，可以使用”drop()”方法：
 
-```
+```py
     mongo.db.users.drop()
 
 ```
@@ -273,7 +273,7 @@ Cursor 类还提供了很多功能接口来强化查询功能，这里列举一�
 
 我们来做个小练习，在扩展系列第一篇中我们介绍过 Flask-Restful 的实现，并且让大家做了练习将 Restful 同数据库集成。现在让我们把数据库改为 MongoDB，使用上面介绍的 Flask-PyMongo 来实现。下面是参考代码：
 
-```
+```py
 from flask import Flask, request
 from flask.ext.restful import Api, Resource
 from flask.ext.pymongo import PyMongo

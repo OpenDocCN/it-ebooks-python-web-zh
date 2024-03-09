@@ -19,7 +19,7 @@
 
 让我们先创建一个工程，目录结构如下：
 
-```
+```py
 flask-logging/
   ├ LICENSE           # 授权说明
   ├ README            # 项目介绍
@@ -35,7 +35,7 @@ flask-logging/
 
 接下来，我们写”setup.py”文件，示例如下：
 
-```
+```py
 """
 Flask-Logging
 -------------
@@ -84,7 +84,7 @@ setup(
 
 进入主题了，由于我们的扩展相当简单，因此所有代码都放在了”__init__.py”中：
 
-```
+```py
 #coding:utf8
 from flask import current_app, request
 from functools import wraps
@@ -138,7 +138,7 @@ class Logging:
 
 扩展写完了，让我们来测试一下，创建一个 Flask 应用：
 
-```
+```py
 from flask import Flask
 from flask_logging import Logging
 

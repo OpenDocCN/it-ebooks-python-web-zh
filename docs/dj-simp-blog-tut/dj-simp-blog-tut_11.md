@@ -10,7 +10,7 @@
 
 首先在 my_blog/templates 下添加所有输入框
 
-```
+```py
 <div class="sidebar pure-u-1 pure-u-md-1-4">
         <div class="header">
             <h1 class="brand-title"><a href="{% url "home" %}">Andrew Liu Blog</a></h1>
@@ -48,7 +48,7 @@
 
 在 my_blog/article/views.py 中添加查询逻辑
 
-```
+```py
 def blog_search(request):
     if 's' in request.GET:
         s = request.GET['s']
@@ -67,7 +67,7 @@ def blog_search(request):
 
 这里为了简单起见, 直接对`archives.html`进行修改, 使其符合查询逻辑
 
-```
+```py
 {% extends "base.html" %}
 
 {% block content %}
@@ -93,7 +93,7 @@ def blog_search(request):
 
 添加了 if 判断逻辑, 然后还需要修改`views 中的 archives`
 
-```
+```py
 def archives(request) :
     try:
         post_list = Article.objects.all()
@@ -105,7 +105,7 @@ def archives(request) :
 
 最后添加`my_blog/my_blog/urls.py`设置 url
 
-```
+```py
 urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'my_blog.views.home', name='home'),
@@ -127,13 +127,13 @@ urlpatterns = patterns('',
 
 通过使用 Django 中内建的 filter 就可以速度实现
 
-```
+```py
 {{ value|truncatewords:2 }} #这里 2 表示要显示的单词数, 以后的会被截断, 不在显示 
 ```
 
 这里只需要修改 my_blog/templates/home.html 界面中的变量的过滤器
 
-```
+```py
 #将正文截断设置为 10
  {{ post.content|custom_markdown|truncatewords_html:100 }} 
 ```

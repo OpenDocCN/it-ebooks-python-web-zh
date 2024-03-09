@@ -32,7 +32,7 @@
 
 代码清单 8-1 一个简单的 Nginx 代理配置
 
-```
+```py
 user nginx;
 worker_processes 5;
 
@@ -95,7 +95,7 @@ Nginx 默认以循环的方式分配请求。此外，你也可以选择基于�
 
 代码清单 8-2 使用 SSL 的 server 块
 
-```
+```py
 server {
     listen 443;
     ssl on;
@@ -131,7 +131,7 @@ server {
 
 代码清单 8-3 用于重定向 HTTP 请求到安全渠道的 server 块
 
-```
+```py
 server {
     listen 80;
     server_name example.com;
@@ -153,7 +153,7 @@ Supervisor 的设计是每次开机时启动其配置文件中列出的进程。
 
 代码清单 8-4 tornado.conf
 
-```
+```py
 [group:tornadoes]
 programs=tornado-8000,tornado-8001,tornado-8002,tornado-8003
 
@@ -201,7 +201,7 @@ loglevel=info
 
 一旦你安装和配置好 Supervisor，你就可以使用 supervisorctl 来管理 supervisord 进程。为了启动你的 Web 应用，你可以让 Supervisor 重新读取配置，然后任何配置改变的程序或程序组将被重启。你同样可以手动启动、停止和重启被管理的程序或检查整个系统的状态。
 
-```
+```py
 supervisor> update
 tornadoes: stopped
 tornadoes: updated process group

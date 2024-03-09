@@ -27,14 +27,14 @@
 
 先让我们创建一个新的数据库。在 Linux:
 
-```
+```py
 rm app.db
 ./db_create.py 
 ```
 
 或者在 Windows 上:
 
-```
+```py
 del app.db
 flask/Scripts/python db_create.py 
 ```
@@ -49,7 +49,7 @@ flask/Scripts/python db_create.py
 
 糟糕！我们已经得到了来自 SQLAlchem​​y 的一个异常。错误的信息写着:
 
-```
+```py
 sqlalchemy.exc.IntegrityError
 IntegrityError: (IntegrityError) column nickname is not unique u'UPDATE user SET nickname=?, about_me=? WHERE user.id = ?' (u'dup', u'', 2) 
 ```
@@ -64,7 +64,7 @@ IntegrityError: (IntegrityError) column nickname is not unique u'UPDATE user SET
 
 当我们在开发的应用程序的时候这个功能很方便，但是我们必须在生产环境上确保这个功能被禁用。让我们创建另外一个调试模式禁用的启动脚本(文件 *runp.py*):
 
-```
+```py
 #!flask/bin/python
 from app import app
 app.run(debug = False) 
@@ -72,7 +72,7 @@ app.run(debug = False)
 
 现在重启应用程序:
 
-```
+```py
 ./runp.py 
 ```
 
@@ -88,7 +88,7 @@ Flask 为应用程序提供了一种安装自己的错误页的机制。作为�
 
 为了声明一个定制的错误处理器，需要使用装饰器 *errorhandler* (文件 *app/views.py*):
 
-```
+```py
 @app.errorhandler(404)
 def internal_error(error):
     return render_template('404.html'), 404
@@ -103,7 +103,7 @@ def internal_error(error):
 
 这是 404 错误的模板:
 
-```
+```py
 <!-- extend base layout -->
 {% extends "base.html" %}
 
@@ -115,7 +115,7 @@ def internal_error(error):
 
 这是 500 错误的一个模板:
 
-```
+```py
 <!-- extend base layout -->
 {% extends "base.html" %}
 
@@ -134,7 +134,7 @@ def internal_error(error):
 
 在开始之前我们先在应用程序中配置邮件服务器以及管理员邮箱地址(文件 *config.py*):
 
-```
+```py
 # mail server settings
 MAIL_SERVER = 'localhost'
 MAIL_PORT = 25
@@ -147,7 +147,7 @@ ADMINS = ['you@example.com']
 
 Flask 使用 Python *logging* 模块，因此当发生异常的时候发送邮件是十分简单(文件 *app/__init__.py*):
 
-```
+```py
 from config import basedir, ADMINS, MAIL_SERVER, MAIL_PORT, MAIL_USERNAME, MAIL_PASSWORD
 
 if not app.debug:
@@ -163,7 +163,7 @@ if not app.debug:
 
 在一个没有邮件服务器的开发机器上测试上述代码是相当容易的，多亏了 Python 的 SMTP 调试服务器。仅需要打开一个新的命令行窗口(Windows 用户打开命令提示符)接着运行如下内容打开一个伪造的邮箱服务器:
 
-```
+```py
 python -m smtpd -n -c DebuggingServer localhost:25 
 ```
 
@@ -177,7 +177,7 @@ python -m smtpd -n -c DebuggingServer localhost:25
 
 启用日志记录类似于电子邮件发送错误(文件 *app/__init__.py*):
 
-```
+```py
 if not app.debug:
     import logging
     from logging.handlers import RotatingFileHandler
@@ -203,7 +203,7 @@ if not app.debug:
 
 像之前讨论的，目前存在两个地方没有处理重复。第一个就是在 *after_login* 函数。当一个用户成功地登录进系统这个函数就会被调用，这里我们需要创建一个新的 User 实例。这里就是受影响的代码块(文件 *app/views.py*):
 
-```
+```py
 if user is None:
     nickname = resp.nickname
     if nickname is None or nickname == "":
@@ -216,7 +216,7 @@ if user is None:
 
 解决问题的方式就是让 User 类为我们选择一个唯一的名字。这就是新的 *make_unique_nickname* 方法所做的(文件 *app/models.py*):
 
-```
+```py
 class User(db.Model):
 # ...
 @staticmethod
@@ -237,7 +237,7 @@ def make_unique_nickname(nickname):
 
 第二个存在重复昵称问题的地方就是编辑用户信息的视图函数。这个稍微有些难处理，因为这是用户自己选择的昵称。正确的做法就是不接受一个重复的昵称，让用户重新输入一个。我们将通过添加一个昵称表单字段定制化的验证来解决这个问题。如果用户输入一个不合法的昵称，字段的验证将会失败，用户将会返回到编辑用户信息页。为了添加验证，我们只需覆盖表单的 *validate* 方法(文件 *app/forms.py*):
 
-```
+```py
 from app.models import User
 
 class EditForm(Form):
@@ -264,7 +264,7 @@ class EditForm(Form):
 
 在视图函数中传入这个参数:
 
-```
+```py
 @app.route('/edit', methods = ['GET', 'POST'])
 @login_required
 def edit():
@@ -274,7 +274,7 @@ def edit():
 
 为了完成这个修改，我们必须在表单模板中使得字段错误信息会显示(文件 *app/templates/edit.html*):
 
-```
+```py
 <td>Your nickname:</td>
 <td>
     {{form.nickname(size = 24)}}
@@ -296,7 +296,7 @@ def edit():
 
 我们使用 Python 的 *unittest* 模块将会构建一个简单的测试框架(文件 *tests.py*):
 
-```
+```py
 #!flask/bin/python
 import os
 import unittest
@@ -352,7 +352,7 @@ if __name__ == '__main__':
 
 为了运行测试套件你只要运行 *tests.py* 脚本:
 
-```
+```py
 python tests.py 
 ```
 

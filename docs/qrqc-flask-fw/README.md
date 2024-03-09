@@ -8,7 +8,7 @@ Flask 是一个轻量级的基于 python 的 web 框架。
 
 一般情况下，只要通过 pip 安装 Flask 即可：
 
-```
+```py
 pip install Flask 
 ```
 
@@ -16,7 +16,7 @@ pip install Flask
 
 笔者安装的 flask 信息如下：
 
-```
+```py
 >>> import flask
 
 >>> print flask.__doc__

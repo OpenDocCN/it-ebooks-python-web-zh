@@ -22,7 +22,7 @@
 
 在功能式架构中，按照每部分代码的功能来组织你的应用。所有模板放到同一个文件夹中，静态文件放在另一个文件夹中，而视图放在第三个文件夹中。
 
-```
+```py
 yourapp/
     __init__.py
     static/
@@ -46,7 +46,7 @@ yourapp/
 
 在分区式架构中，按照每一部分所属的蓝图来组织你的应用。管理面板的所有的模板，视图和静态文件放在一个文件夹中，用户控制面板的则放在另一个文件夹中。
 
-```
+```py
 yourapp/
     __init__.py
     admin/
@@ -77,7 +77,7 @@ yourapp/
 
 另一方面，如果你的应用的组件之间的联系较为紧密，使用功能式架构会更好。如果 Facebook 是用 Flask 开发的，它将有一系列蓝图，用于静态页面(比如登出主页，注册页面，关于，等等)，面板(比如最新消息)，用户内容(/robert/about 和/robert/photos)，还有设置页面(/settings/security 和/settings/privacy)以及别的。这些组件都共享一个通用的布局和风格，但每一个都有它自己的布局。下面是一个非常精简的可能的 Facebook 结构，假定它用的是 Flask。
 
-```
+```py
 facebook/
     __init__.py
     templates/
@@ -127,7 +127,7 @@ facebook/
 
 facebook/views/profile.py
 
-```
+```py
 from flask import Blueprint, render_template
 
 profile = Blueprint('profile', __name__)
@@ -152,7 +152,7 @@ def about(user_url_slug):
 
 假如使用分区式架构，你得告诉 Flask 某个蓝图是有着自己的模板和静态文件夹的。下面是这种情况下我们的定义大概的样子：
 
-```
+```py
 profile = Blueprint('profile', __name__,
                     template_folder='templates',
                     static_folder='static') 
@@ -162,7 +162,7 @@ profile = Blueprint('profile', __name__,
 
 facebook/__init__.py
 
-```
+```py
 from flask import Flask
 from .views.profile import profile
 
@@ -184,7 +184,7 @@ app.register_blueprint(profile)
 
 facebook/views/profile.py
 
-```
+```py
 from flask import Blueprint, render_template
 
 profile = Blueprint('profile', __name__, url_prefix='/<user_url_slug>')
@@ -196,7 +196,7 @@ profile = Blueprint('profile', __name__, url_prefix='/<user_url_slug>')
 
 facebook/__init__.py
 
-```
+```py
 from flask import Flask
 from .views.profile import profile
 
@@ -210,7 +210,7 @@ app.register_blueprint(profile, url_prefix='/<user_url_slug>')
 
 facebook/views/profile.py
 
-```
+```py
 from flask import Blueprint, render_template, g
 
 from ..models import User
@@ -240,7 +240,7 @@ def about():
 
 facebook/templates/profile/photos.html
 
-```
+```py
 {% extends "profile/layout.html" %}
 
 {% for photo in g.profile_owner.photos.all() %}
@@ -256,7 +256,7 @@ facebook/templates/profile/photos.html
 
 在这一节，我将使用一个允许用户创建自己的网站的应用作为例子。假设我们的应用有三个蓝图分别针对以下的部分：用户注册的主页面，可用于建立自己的网站的用户管理面板，用户的网站。考虑到这三个部分相对独立，我们将用分区式结构组织起来。
 
-```
+```py
 sitemaker/
     __init__.py
     home/
@@ -293,7 +293,7 @@ sitemaker/
 
 sitemaker/__init__.py
 
-```
+```py
 from flask import Flask
 from .site import site
 
@@ -305,7 +305,7 @@ app.register_blueprint(site, subdomain='<site_subdomain>')
 
 sitemaker/site/__init__py
 
-```
+```py
 from flask import Blueprint
 
 from ..models import Site
@@ -330,7 +330,7 @@ from . import views
 
 *config.py*
 
-```
+```py
 SERVER_NAME = 'sitemaker.com' 
 ```
 
@@ -342,7 +342,7 @@ SERVER_NAME = 'sitemaker.com'
 
 我打算通过一个简单的例子来展示用蓝图重写一个应用的几个步骤。我们将从一个典型的 Flask 应用起步，然后重构它。
 
-```
+```py
 config.txt
 requirements.txt
 run.py
@@ -367,7 +367,7 @@ tests/
 
 接下来我们将继续前进，为我们的新应用创建目录树。从为每一个蓝图创建一个目录开始吧。然后整体复制*views.py*，*static/*和*templates/*到每一个蓝图文件夹。接着你可以从顶级目录删除掉它们了。
 
-```
+```py
 config.txt
 requirements.txt
 run.py
@@ -411,7 +411,7 @@ tests/
 
 *gnizama/api/__init__.py*
 
-```
+```py
 from flask import Blueprint
 
 api = Blueprint(
@@ -428,7 +428,7 @@ from . import views
 
 *gnizama/__init__.py*
 
-```
+```py
 from flask import Flask
 from .api import api
 
@@ -442,7 +442,7 @@ app.register_blueprint(api, subdomain='api')
 
 *gnizama/views.py*
 
-```
+```py
 from . import app
 
 @app.route('/search', subdomain='api')
@@ -454,7 +454,7 @@ def api_search():
 
 *gnizama/api/views.py*
 
-```
+```py
 from . import api
 
 @api.route('/search')

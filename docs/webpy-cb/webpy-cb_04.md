@@ -14,7 +14,7 @@ web.ctx 保存每个 HTTP 请求的特定信息，比如客户端环境变量。
 
 ## 例子
 
-```
+```py
 class example:
     def GET(self):
         referer = web.ctx.env.get('HTTP_REFERER', 'http://google.com')
@@ -57,7 +57,7 @@ web.ctx 另一个特性，是它可以被 loadhook 赋值。例如：当一个�
 
 web.py 可以在处理请求之前或之后，通过添加处理器(processor)来完成某些操作。
 
-```
+```py
 def my_processor(handler): 
     print 'before handling'
     result = handler() 
@@ -69,7 +69,7 @@ app.add_processor(my_processor)
 
 可以用加载钩子(loadhook)和卸载钩子(unloadhook)的方式来完成同样的操作，它们分别在请求开始之前和结束之后工作。
 
-```
+```py
 def my_loadhook():
     print "my load hook"
 
@@ -82,7 +82,7 @@ app.add_processor(web.unloadhook(my_unloadhook))
 
 你可以在钩子中使用和修改全局变量，比如：web.header()
 
-```
+```py
 def my_loadhook():
     web.header('Content-type', "text/html; charset=utf-8")
 
@@ -91,7 +91,7 @@ app.add_processor(web.loadhook(my_loadhook))
 
 ### 提示: 你也可以在钩子中使用 web.ctx 和 web.input() 。
 
-```
+```py
 def my_loadhook():
     input = web.input()
     print input 
@@ -109,7 +109,7 @@ web.background 和 web.backgrounder 都是 python 装饰器，它可以让某个
 
 ## 例子
 
-```
+```py
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from web import run, background, backgrounder
@@ -139,7 +139,7 @@ if __name__ == '__main__':
 
 在请求[`localhost:8080/时，将自动重定向到类似 http://localhost:8080/?_t=3080772748 的网址(t 后面的数字就是 background 线程 id)，接下来(在点击几次刷新之后)就会看到如下信息：`](http://localhost:8080/时，将自动重定向到类似 http://localhost:8080/?_t=3080772748 的网址(t 后面的数字就是 background 线程 id)，接下来(在点击几次刷新之后)就会看到如下信息：)
 
-```
+```py
 Started at 2008-06-14 15:50:26.764474
 hit f5 to refresh!
 0: 2008-06-14 15:50:27.763813
@@ -158,7 +158,7 @@ hit f5 to refresh!
 
 web.py 在 background.threaddb 字典中保存线程信息。这就很容易检查线程的状态；
 
-```
+```py
 class threaddbviewer:
     def GET(self):
         for k, v in background.threaddb.items():
@@ -181,7 +181,7 @@ web.py 并不会主动去清空 threaddb 词典，这使得输出(如[`localhost
 
 ## 解法
 
-```
+```py
 import web
 
 urls = (...)
@@ -199,7 +199,7 @@ app.notfound = notfound
 
 要返回自定义的 NotFound 消息，这么做即可：
 
-```
+```py
 class example:
     def GET(self):
         raise web.notfound() 
@@ -207,7 +207,7 @@ class example:
 
 也可以用同样的方法自定义 500 错误消息：
 
-```
+```py
 def internalerror():
     return web.internalerror("Bad, bad server. No donut for you.")
 
@@ -228,7 +228,7 @@ app.internalerror = internalerror
 
 例子
 
-```
+```py
 # Simple streaming server demonstration
 # Uses time.sleep to emulate a large file read
 import web
@@ -285,7 +285,7 @@ if __name__ == "__main__":
 
 如下，写一个 Log 类继承 wsgilog.WsgiLog，在*init*中把参数传给基类，如[这个例子](http://github.com/harryf/urldammit/blob/234bcaae6deb65240e64ee3199213712ed62883a/dammit/log.py)：
 
-```
+```py
 import sys, logging
 from wsgilog import WsgiLog, LogIO
 import config
@@ -307,7 +307,7 @@ class Log(WsgiLog):
 
 接下来，当应用运行时，传递一个引用给上例中的 Log 类即可(假设上面代码是'mylog'模块的一部分，代码如下)：
 
-```
+```py
 from mylog import Log
 application = web.application(urls, globals())
 application.run(Log) 
@@ -321,7 +321,7 @@ application.run(Log)
 
 ## 解法
 
-```
+```py
 import web
 
 from web.wsgiserver import CherryPyWSGIServer
@@ -352,7 +352,7 @@ if __name__ == "__main__":
 
 文件: code.py
 
-```
+```py
 import os
 import sys
 import gettext
@@ -441,7 +441,7 @@ if __name__ == "__main__": app.run()
 
 模板文件: templates/index.html.
 
-```
+```py
 $_('Hello') 
 ```
 
@@ -449,14 +449,14 @@ $_('Hello')
 
 现在运行 code.py:
 
-```
+```py
 $ python code.py
 http://0.0.0.0:8080/ 
 ```
 
 然后用你喜欢的浏览器访问下面的地址，检查语言是否改变:
 
-```
+```py
 http://your_server:8080/
 http://your_server:8080/?lang=en_US
 http://your_server:8080/?lang=zh_CN 

@@ -20,7 +20,7 @@ Flask 的信号功能是基于 Python 消息分发组件[Blinder](https://pypi.p
 
 还是老习惯，从例子开始，让我们找回入门系列第三篇中的代码和模板，并加入下面的代码：
 
-```
+```py
 from flask import template_rendered, request
 
 def print_template_rendered(sender, template, context, **extra):
@@ -33,7 +33,7 @@ template_rendered.connect(print_template_rendered, app)
 
 访问”http://localhost:5000/hello”时，你会在控制台看到：
 
-```
+```py
 Using template: hello.html with context: {'session': , 'request': , 'name': None, 'g': }
 http://localhost:5000/hello
 ```
@@ -51,7 +51,7 @@ http://localhost:5000/hello
 
 Flask 同时提供了信号装饰器来简化代码，上面的信号订阅也可以写成：
 
-```
+```py
 from flask import template_rendered, request
 
 @template_rendered.connect_via(app)
@@ -128,7 +128,7 @@ def with_template_rendered(sender, template, context, **extra):
 
 对于各函数的调用顺序，我用下面的代码测试了下：
 
-```
+```py
 ########## Capture flask core signals ##########
 @request_started.connect_via(app)
 def print_request_started(sender, **extra):
@@ -160,7 +160,7 @@ def teardown_request(exception):
 
 运行结果如下：
 
-```
+```py
 Signal: request_started
 Hook: before_request
 Hook: after_request
@@ -176,7 +176,7 @@ Signal: request_tearing_down
 
 除了 Flask 的核心信号，我们也可以自定义信号。这是 Hook 函数无法做到的。这里，我们要引入 Blinder 的库了：
 
-```
+```py
 from blinker import Namespace
 
 signals = Namespace()
@@ -186,7 +186,7 @@ index_called = signals.signal('index-called')
 
 我们在全局定义了一个”index_called”信号对象，表示根路径被访问了。然后我们在根路径的请求处理中发出这个信号：
 
-```
+```py
 @app.route('/')
 def index():
     index_called.send(current_app._get_current_object(), method=request.method)
@@ -198,7 +198,7 @@ def index():
 
 现在我们来定义订阅回调函数：
 
-```
+```py
 def log_index_called(sender, method, **extra):
     print 'URL "%s" is called with method "%s"' % (request.url, method)
 
@@ -208,7 +208,7 @@ index_called.connect(log_index_called, app)
 
 函数很简单，就是将请求地址和方法打印在控制台上，大家可以运行下试试。另外，同核心信号一样，自定义信号的回调函数也可以用装饰器来修饰，上面的代码等同于：
 
-```
+```py
 @index_called.connect_via(app)
 def log_index_called(sender, method, **extra):
     print 'URL "%s" is called with method "%s"' % (request.url, method)

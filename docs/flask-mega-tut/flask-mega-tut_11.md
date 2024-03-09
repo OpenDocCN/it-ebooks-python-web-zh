@@ -21,13 +21,13 @@
 
 在我们的虚拟环境上安装 Flask-Mail 是相当简单的。在 Windows 以外的其它系统上的用户可以按照如下命令:
 
-```
+```py
 flask/bin/pip install flask-mail 
 ```
 
 Windows 上的用户稍微有些不同，因为 Flask-Mail 中使用的一个模块不支持该系统，用户需要按照如下命令:
 
-```
+```py
 flask\Scripts\pip install --no-deps lamson chardet flask-mail 
 ```
 
@@ -42,7 +42,7 @@ flask\Scripts\pip install --no-deps lamson chardet flask-mail
 
 下面就是 单元测试 中的配置(文件 *config.py*):
 
-```
+```py
 # email server
 MAIL_SERVER = 'your.mailserver.com'
 MAIL_PORT = 25
@@ -55,7 +55,7 @@ ADMINS = ['you@example.com']
 
 在开始发送应用程序的邮件之前，我们必须输入实际的邮件服务器以及管理员的邮箱。比如，如果你想要应用程序通过你的 gmail 账号发送邮件，你可以输入如下内容:
 
-```
+```py
 # email server
 MAIL_SERVER = 'smtp.googlemail.com'
 MAIL_PORT = 465
@@ -70,7 +70,7 @@ ADMINS = ['your-gmail-username@gmail.com']
 
 我们也需要初始化一个 *Mail* 对象，这个对象为我们连接到 SMTP 服务器并且发送邮件(文件 *app/__init__.py*):
 
-```
+```py
 from flask.ext.mail import Mail
 mail = Mail(app) 
 ```
@@ -79,7 +79,7 @@ mail = Mail(app)
 
 为了学习 Flask-Mail 是如何工作的，我们将会在命令行中发送邮件。因此让我们在虚拟环境中启动 Python 并且执行下面的代码:
 
-```
+```py
 >>> from flask.ext.mail import Message
 >>> from app import app, mail
 >>> from config import ADMINS
@@ -99,7 +99,7 @@ mail = Mail(app)
 
 我们现在编写一个辅助方法用于发送邮件。这是上面使用的测试代码通用的版本。我们将会把这个函数放入一个新文件，专门用于我们的应用程序的邮件支持(文件 *app/emails.py*):
 
-```
+```py
 from flask.ext.mail import Message
 from app import mail
 
@@ -116,7 +116,7 @@ Flask-Mail 支持的应用超出了我们所用的。比如，抄送以及附件
 
 现在我们已经有了发送邮件的基本框架，我们可以编写发送关注提醒的函数(文件 *app/emails.py*):
 
-```
+```py
 from flask import render_template
 from config import ADMINS
 
@@ -134,7 +134,7 @@ def follower_notification(followed, follower):
 
 因此我们需要编写我们的关注者提醒邮件的文本以及 HTML 版本的模板。这里是文本版本(文件 *app/templates/follower_email.txt*):
 
-```
+```py
 Dear {{user.nickname}},
 
 {{follower.nickname}} is now a follower. Click on the following link to visit {{follower.nickname}}'s profile page:
@@ -148,7 +148,7 @@ The microblog admin
 
 对于 HTML 版本，我们可能会做得更好些，甚至会显示出关注者的头像和用户信息(文件 *app/templates/follower_email.html*):
 
-```
+```py
 <p>Dear {{user.nickname}},</p>
 <p><a href="{{url_for("user", nickname = follower.nickname, _external = True)}}">{{follower.nickname}}</a> is now a follower.</p>
 <table>
@@ -168,7 +168,7 @@ The microblog admin
 
 最后一步就是把发送邮件整合到实际的视图函数中(文件 *app/views.py*):
 
-```
+```py
 from emails import follower_notification
 
 @app.route('/follow/<nickname>')
@@ -202,7 +202,7 @@ def follow(nickname):
 
 每次我们需要发送邮件的时候启动一个进程的资源远远小于启动一个新的发送邮件的整个过程，因此把 *mail.send(msg)* 调用移入线程中(文件 *app/emails.py*):
 
-```
+```py
 from threading import Thread
 from app import app
 
@@ -224,7 +224,7 @@ def send_email(subject, sender, recipients, text_body, html_body):
 
 我们可以通过实现一个 [装饰器](http://www.python.org/dev/peps/pep-0318/) [http://www.python.org/dev/peps/pep-0318/] 来解决这个问题。有了装饰器，上面的代码可以修改为:
 
-```
+```py
 from .decorators import async
 
 @async
@@ -243,7 +243,7 @@ def send_email(subject, sender, recipients, text_body, html_body):
 
 这个神奇的代码其实很简单。我们把它放入一个新文件(文件 *app/decorators.py*):
 
-```
+```py
 from threading import Thread
 
 def async(f):

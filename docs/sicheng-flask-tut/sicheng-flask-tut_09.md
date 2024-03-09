@@ -18,7 +18,7 @@
 
 我们先创建个最简单的 Flask 应用，想必大家都信手拈来了。
 
-```
+```py
 from flask import Flask, render_template
 
 app = Flask(__name__)
@@ -43,7 +43,7 @@ if __name__ == '__main__':
 
 模板代码如下：
 
-```
+```py
 <!DOCTYPE html>
 <title>Hello View</title>
 {% if name %}
@@ -58,7 +58,7 @@ if __name__ == '__main__':
 
 我们现在就来写个验证用户登录的装饰器：
 
-```
+```py
 from functools import wraps
 from flask import session, abort
 
@@ -76,7 +76,7 @@ app.secret_key = '12345678'
 
 代码很简单，就是在调用函数前，先检查 session 里有没有用户。此后，我们只需将此装饰器加在每个需要验证登录的请求方法上即可：
 
-```
+```py
 @app.route('/admin')
 @login_required
 def admin():
@@ -94,7 +94,7 @@ def admin():
 
 说了这么多，就是要告诉大家，其实 Flask 也支持像 Django 一样，把 URL 路由规则统一管理，而不是写在视图函数上。怎么做呢？我们先来写个视图函数，将它放在一个”views.py”文件中：
 
-```
+```py
 def foo():
     return '<h1>Hello Foo!</h1>'
 
@@ -102,7 +102,7 @@ def foo():
 
 然后在 Flask 主程序上调用”app.add_url_rule”方法：
 
-```
+```py
 app.add_url_rule('/foo', view_func=views.foo)
 
 ```
@@ -111,7 +111,7 @@ app.add_url_rule('/foo', view_func=views.foo)
 
 那么在这种情况下，上一节定义的装饰器怎么用？大家想想，装饰器本质上是一个闭包函数，所以我们当然可以把它当函数使用：
 
-```
+```py
 app.add_url_rule('/foo', view_func=login_required(views.foo))
 
 ```
@@ -122,7 +122,7 @@ app.add_url_rule('/foo', view_func=login_required(views.foo))
 
 上一节的 URL 集中映射，就是视图可插拔的基础，因为它可以支持在程序中动态的绑定路由和视图。Flask 提供了视图类，使其可以变得更灵活，我们先看个例子：
 
-```
+```py
 from flask.views import View
 
 class HelloView(View):
@@ -139,7 +139,7 @@ app.add_url_rule('/helloview/<name>', view_func=view)
 
 这个例子比较简单，只是为了介绍怎么用视图类，体现不出它的灵活性，我们再看个例子：
 
-```
+```py
 class RenderTemplateView(View):
     def __init__(self, template):
         self.template = template
@@ -158,7 +158,7 @@ app.add_url_rule('/login', view_func=RenderTemplateView.as_view('login', templat
 
 在使用视图类的情况下，视图装饰器要怎么用呢？Flask 在 0.8 版本后支持这样的写法：
 
-```
+```py
 class HelloView(View):
     decorators = [login_required]
 
@@ -173,7 +173,7 @@ class HelloView(View):
 
 当我们的视图要同时支持 GET 和 POST 请求时，视图类可以这么定义：
 
-```
+```py
 class MyMethodView(View):
     methods = ['GET', 'POST']
 
@@ -193,7 +193,7 @@ app.add_url_rule('/mmview', view_func=MyMethodView.as_view('mmview'))
 
 上节介绍的 HTTP 请求方法的支持，的确比较方便，但是对于 RESTFul 类型的应用来说，有没有更简单的方法，比如省去那些 if, else 判断语句呢？Flask 中的”flask.views.MethodView”就可以做到这点，它是”flask.views.View”的子类。我们写个 user API 的视图吧：
 
-```
+```py
 from flask.views import MethodView
 
 class UserAPI(MethodView):
@@ -216,7 +216,7 @@ class UserAPI(MethodView):
 
 现在我们分别定义了 get, post, put, delete 方法来对应四种类型的 HTTP 请求，注意函数名必须这么写。怎么将它绑定到路由上呢？
 
-```
+```py
 user_view = UserAPI.as_view('users')
 # 将 GET /users/请求绑定到 UserAPI.get()方法上，并将 get()方法参数 user_id 默认为 None
 app.add_url_rule('/users/', view_func=user_view, 
@@ -236,7 +236,7 @@ app.add_url_rule('/users/<user_id>', view_func=user_view,
 
 如果 API 多，有人觉得每次都要加这么三个路由规则太麻烦，可以将其封装个函数：
 
-```
+```py
 def register_api(view, endpoint, url, primary_id='id', id_type='int'):
     view_func = view.as_view(endpoint)
     app.add_url_rule(url, view_func=view_func,
@@ -258,7 +258,7 @@ register_api(UserAPI, 'users', '/users/', primary_id='user_id')
 
 当某一视图很占内存，而且很少会被使用，我们会希望它在应用启动时不要被加载，只有当它被使用时才会被加载。也就是接下来要介绍的延迟加载。Flask 原生并不支持视图延迟加载功能，但我们可以通过代码实现。这里，我引用了[官方文档](http://flask.pocoo.org/docs/0.10/patterns/lazyloading/)上的一个实现。
 
-```
+```py
 from werkzeug import import_string, cached_property
 
 class LazyView(object):
@@ -277,7 +277,7 @@ class LazyView(object):
 
 我们先写了一个 LazyView，然后在 views.py 中定义一个名为 bar 的视图函数：
 
-```
+```py
 def bar():
     return '<h1>Hello Bar!</h1>'
 
@@ -285,7 +285,7 @@ def bar():
 
 现在让我们来绑定路由：
 
-```
+```py
 app.add_url_rule('/lazy/bar', view_func=LazyView('views.bar'))
 
 ```
@@ -294,7 +294,7 @@ app.add_url_rule('/lazy/bar', view_func=LazyView('views.bar'))
 
 这个 LazyView 的实现还是挺有趣的吧。可能有一天，Flask 会把延迟加载视图的功能加入到它的原生代码中。同上一节的”register_api()”函数一样，你也可以把绑定延迟加载视图的代码封装在一个函数里。
 
-```
+```py
 def add_url_for_lazy(url_rule, import_name, **options):
     view = LazyView(import_name)
     app.add_url_rule(url_rule, view_func=view, **options)

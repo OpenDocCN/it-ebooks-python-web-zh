@@ -10,7 +10,7 @@
 
 webpy 0.3 支持多数据库操作,并从 web 模块中移走数据库部分, 使其成为一个更典型的对象. 例子如下:
 
-```
+```py
 import web
 
 db1 = web.database(dbn='mysql', db='dbname1', user='foo')
@@ -34,13 +34,13 @@ print db2.select('bar', where='id=5')
 
 如果是 0.3 版本, 连接部分大致如下:
 
-```
+```py
 db = web.database(dbn='postgres', db='mydata', user='dbuser', pw='') 
 ```
 
 当获取数据库连接后, 可以这样执行查询数据库:
 
-```
+```py
 # Select all entries from table 'mytable'
 entries = db.select('mytable') 
 ```
@@ -60,7 +60,7 @@ select 方法有下面几个参数:
 
 vars 变量用来填充查询条件. 如:
 
-```
+```py
 myvar = dict(name="Bob")
 results = db.select('mytable', myvar, where="name = $name") 
 ```
@@ -69,7 +69,7 @@ results = db.select('mytable', myvar, where="name = $name")
 
 what 是标明需要查询的列名, 默认是*, 但是你可以标明需要查询哪些列.
 
-```
+```py
 results = db.select('mytable', what="id,name") 
 ```
 
@@ -77,7 +77,7 @@ results = db.select('mytable', what="id,name")
 
 where 查询条件, 如:
 
-```
+```py
 results = db.select('mytable', where="id>100") 
 ```
 
@@ -85,7 +85,7 @@ results = db.select('mytable', where="id>100")
 
 排序方式:
 
-```
+```py
 results = db.select('mytable', order="post_date DESC") 
 ```
 
@@ -93,7 +93,7 @@ results = db.select('mytable', order="post_date DESC")
 
 按 group 组排列.
 
-```
+```py
 results = db.select('mytable', group="color") 
 ```
 
@@ -101,7 +101,7 @@ results = db.select('mytable', group="color")
 
 从多行中返回 limit 查询.
 
-```
+```py
 results = db.select('mytable', limit=10) 
 ```
 
@@ -109,7 +109,7 @@ results = db.select('mytable', limit=10)
 
 偏移量, 从第几行开始.
 
-```
+```py
 results = db.select('mytable', offset=10) 
 ```
 
@@ -117,7 +117,7 @@ results = db.select('mytable', offset=10)
 
 查看运行时执行的 SQL 语句:
 
-```
+```py
 results = db.select('mytable', offset=10, _test=True) 
 <sql: 'SELECT * FROM mytable OFFSET 10'> 
 ```
@@ -130,7 +130,7 @@ results = db.select('mytable', offset=10, _test=True)
 
 ### 解决方案
 
-```
+```py
 import web
 
 db = web.database(dbn='postgres', db='mydata', user='dbuser', pw='')
@@ -149,7 +149,7 @@ db.update('mytable', where="id = 10", value1 = "foo")
 
 ### 解决办法
 
-```
+```py
 import web
 
 db = web.database(dbn='postgres', db='mydata', user='dbuser', pw='')
@@ -170,13 +170,13 @@ db.delete('mytable', where="id=10")
 
 在 0.3 中，数据库连接如下：
 
-```
+```py
 db = web.database(dbn='postgres', db='mydata', user='dbuser', pw='') 
 ```
 
 数据库连接写好以后，“insert” 操作如下：
 
-```
+```py
 # 向 'mytable' 表中插入一条数据
 sequence_id = db.insert('mytable', firstname="Bob",lastname="Smith",joindate=web.SQLLiteral("NOW()")) 
 ```
@@ -200,7 +200,7 @@ sequence_id = db.insert('mytable', firstname="Bob",lastname="Smith",joindate=web
 
 `_test` 参数可以让你看到 SQL 的执行过程：
 
-```
+```py
 results = db.select('mytable', offset=10, _test=True) 
 ><sql: 'SELECT * FROM mytable OFFSET 10'> 
 ```
@@ -219,7 +219,7 @@ results = db.select('mytable', offset=10, _test=True)
 
 webpy 不会尝试为您和您的数据库建立层。相反，它试图以方便的通用任务，走出自己的方式，当您需要做的更高级的主题。执行高级的数据库查询是没有什么不同。例如：
 
-```
+```py
 import web
 
 db = web.database(dbn='postgres', db='mydata', user='dbuser', pw='')
@@ -230,7 +230,7 @@ print results[0].total_users # -> prints number of entries in 'users' table
 
 或者是，使用一个 JOIN 示例:
 
-```
+```py
 import web
 
 db = web.database(dbn='postgres', db='mydata', user='dbuser', pw='')
@@ -240,7 +240,7 @@ results = db.query("SELECT * FROM entries JOIN users WHERE entries.author_id = u
 
 为了防止 SQL 注入攻击，db.query 还接受了“vars”语法如下描述 db.select:
 
-```
+```py
 results = db.query("SELECT * FROM users WHERE id=$id", vars={'id':10}) 
 ```
 
@@ -256,7 +256,7 @@ results = db.query("SELECT * FROM users WHERE id=$id", vars={'id':10})
 
 数据库对象有一个方法“transaction”,将启动一个新的事务，并返回事务对象。这个事务对象可以使用 commit 提交事务或 rollback 来回滚事务。
 
-```
+```py
 import web
 
 db = web.database(dbn="postgres", db="webpy", user="foo", pw="")
@@ -273,7 +273,7 @@ else:
 
 在 python 2.5+以上的版本，事务同样可以在段中使用：
 
-```
+```py
 from __future__ import with_statement
 
 db = web.databse(dbn="postgres", db="webpy", user="foo", pw="")
@@ -285,7 +285,7 @@ with db.transaction():
 
 它同样可能有一个嵌套的事务：
 
-```
+```py
 def post(title, body, tags):
     t = db.transaction()
     try:
@@ -319,7 +319,7 @@ def add_tags(post_id, tags):
 
 创建一个钩子并使用 sqlalchemy 的 scoped session ([`www.sqlalchemy.org/docs/05/session.html#unitofwork_contextual`](http://www.sqlalchemy.org/docs/05/session.html#unitofwork_contextual))
 
-```
+```py
 import string
 import random
 import web
@@ -372,7 +372,7 @@ if __name__ == "__main__":
 
 ### models.py
 
-```
+```py
 from sqlalchemy import create_engine
 from sqlalchemy import Column, Integer, String
 
@@ -418,7 +418,7 @@ if __name__ == "__main__":
 
 示例：
 
-```
+```py
 >>> import sqlite3 as db
 >>> conn = db.connect(":memory:")
 >>> conn.create_function("sign", 1, lambda val: val and (val > 0 and 1 or -1))
@@ -438,7 +438,7 @@ if __name__ == "__main__":
 
 示例：
 
-```
+```py
 >>> import web
 >>> db = web.database(dbn="sqlite", db=":memory:")
 >>> db._db_cursor().connection.create_function("sign", 1, lambda val: val and (val > 0 and 1 or -1))
@@ -454,7 +454,7 @@ if __name__ == "__main__":
 
 ## 解决
 
-```
+```py
 >>> import web
 >>> db = web.database(dbn='postgres', db='mydb', user='postgres')
 >>> where_dict = {'col1': 1, col2: 'sometext'}
@@ -468,7 +468,7 @@ if __name__ == "__main__":
 
 `web.db.sqlwhere`将 Python 的字典作为参数并且转换为适用于不同的查询语句的 where 子句的 string 类型数据。你也可以使用`grouping`参数来定义链接字典中的 key 的链接字符。例子如下。
 
-```
+```py
 >>> import web
 >>> web.db.sqlwhere({'a': 1, 'b': 2}, grouping=' OR ')
 'a = 1 OR b = 2' 

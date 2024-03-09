@@ -12,7 +12,7 @@
 
 *myapp/forms.py*
 
-```
+```py
 from flask_wtf import Form
 from wtforms import StringField, PasswordField
 from wtforms.validators import DataRequired, Email
@@ -47,7 +47,7 @@ CSRF 全称是 cross site request forgery，跨站请求伪造。CSRF 通过第�
 
 myapp/views.py
 
-```
+```py
 from flask import render_template, redirect, url_for
 
 from . import app
@@ -76,7 +76,7 @@ def login():
 
 myapp/templates/login.html
 
-```
+```py
 {% extends "layout.html" %}
 <html>
     <head>
@@ -104,7 +104,7 @@ Flask-WTF 的 CSRF token 不仅限于保护表单提交。如果你的应用需�
 
 *myapp/forms.py*
 
-```
+```py
 from flask_wtf import Form
 from wtforms import StringField, PasswordField,
 from wtforms.validators import DataRequired, Email
@@ -118,7 +118,7 @@ class EmailPasswordForm(Form):
 
 *myapp/util/validators.py*
 
-```
+```py
 from wtforms.validators import ValidationError
 
 class Unique(object):
@@ -140,7 +140,7 @@ class Unique(object):
 
 *myapp/forms.py*
 
-```
+```py
 from flask_wtf import Form
 from wtforms import StringField, PasswordField,
 from wtforms.validators import DataRequired, Email
@@ -161,7 +161,7 @@ WTForms 也可以帮助我们给我们只需要表单渲染 HTML。WTForms 实�
 
 myapp/templates/login.html
 
-```
+```py
 {% extends "layout.html" %}
 <html>
     <head>
@@ -179,7 +179,7 @@ myapp/templates/login.html
 
 通过传递域的性质(properties)作为调用域的参数，我们可以自定义域的渲染形式。下面我们添加一个`placeholder=`性质给 email 域：
 
-```
+```py
 <form action="" method="POST">
     {{ form.email.label }}: {{ form.email(placeholder='yourname@email.com') }}<br>
     {{ form.password.label }}: {{ form.password }}<br>

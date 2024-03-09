@@ -19,7 +19,7 @@ Flask 提供的内建对象常用的有 request, session, g，通过 request，�
 
 引入 flask 包中的 request 对象，就可以直接在请求函数中直接使用该对象了。让我们改进下第二篇中的 login 方法：
 
-```
+```py
 from flask import request
 
 @app.route('/login', methods=['POST', 'GET'])
@@ -36,7 +36,7 @@ def login():
 
 在第三篇的 templates 目录下，添加”login.html”文件
 
-```
+```py
 {% extends "layout.html" %}
 {% block body %}
 <form name="login" action="/login" method="post">
@@ -53,7 +53,7 @@ def login():
 
 会话可以用来保存当前请求的一些状态，以便于在请求之前共享信息。我们将上面的 python 代码改动下：
 
-```
+```py
 from flask import request, session
 
 @app.route('/login', methods=['POST', 'GET'])
@@ -78,7 +78,7 @@ app.secret_key = '123456'
 
 我们顺便写个登出的方法，估计我不放例子，大家也都猜到怎么写，就是清除字典里的键值：
 
-```
+```py
 from flask import request, session, redirect, url_for
 
 @app.route('/logout')
@@ -94,7 +94,7 @@ def logout():
 
 在之前的例子中，请求的响应我们都是直接返回字符串内容，或者通过模板来构建响应内容然后返回。其实我们也可以先构建响应对象，设置一些参数（比如响应头）后，再将其返回。修改下上例中的 Get 请求部分：
 
-```
+```py
 from flask import request, session, make_response
 
 @app.route('/login', methods=['POST', 'GET'])
@@ -117,7 +117,7 @@ def login():
 
 提到了 Session，当然也要介绍 Cookie 喽，毕竟没有 Cookie，Session 就根本没法用（不知道为什么？查查去）。Flask 中使用 Cookie 也很简单：
 
-```
+```py
 from flask import request, session, make_response
 import time
 

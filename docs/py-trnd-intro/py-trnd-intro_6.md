@@ -32,7 +32,7 @@
 
 代码清单 7-1 查看 Twitter 时间轴：twitter.py
 
-```
+```py
 import tornado.web
 import tornado.httpserver
 import tornado.auth
@@ -114,7 +114,7 @@ if __name__ == '__main__':
 
 代码清单 7-2 Twitter 时间轴：home.html
 
-```
+```py
 <html>
     <head>
         <title>{{ user['name'] }} ({{ user['screen_name'] }}) on Twitter</title>
@@ -154,7 +154,7 @@ if __name__ == '__main__':
 
 代码清单 7-3 Twitter 时间轴：logout.html
 
-```
+```py
 <html>
     <head>
         <title>Tornadoes on Twitter</title>
@@ -174,7 +174,7 @@ if __name__ == '__main__':
 
 TwitterHandler 类包含我们应用逻辑的主要部分。有两件事情需要立刻引起我们的注意，其一是这个类继承自能给我们提供 Twitter 功能的 tornado.auth.TwitterMixin 类，其二是 get 方法使用了我们在[第五章](http://dockerpool.com/static/books/introduction_to_tornado_cn/ch5.html)中讨论的@tornado.web.asynchronous 装饰器。现在让我们看看第一个异步调用：
 
-```
+```py
 if self.get_argument('oauth_token', None):
     self.get_authenticated_user(self.async_callback(self._twitter_on_auth))
     return
@@ -187,7 +187,7 @@ if self.get_argument('oauth_token', None):
 
 如果 oauth_token 参数没有被发现，我们继续测试是否之前已经看到过这个特定用户了。
 
-```
+```py
 elif oAuthToken and oAuthSecret:
     accessToken = {
         'key': oAuthToken,
@@ -210,7 +210,7 @@ twitter_quest 方法期待一个路径地址作为它的第一个参数，另外
 
 如果上面我们讨论的情况都没有发生，这说明用户是首次访问我们的应用（或者已经注销或删除了 cookies），此时我们想将其重定向到 Twitter 的验证页面。调用 self.authorize_redirect()来完成这项工作。
 
-```
+```py
 def _twitter_on_auth(self, user):
     if not user:
         self.clear_all_cookies()
@@ -226,7 +226,7 @@ def _twitter_on_auth(self, user):
 
 我们的 Twitter 请求的回调方法非常的直接。_twitter_on_auth 使用一个 user 参数进行调用，这个参数是已授权用户的用户数据字典。我们的方法实现只需要验证我们接收到的用户是否合法，并设置应有的 cookies。一旦 cookies 被设置好，我们将用户重定向到根目录，即我们之前谈论的发起请求到/users/show API 方法。
 
-```
+```py
 def _twitter_on_user(self, user):
     if not user:
         self.clear_all_cookies()
@@ -256,7 +256,7 @@ Facebook 的这个例子在结构上和刚才看到的 Twitter 的例子非常�
 
 代码清单 7-4 Facebook 验证：facebook.py
 
-```
+```py
 import tornado.web
 import tornado.httpserver
 import tornado.auth
@@ -380,7 +380,7 @@ class Application(tornado.web.Application):
 
 代码清单 7-5 Facebook 验证：home.html
 
-```
+```py
 <html>
     <head>
         <title>{{ name }} on Facebook</title>

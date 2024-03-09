@@ -4,7 +4,7 @@
 
 上一章的例子，只是很簡單的顯示一行字串。讓我們加上一些 HTML/CSS 美化網頁，並動態顯示每次進來這個頁面的時間:
 
-```
+```py
 # trips/views.py
 
 from datetime import datetime
@@ -55,7 +55,7 @@ def hello_world(request):
 
 新增一個名為 `templates` 的資料夾`：
 
-```
+```py
 (djangogirls_venv) ~/djangogirls/mysite$ mkdir templates 
 ```
 
@@ -63,7 +63,7 @@ def hello_world(request):
 
 建立好資料夾以後，我們需要修改 `mysite/settings.py` 中的 `TEMPLATES` 設定：
 
-```
+```py
 # mysite/settings.py
 
 TEMPLATES = [
@@ -85,7 +85,7 @@ TEMPLATES = [
 
 我們將 `'DIRS'` 原本的`[]`修改成：
 
-```
+```py
 [os.path.join(BASE_DIR, 'templates').replace('\\', '/')] 
 ```
 
@@ -95,7 +95,7 @@ TEMPLATES = [
 
 新增檔案 `templates/hello_world.html` ，並將之前寫在 view function 中的 HTML 複製到 `hello_world.html`：
 
-```
+```py
 mysite
 ├── mysite
 ├── templates
@@ -106,7 +106,7 @@ mysite
 
 為了區別，我們做了一些樣式上的調整：
 
-```
+```py
 <!-- hello_world.html -->
 
 <!DOCTYPE html>
@@ -131,7 +131,7 @@ mysite
 
 以上 template 中，有個地方要特別注意：
 
-```
+```py
 <em>{{ current_time }}</em> 
 ```
 
@@ -149,7 +149,7 @@ mysite
 
 最後，將 view function `hello_world` 修改如下：
 
-```
+```py
 # trips/views.py
 
 from datetime import datetime

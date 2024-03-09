@@ -22,7 +22,7 @@
 
 代码清单 2-1 简单表单和模板：poemmaker.py
 
-```
+```py
 import os.path
 
 import tornado.httpserver
@@ -62,7 +62,7 @@ if __name__ == '__main__':
 
 代码清单 2-2 Poem Maker 表单：index.html
 
-```
+```py
 <!DOCTYPE html>
 <html>
     <head><title>Poem Maker Pro</title></head>
@@ -82,7 +82,7 @@ if __name__ == '__main__':
 
 代码清单 2-3 Poem Maker 模板：poem.html
 
-```
+```py
 <!DOCTYPE html>
 <html>
     <head><title>Poem Maker Pro</title></head>
@@ -98,7 +98,7 @@ And that has {{made}} all the {{difference}}.</p>
 
 在命令行执行下述命令：
 
-```
+```py
 $ python poemmaker.py --port=8000
 
 ```
@@ -121,7 +121,7 @@ $ python poemmaker.py --port=8000
 
 从结构上讲，poemmaker.py 和[第一章](http://dockerpool.com/static/books/introduction_to_tornado_cn/ch1.html)中的例子很相似。我们定义了几个 RequestHandler 子类并把它们传给 tornado.web.Application 对象。那么有什么不一样的地方呢？首先，我们向 Application 对象的**init**方法传递了一个 template_path 参数。
 
-```
+```py
 template_path=os.path.join(os.path.dirname(__file__), "templates")
 
 ```
@@ -130,7 +130,7 @@ template_path 参数告诉 Tornado 在哪里寻找模板文件。我们将在本
 
 一旦我们告诉 Tornado 在哪里找到模板，我们可以使用 RequestHandler 类的 render 方法来告诉 Tornado 读入模板文件，插入其中的模版代码，并返回结果给浏览器。比如，在 IndexHandler 中，我们发现了下面的语句：
 
-```
+```py
 self.render('index.html')
 
 ```
@@ -143,7 +143,7 @@ self.render('index.html')
 
 在 poem.html 中，你可以看到模板中有一些被双大括号（{{和}}）括起来的字符串，就像这样：
 
-```
+```py
 <p>Two {{roads}} diverged in a {{wood}}, and I—<br/>
 I took the one less travelled by,<br>
 And that has {{made}} all the {{difference}}.</p>
@@ -152,7 +152,7 @@ And that has {{made}} all the {{difference}}.</p>
 
 在双大括号中的单词是占位符，当我们渲染模板时希望以实际值代替。我们可以使用向 render 函数中传递关键字参数的方法指定什么值将被填充到 HTML 文件中的对应位置，其中关键字对应模板文件中占位符的名字。下面是在 PoemPageHandler 中相应的代码部分：
 
-```
+```py
 noun1 = self.get_argument('noun1')
 noun2 = self.get_argument('noun2')
 verb = self.get_argument('verb')
@@ -163,7 +163,7 @@ self.render('poem.html', roads=noun1, wood=noun2, made=verb, difference=noun3)
 
 在这里，我们告诉模板使用变量 noun1（该变量是从 get_argument 方法取得的）作为模板中 roads 的值，noun2 作为模板中 wood 的值，依此类推。假设用户在表单中按顺序键入了 pineapples、grandfather clock、irradiated 和 supernovae，那么结果 HTML 将会如下所示：
 
-```
+```py
 <p>Two pineapples diverged in a grandfather clock, and I—<br>
 I took the one less travelled by,<br>
 And that has irradiated all the supernovae.</p>
@@ -176,7 +176,7 @@ And that has irradiated all the supernovae.</p>
 
 在 2.1 节中，我们展示了如何在一个 Web 应用中使用 render 方法传送 HTML 给浏览器。你可以在 Tornado 应用之外使用 Python 解释器导入模板模块尝试模板系统，此时结果会被直接输出出来。
 
-```
+```py
 >>> from tornado.template import Template
 >>> content = Template("<html><body><h1>{{ header }}</h1></body></html>")
 >>> print content.generate(header="Welcome!")
@@ -188,7 +188,7 @@ And that has irradiated all the supernovae.</p>
 
 在代码清单 2-1 中，我们演示了填充 Python 变量的值到模板的双大括号中的使用。实际上，你可以将任何 Python 表达式放在双大括号中。Tornado 将插入一个包含任何表达式计算结果值的字符串到输出中。下面是几个可能的例子：
 
-```
+```py
 >>> from tornado.template import Template
 >>> print Template("{{ 1+1 }}").generate()
 2
@@ -203,14 +203,14 @@ eggs
 
 你同样可以在 Tornado 模板中使用 Python 条件和循环语句。控制语句以{%和%}包围，并以类似下面的形式被使用：
 
-```
+```py
 {% if page is None %}
 
 ```
 
 或
 
-```
+```py
 {% if len(entries) == 3 %}
 
 ```
@@ -219,7 +219,7 @@ eggs
 
 所以这个模板：
 
-```
+```py
 <html>
     <head>
         <title>{{ title }}</title>
@@ -238,7 +238,7 @@ eggs
 
 当被下面这个处理函数调用时：
 
-```
+```py
 class BookHandler(tornado.web.RequestHandler):
     def get(self):
         self.render(
@@ -256,7 +256,7 @@ class BookHandler(tornado.web.RequestHandler):
 
 将会渲染得到下面的输出：
 
-```
+```py
 <html>
     <head>
         <title>Home Page</title>
@@ -301,7 +301,7 @@ Tornado 在所有模板中默认提供了一些便利的函数。它们包括：
 
 在模板中使用一个你自己编写的函数也是很简单的：只需要将函数名作为模板的参数传递即可，就像其他变量一样。
 
-```
+```py
 >>> from tornado.template import Template
 >>> def disemvowel(s):
 ...     return ''.join([x for x in s if x not in 'aeiou'])
@@ -321,7 +321,7 @@ my name is mrtmr
 
 代码清单 2-4 复杂表单和模板：main.py
 
-```
+```py
 import os.path
 import random
 
@@ -380,7 +380,7 @@ if __name__ == '__main__':
 
 代码清单 2-5 Alpha Munger 表单：index.html
 
-```
+```py
 <!DOCTYPE html>
 <html>
     <head>
@@ -405,7 +405,7 @@ if __name__ == '__main__':
 
 代码清单 2-6 Alpha Munger 模板：munged.html
 
-```
+```py
 <!DOCTYPE html>
 <html>
     <head>
@@ -436,7 +436,7 @@ if __name__ == '__main__':
 
 代码清单 2-7 Alpha Munger 样式表：style.css
 
-```
+```py
 body {
     font-family: Helvetica,Arial,sans-serif;
     width: 600px;
@@ -468,7 +468,7 @@ MungedPageHandler 类用于处理到`/poem`的 POST 请求。当一个请求到�
 
 你可以通过向 Application 类的构造函数传递一个名为 static_path 的参数来告诉 Tornado 从文件系统的一个特定位置提供静态文件。Alpha Munger 中的相关代码片段如下：
 
-```
+```py
 app = tornado.web.Application(
     handlers=[(r'/', IndexHandler), (r'/poem', MungedPageHandler)],
     template_path=os.path.join(os.path.dirname(__file__), "templates"),
@@ -484,14 +484,14 @@ app = tornado.web.Application(
 
 Tornado 模板模块提供了一个叫作 static_url 的函数来生成 static 目录下文件的 URL。让我们来看看在 index.html 中 static_url 的调用的示例代码：
 
-```
+```py
 <link rel="stylesheet" href="{{ static_url("style.css") }}">
 
 ```
 
 这个对 static_url 的调用生成了 URL 的值，并渲染输出类似下面的代码：
 
-```
+```py
 <link rel="stylesheet" href="/static/style.css?v=ab12">
 
 ```

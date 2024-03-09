@@ -19,13 +19,13 @@
 
 Flask-HTTPAuth 不属于官方扩展，所以你无法从[官方扩展列表](http://flask.pocoo.org/extensions/)上找到它。不过安装和启用同其他扩展基本一样，先通过 pip 来安装扩展：
 
-```
+```py
 $ pip install Flask-HTTPAuth
 ```
 
 接下来创建扩展对象实例：
 
-```
+```py
 from flask import Flask
 from flask_httpauth import HTTPBasicAuth
 
@@ -40,7 +40,7 @@ auth = HTTPBasicAuth()
 
 为了方便理解，我们就不引入数据库了，把用户名密码存在一个数组里，我们所要做的，就是实现一个根据用户名获取密码的回调函数：
 
-```
+```py
 users = [
     {'username': 'Tom', 'password': '111111'},
     {'username': 'Michael', 'password': '123456'}
@@ -57,7 +57,7 @@ def get_password(username):
 
 回调函数”get_password()”由装饰器”@auth.get_password”修饰。在函数里，我们根据传入的用户名，返回其密码；如果用户不存在，则返回空。接下来，我们就可以在任一视图函数上，加上”@auth.login_required”装饰器，来表示该视图需要认证：
 
-```
+```py
 @app.route('/')
 @auth.login_required
 def index():
@@ -70,13 +70,13 @@ def index():
 
 进入浏览器调试，你会发现认证并没有启用 Cookie，而是在请求头中加上了加密后的认证字段：
 
-```
+```py
 Authorization: Basic TWljaGFlbDoxMjM0NTY=
 ```
 
 这就是”HTTPBasicAuth”认证的功能，你也可以用 Curl 命令来测试：
 
-```
+```py
 curl -u Tom:111111 -i -X GET http://localhost:5000/
 ```
 
@@ -89,7 +89,7 @@ curl -u Tom:111111 -i -X GET http://localhost:5000/
 
 这两个方法都在”werkzeug.security”包下。现在，我们要利用这两个方法，来实现加密后的用户名密码验证：
 
-```
+```py
 from werkzeug.security import generate_password_hash, check_password_hash
 
 users = [
@@ -113,7 +113,7 @@ def verify_password(username, password):
 
 在之前的例子中，如果未认证成功，服务端会返回 401 状态码及”Unauthorized Access”文本信息。你可以重写错误处理方法，并用”@auth.error_handler”装饰器来修饰它：
 
-```
+```py
 from flask import make_response, jsonify
 
 @auth.error_handler
@@ -130,7 +130,7 @@ def unauthorized():
 
 同 HTTPBasicAuth 类似，它也提供”login_required”装饰器来认证视图函数，”error_handler”装饰器来处理错误。区别是，它没有”verify_password”装饰器，相应的，它提供了”verify_token”装饰器来验证令牌。我们来看下代码，为了简化，我们将 Token 与用户的关系保存在一个字典中：
 
-```
+```py
 from flask import Flask, g
 from flask_httpauth import HTTPTokenAuth
 
@@ -163,7 +163,7 @@ def index():
 
 让我们启动上面的代码，并用 Curl 命令来测试它：
 
-```
+```py
 curl -X GET -H "Authorization: Bearer secret-token-1" http://localhost:5000/
 ```
 
@@ -173,7 +173,7 @@ curl -X GET -H "Authorization: Bearer secret-token-1" http://localhost:5000/
 
 itsdangerous 库提供了对信息加签名（Signature）的功能，我们可以通过它来生成并验证令牌。使用前，先记得安装”pip install itsdangerous”。现在，让我们先来产生令牌，并打印出来看看：
 
-```
+```py
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
 app = Flask(__name__)
@@ -189,7 +189,7 @@ for user in users:
 
 这里我们实例化了一个针对 JSON 的签名序列化对象 serializer，它是有时效性的，30 分钟后序列化后的签名即会失效。让我们运行下程序，在控制台上，会看到类似下面的内容：
 
-```
+```py
 Token for John: eyJhbGciOiJIUzI1NiIsImV4cCI6MTQ2MzUzMzY4MCwiaWF0IjoxNDYzNTMxODgwfQ.eyJ1c2VybmFtZSI6IkpvaG4ifQ.ox-64Jbd2ngjQMV198nHYUsJ639KIZS6RJl48tC7-DU
 
 Token for Susan: eyJhbGciOiJIUzI1NiIsImV4cCI6MTQ2MzUzMzY4MCwiaWF0IjoxNDYzNTMxODgwfQ.eyJ1c2VybmFtZSI6IlN1c2FuIn0.lRx6Z4YZMmjCmga7gs84KB44UIadHYRnhOr7b4AAKwo
@@ -198,7 +198,7 @@ Token for Susan: eyJhbGciOiJIUzI1NiIsImV4cCI6MTQ2MzUzMzY4MCwiaWF0IjoxNDYzNTMxODg
 
 接下来，改写”verify_token()”方法：
 
-```
+```py
 @auth.verify_token
 def verify_token(token):
     g.user = None
@@ -215,7 +215,7 @@ def verify_token(token):
 
 我们通过序列化对象的”load()”方法，将签名反序列化为 JSON 对象，也就是 Python 里的字典。然后获取字典中的用户名，如果成功则返回 True，否则返回 False。这样，就实现了加密后的令牌认证了，让我们用 Curl 测试一下，还记得刚才控制台上打印出的令牌吗？
 
-```
+```py
 curl -X GET -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsImV4cCI6MTQ2MzUzMzY4MCwiaWF0IjoxNDYzNTMxODgwfQ.eyJ1c2VybmFtZSI6IkpvaG4ifQ.ox-64Jbd2ngjQMV198nHYUsJ639KIZS6RJl48tC7-DU" http://localhost:5000/
 
 ```
@@ -226,7 +226,7 @@ curl -X GET -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsImV4cCI6MTQ2MzUzMzY4MC
 
 Flask-HTTPAuth 扩展还支持几种不同认证的组合，比如上面我们介绍了 HTTPBasicAuth 和 HTTPTokenAuth，我们可以将两者组合在一起，其中任意一个认证通过，即可以访问应用视图。实现起来也很简单，只需将不同的认证实例化为不同的对象，并将其传入 MultiAuth 对象即可。大体代码如下：
 
-```
+```py
 from flask_httpauth import HTTPBasicAuth, HTTPTokenAuth, MultiAuth
 
 ...
@@ -264,7 +264,7 @@ def index():
 
 还记得本系列第一篇中介绍的 Flask-RESTful 扩展吗？如果能将上面介绍的 HTTP 认证方法，加入到 RESTful API 中去，那该多好啊。别担心，我们有办法。让我们先取回 Flask-RESTful 扩展的示例代码，再把上例中的认证代码，就 HTTPTokenAuth 部分吧，加上去。现在关键时刻到了，使用 Flask-RESTful 扩展时，我们并没有声明视图函数，那该怎么把”@auth.login_required”装饰器加到 API 视图中去呢？我们来看下代码：
 
-```
+```py
 ...
 
 class User(Resource):

@@ -6,18 +6,18 @@ Tornado 在 Python 2.5, 2.6, 2.7 中都经过了测试。要使用 Tornado 的�
 
 Mac OS X 10.6 (Python 2.6+)
 
-```
+```py
 sudo easy_install setuptools pycurl 
 ```
 
 Ubuntu Linux (Python 2.6+)
 
-```
+```py
 sudo apt-get install python-pycurl 
 ```
 
 Ubuntu Linux (Python 2.5)
 
-```
+```py
 sudo apt-get install python-dev python-pycurl python-simplejson 
 ```

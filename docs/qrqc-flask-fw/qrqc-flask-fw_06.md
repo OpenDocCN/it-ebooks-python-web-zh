@@ -12,7 +12,7 @@
 
 按照以下命令建立 Flask 项目 HelloWorld:
 
-```
+```py
 mkdir HelloWorld
 mkdir HelloWorld/static
 mkdir HelloWorld/templates
@@ -25,7 +25,7 @@ touch HelloWorld/index.py
 
 编辑`HelloWorld/index.py`：
 
-```
+```py
 from flask import Flask, url_for, redirect
 
 app = Flask(__name__)
@@ -50,13 +50,13 @@ if __name__ == '__main__':
 
 运行`HelloWorld/index.py`，在浏览器中访问`http://127.0.0.1:5000/test1`，浏览器的 url 会变成`http://127.0.0.1:5000/test2`，并显示：
 
-```
+```py
 this is test2 
 ```
 
 而`HelloWorld/index.py`的输出信息为：
 
-```
+```py
 this is test1
 127.0.0.1 - - [28/Jun/2014 18:56:23] "GET /test1 HTTP/1.1" 302 -
 this is test2

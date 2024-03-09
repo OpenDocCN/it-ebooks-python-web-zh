@@ -14,7 +14,7 @@
 
 首先利用 `pip` 安裝一些部署時需要用到的套件：
 
-```
+```py
 (djangogirls_venv) ~/djangogirls$ pip install dj-database-url gunicorn dj-static 
 ```
 
@@ -28,13 +28,13 @@
 
 在 `djangogirls` 專案目錄底下，利用以下的指令將此虛擬環境裡的 Python 套件全部條列出來，包括套件名稱與版本資訊，並儲存於 [requirements.txt](https://devcenter.heroku.com/articles/python-pip#the-basics)：
 
-```
+```py
 (djangogirls_venv) ~/djangogirls$ pip freeze > requirements.txt 
 ```
 
 由於 Heroku 使用 [PostgreSQL](http://www.postgresql.org/) 資料庫，我們還需要手動在 `requirements.txt` 最後面加上 `psycopg2==2.6.1`（Python 的 PostgreSQL 模組）。最終的檔案內容範例如下，版本可能會稍有不同：
 
-```
+```py
 # djangogirls/requirements.txt
 
 Django==1.8.6
@@ -60,7 +60,7 @@ psycopg2==2.6.1
 
 建立一個 [Procfile](https://devcenter.heroku.com/articles/procfile) 檔案，告訴 Heroku 要如何啟動我們的應用：
 
-```
+```py
 web: gunicorn --pythonpath mysite mysite.wsgi 
 ```
 
@@ -70,7 +70,7 @@ web: gunicorn --pythonpath mysite mysite.wsgi
 
 *   **<command class="hljs-doctype"></command>**-- [Gunicorn](http://gunicorn.org/) 是一個用 Python 開發的 WSGI 工具，可以用來執行 Django 的網站。我們透過指令下列指令來啟動網站：
 
-    ```
+    ```py
      gunicorn --pythonpath <directory_path> <project_name>.wsgi 
     ```
 
@@ -78,7 +78,7 @@ web: gunicorn --pythonpath mysite mysite.wsgi
 
 為了讓 Heroku 知道要用哪一個版本的 Python，新增 [runtime.txt](https://devcenter.heroku.com/articles/python-runtimes) 輸入：
 
-```
+```py
 python-3.4.3 
 ```
 
@@ -86,7 +86,7 @@ python-3.4.3
 
 在前面的章節中，我們透過修改 `settings.py` 來調整 Django project 的設定，但是通常正式上線（production）的環境會和開發/本機（development/local）環境有所不同。所以我們在 `mysite/mysite/` 底下新建一個 `production_settings.py`，專門放部署時所需要的設定：
 
-```
+```py
 # mysite/mysite/production_settings.py
 
 # Import all default settings.
@@ -114,7 +114,7 @@ DEBUG = False
 
 [WSGI - Web Server Gateway Interface](http://webpython.codepoint.net/wsgi_tutorial) 是 Python 定義網頁程式和伺服器溝通的介面。為了讓 Heroku 的服務能夠透過這個介面與我們的網站溝通，修改 `mysite/mysite/wsgi.py` 如下：
 
-```
+```py
 # mysite/mysite/wsgi.py
 
 import os
@@ -134,7 +134,7 @@ application = Cling(get_wsgi_application())
 
 我們不希望把有些開發時使用的檔案，例如虛擬環境、本機資料庫等等，都一股腦放到網路上。因此，接下來需要建立一個 [.gitignore](http://git-scm.com/docs/gitignore) 檔案，排除這些資料：
 
-```
+```py
 # djangogirls/.gitignore
 
 djangogirls_venv
@@ -148,7 +148,7 @@ db.sqlite3
 
 最後的檔案結構如下：
 
-```
+```py
 djangogirls
 ├──mysite
 │   ├── mysite
@@ -178,7 +178,7 @@ djangogirls
 
 安裝完工具箱裡的 Heroku client 後，就可以使用 `heroku` 指令，首先讓我們登入：
 
-```
+```py
 $ heroku login 
 ```
 
@@ -188,7 +188,7 @@ $ heroku login
 
 在 `djangogirls` 資料夾底下新增一個 git repository：
 
-```
+```py
 ~/djangogirls$ git init
 ~/djangogirls$ git add .
 ~/djangogirls$ git commit -m "my djangogirls app" 
@@ -198,13 +198,13 @@ $ heroku login
 
 接下來，我們需要新增一個可以上傳 repository 的地方，如果你之前已經新增過 app，請跳到 **Step 3-2**：
 
-```
+```py
 ~/djangogirls$ heroku create 
 ```
 
 預設`create`後面不放名字時，會自動產生隨機名稱的 Heroku app，如果想要命名自己的 app，如下：
 
-```
+```py
 ~/djangogirls$ heroku create djangogirlsdiary 
 ```
 
@@ -217,7 +217,7 @@ $ heroku login
 
 如果你之前已經新增過 app ，並且想發佈在已經存在的 app 上時，可以先用指令 `heroku apps` 查看 app 的名稱：
 
-```
+```py
 $ heroku apps
 === My Apps
 djangogirlsdiary 
@@ -225,14 +225,14 @@ djangogirlsdiary
 
 然後設定成你想要上傳的 app：
 
-```
+```py
 $  heroku git:remote -a djangogirlsdiary
 Git remote heroku added. 
 ```
 
 最後透過 `git remote -v` 檢查一下是否設定到正確的位置：
 
-```
+```py
 $ git remote -v
 heroku    https://git.heroku.com/djangogirlsdiary.git (fetch)
 heroku    https://git.heroku.com/djangogirlsdiary.git (push) 
@@ -242,7 +242,7 @@ heroku    https://git.heroku.com/djangogirlsdiary.git (push)
 
 我們利用 `heroku config:set` 指令設置 [環境變數](https://devcenter.heroku.com/articles/config-vars)，以確保未來在 Heroku 執行任何指令時，都是使用到部署專用的設定檔：
 
-```
+```py
 $ heroku config:set DJANGO_SETTINGS_MODULE=mysite.production_settings 
 ```
 
@@ -250,7 +250,7 @@ $ heroku config:set DJANGO_SETTINGS_MODULE=mysite.production_settings
 
 使用 `git push` 指令上傳 git repository 後，你會發現它按照 **runtime.txt** 安裝 python-3.4.3，也透過 pip 安裝我們在 **requirements.txt** 上列出的所有套件：
 
-```
+```py
 ~/djangogirls$ git push heroku master
 ...
 remote: Compressing source files... done.
@@ -271,14 +271,14 @@ To https://git.heroku.com/djangogirlsdiary.git
 
 如果你遇到下列的錯誤訊息：
 
-```
+```py
 Permission denied (publickey).
 fatal: The remote end hung up unexpectedly 
 ```
 
 請透過下列指令新增 public key，然後再重新 `git push`。
 
-```
+```py
 ~/djangogirls$ heroku keys:add 
 ```
 
@@ -286,7 +286,7 @@ fatal: The remote end hung up unexpectedly
 
 先前建立了 **Procfile** 檔案告訴 Heroku 啟動時要執行的指令，現在我們使用指令啟動 web process，並指定只需要 1 個 instance：
 
-```
+```py
 ~/djangogirls$ heroku ps:scale web=1 
 ```
 
@@ -294,13 +294,13 @@ fatal: The remote end hung up unexpectedly
 
 Django 已經成功啟動了，但是我們還需要進行資料庫初始化，利用 `heroku run` 可以在 Heroku 執行指令：
 
-```
+```py
 ~/djangogirls$ heroku run python mysite/manage.py migrate 
 ```
 
 並為新資料庫建立一個 superuser：
 
-```
+```py
 ~/djangogirls$ heroku run python mysite/manage.py createsuperuser 
 ```
 
@@ -308,7 +308,7 @@ Django 已經成功啟動了，但是我們還需要進行資料庫初始化，�
 
 最後，透過 `open` 指令會自動在瀏覽器打開你的網站：
 
-```
+```py
 ~/djangogirls$ heroku open 
 ```
 
@@ -322,7 +322,7 @@ Django 已經成功啟動了，但是我們還需要進行資料庫初始化，�
 
 未來如果對網站進行任何修改並想更新到 Heroku，只要先確定 **git commit** 完成後再 push 到 Heroku 即可。
 
-```
+```py
 $ git push heroku master 
 ```
 

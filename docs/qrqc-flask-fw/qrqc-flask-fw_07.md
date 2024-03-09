@@ -25,7 +25,7 @@ Flask 与模板相关的函数有：
 
 按照以下命令建立 Flask 项目 HelloWorld:
 
-```
+```py
 mkdir HelloWorld
 mkdir HelloWorld/static
 mkdir HelloWorld/templates
@@ -54,7 +54,7 @@ touch HelloWorld/index.py
 
 内容如下：
 
-```
+```py
 from flask import Flask, render_template
 
 app = Flask(__name__)
@@ -83,7 +83,7 @@ if __name__ == '__main__':
 
 运行 HelloWorld/index.py：
 
-```
+```py
 $ python HelloWorld/index.py 
 ```
 

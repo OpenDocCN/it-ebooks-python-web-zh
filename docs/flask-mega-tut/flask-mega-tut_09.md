@@ -19,14 +19,14 @@
 
 首先我们定义一个单字段的表单对象(文件 *app/forms.py*):
 
-```
+```py
 class PostForm(Form):
     post = StringField('post', validators=[DataRequired()]) 
 ```
 
 接着，我们把表单添加到模板中(文件 *app/templates/index.html*):
 
-```
+```py
 <!-- extend base layout -->
 {% extends "base.html" %}
 
@@ -63,7 +63,7 @@ class PostForm(Form):
 
 最后，把这一切联系起来的视图函数需要被扩展用来处理表单(文件 *app/views.py*):
 
-```
+```py
 from forms import LoginForm, EditForm, PostForm
 from models import User, Post
 
@@ -103,7 +103,7 @@ def index():
 
 当我们在数据库中插入一个新的 *Post* 后，我们将会重定向到首页:
 
-```
+```py
 return redirect(url_for('index')) 
 ```
 
@@ -121,7 +121,7 @@ return redirect(url_for('index'))
 
 如果你还记得前几篇文章中，我们创建了几个伪造的 blog，它们已经在我们主页上展示很长一段时间。在 *index* 视图函数这两个创建的伪造的对象是简单的 Python 列表:
 
-```
+```py
 posts = [
     {
         'author': { 'nickname': 'John' },
@@ -136,7 +136,7 @@ posts = [
 
 但是在上一章中我们已经创建了一个查询，它允许我们获取关注的用户的所有的 blog，因此我们简单地替换上面这些伪造的数据(文件 *app/views.py*):
 
-```
+```py
 posts = g.user.followed_posts().all() 
 ```
 
@@ -154,7 +154,7 @@ posts = g.user.followed_posts().all()
 
 Flask-SQLAlchemy 天生就支持分页。比如如果我们想要得到用户关注者的前三篇 blog，我们可以这样做:
 
-```
+```py
 posts = g.user.followed_posts().paginate(1, 3, False).items 
 ```
 
@@ -168,7 +168,7 @@ posts = g.user.followed_posts().paginate(1, 3, False).items
 
 现在让我们想想如何在我们的 *index* 视图函数中实现分页。我们首先在配置文件中添加一些决定每页显示的 blog 数的配置项(文件 *config.py*):
 
-```
+```py
 # pagination
 POSTS_PER_PAGE = 3 
 ```
@@ -177,7 +177,7 @@ POSTS_PER_PAGE = 3
 
 接着，让我们看看不同页的 URLs 是什么样的。我们知道 Flask 路由可以携带参数，因此我们在 URL 后添加一个后缀表示所需的页面:
 
-```
+```py
 http://localhost:5000/         <-- page #1 (default)
 http://localhost:5000/index    <-- page #1 (default)
 http://localhost:5000/index/1  <-- page #1
@@ -186,7 +186,7 @@ http://localhost:5000/index/2  <-- page #2
 
 这种格式的 URLs 能够轻易地通过在我们的视图函数中附加一个 *route* 来实现(文件 *app/views.py*):
 
-```
+```py
 from config import POSTS_PER_PAGE
 
 @app.route('/', methods = ['GET', 'POST'])
@@ -220,19 +220,19 @@ def index(page = 1):
 
 我们现在开始在视图函数中做一些小改变。在我们目前的版本中我们按如下方式使用 *paginate* 方法:
 
-```
+```py
 posts = g.user.followed_posts().paginate(page, POSTS_PER_PAGE, False).items 
 ```
 
 通过上面这样做，我们可以获得返回自 *paginate* 的 *Pagination* 对象的 *items* 成员。但是这个对象还有很多其它有用的东西在里面，因此我们还是使用整个对象(文件 *app/views.py*):
 
-```
+```py
 posts = g.user.followed_posts().paginate(page, POSTS_PER_PAGE, False) 
 ```
 
 为了适应这种改变，我们必须修改模板(文件 *app/templates/index.html*):
 
-```
+```py
 <!-- posts is a Paginate object -->
 {% for post in posts.items %}
 <p>
@@ -250,7 +250,7 @@ posts = g.user.followed_posts().paginate(page, POSTS_PER_PAGE, False)
 
 有了这些元素后，我们产生了这些(文件 *app/templates/index.html*):
 
-```
+```py
 <!-- posts is a Paginate object -->
 {% for post in posts.items %}
 <p>
@@ -271,7 +271,7 @@ posts = g.user.followed_posts().paginate(page, POSTS_PER_PAGE, False)
 
 现在是时候在我们的首页上也包含这个子模板。大部分的事情都已经做完了，因此这是很简单的(文件 *app/templates/index.html*):
 
-```
+```py
 <!-- posts is a Paginate object -->
 {% for post in posts.items %}
     {% include 'post.html' %}
@@ -297,7 +297,7 @@ posts = g.user.followed_posts().paginate(page, POSTS_PER_PAGE, False)
 
 下面就是更新后的视图函数(文件 *app/views.py*):
 
-```
+```py
 @app.route('/user/<nickname>')
 @app.route('/user/<nickname>/<int:page>')
 @login_required
@@ -316,7 +316,7 @@ def user(nickname, page=1):
 
 模版的改变同样很简单(文件 *app/templates/user.html*):
 
-```
+```py
 <!-- posts is a Paginate object -->
 {% for post in posts.items %}
     {% include 'post.html' %}

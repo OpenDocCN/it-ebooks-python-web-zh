@@ -24,7 +24,7 @@
 
 我们使用删除 blog 的视图函数如下(文件 *app/views.py*):
 
-```
+```py
 @app.route('/delete/<int:id>')
 @login_required
 def delete(id):
@@ -43,7 +43,7 @@ def delete(id):
 
 为了调用这个函数，我们将会在模板中添加这个删除链接(文件 *app/templates/post.html*):
 
-```
+```py
 {% if post.author.id == g.user.id %}
 <div><a href="{{ url_for('delete', id = post.id) }}">{{ _('Delete') }}</a></div>
 {% endif %} 
@@ -51,13 +51,13 @@ def delete(id):
 
 现在我们接着继续，在生产模式下运行我们的应用程序。Linux 和 Mac 用户可以这么做:
 
-```
+```py
 $ ./runp.py 
 ```
 
 Windows 用户这么做:
 
-```
+```py
 flask/Scripts/python runp.py 
 ```
 
@@ -73,7 +73,7 @@ flask/Scripts/python runp.py
 
 一个堆栈轨迹并不足够，但是总比没有好吧。假设我们对问题一点都不知道，我们需要单从堆栈轨迹中之处发生些什么。这是这个特别的堆栈轨迹的副本:
 
-```
+```py
 127.0.0.1 - - [03/Mar/2013 23:57:39] "GET /delete/12 HTTP/1.1" 500 -
 Traceback (most recent call last):
   File "/home/microblog/flask/lib/python2.7/site-packages/flask/app.py", line 1701, in __call__
@@ -121,7 +121,7 @@ web 的堆栈轨迹是十分好的，因为它允许你检查代码并且从服�
 
 但是我们该检查哪个类？让我们回到基于 Web 的堆栈轨迹，再仔细找找。在最底层的堆栈帧中，我们能使用代码浏览器和 Python 控制台来找出使用会话的类。在代码中，我们看到我们是在 *Session* 类中。这像是 SQLAlchemy 中的数据库会话的基础类。因为现在在最底层的堆栈帧正是在会话对象里，我们能够在控制台中得到会话实际的类，通过运行:
 
-```
+```py
 >>> print self
 <flask_sqlalchemy._SignallingSession object at 0xff34914c> 
 ```
@@ -132,13 +132,13 @@ web 的堆栈轨迹是十分好的，因为它允许你检查代码并且从服�
 
 有很多方式在 Python 应用程序中设置断点。最简单的一种就是在我们想要中断的程序中写入如下代码:
 
-```
+```py
 import pdb; pdb.set_trace() 
 ```
 
 因此我们继续向前并且暂时在 *_SignallingSession* 类的构造函数插入断点(文件 *flask/lib/python2.7/site-packages/flask_sqlalchemy.py*):
 
-```
+```py
 class _SignallingSession(Session):
 
     def __init__(self, db, autocommit=False, autoflush=False, **options):
@@ -155,7 +155,7 @@ class _SignallingSession(Session):
 
 让我们继续运行看看会发生什么:
 
-```
+```py
 $ ./run.py
 > /home/microblog/flask/lib/python2.7/site-packages/flask_sqlalchemy.py(198)__init__()
 -> self.app = db.get_app()
@@ -166,7 +166,7 @@ $ ./run.py
 
 最重要的问题是我们需要回答应用程序现在处于哪里，因为这将会告诉我们谁在请求创建会话 *‘1’*。我们将会使用 *bt* 来获取堆栈轨迹:
 
-```
+```py
 (Pdb) bt
   /home/microblog/run.py(2)<module>()
 -> from app import app
@@ -195,7 +195,7 @@ $ ./run.py
 
 像之前做的，我们会发现在 *models.py* 的 92 行中存在问题，那里是我们全文搜索引擎初始化的地方:
 
-```
+```py
 whooshalchemy.whoosh_index(app, Post) 
 ```
 
@@ -205,7 +205,7 @@ whooshalchemy.whoosh_index(app, Post)
 
 让我们多看这个堆栈轨迹一眼。我们调用了 *whoosh_index()*，它反过来调用了 *_create_index()*。在 *_create_index()* 中的一行代码是这样的:
 
-```
+```py
 model.query = _QueryProxy(model.query, primary_key,
             searcher, model) 
 ```
@@ -216,7 +216,7 @@ model.query = _QueryProxy(model.query, primary_key,
 
 让我们继续往下看看接下来发生什么。在 *__get__()* 中的代码是这个:
 
-```
+```py
 return type.query_class(mapper, session=self.sa.session()) 
 ```
 
@@ -234,7 +234,7 @@ return type.query_class(mapper, session=self.sa.session())
 
 因此为了准备修复这个问题，我们可以试着去重现这个问题，我们可以试着去创建针对这个问题的测试。为了创建这个测试，我们需要模拟两个请求，第一个请求就是查询一个 Post 对象，模拟我们请求数据为了在首先显示 blog。因为这是第一个会话，我们准备命名这个会话为 *‘1’*。接着我们需要忘记这个会话创建一个新的会话，就像 Flask-SQLAlchemy 所做的。试着删除 Post 对象在第二个会话中，这时候应该会触发这个 bug:
 
-```
+```py
 def test_delete_post(self):
     # create a user and a post
     u = User(nickname = 'john', email = 'john@example.com')
@@ -253,7 +253,7 @@ def test_delete_post(self):
 
 现在当我们运行测试的时候失败会出现:
 
-```
+```py
 $ ./tests.py
 .E....
 ======================================================================
@@ -290,7 +290,7 @@ Flask-SQLAlchemy 的文档上提到过有一个 [model.query_class](http://pytho
 
 Python 有一个测试覆盖率的工具，我们称之为 [coverage](http://nedbatchelder.com/code/coverage/) [http://nedbatchelder.com/code/coverage/]。让我们安装它:
 
-```
+```py
 flask/bin/pip install coverage 
 ```
 
@@ -298,7 +298,7 @@ flask/bin/pip install coverage
 
 这有些改变我们需要加入到测试代码中为了生成一个覆盖率的报告(文件 *tests.py*):
 
-```
+```py
 from coverage import coverage
 cov = coverage(branch = True, omit = ['flask/*', 'tests.py'])
 cov.start()
@@ -325,7 +325,7 @@ if __name__ == '__main__':
 
 这是运行后的报告例子:
 
-```
+```py
 $ ./tests.py
 .....F
     ======================================================================
@@ -366,7 +366,7 @@ HTML version: /home/microblog/tmp/coverage/index.html
 
 我们新增加些测试为了提高覆盖率:
 
-```
+```py
 def test_user(self):
     # make valid nicknames
     n = User.make_valid_nickname('John_123')
@@ -404,7 +404,7 @@ Python 有一个称为 [cProfile](http://docs.python.org/2/library/profile.html)
 
 为了启用 Werkzeug 分析器，我们能创建一个像 *run.py* 的另外一个启动脚本。让我们称它为 *profile.py*:
 
-```
+```py
 #!flask/bin/python
 from werkzeug.contrib.profiler import ProfilerMiddleware
 from app import app
@@ -416,7 +416,7 @@ app.run(debug = True)
 
 一旦这个脚本运行，每一个请求将会显示分析器的摘要。这里就是其中一个例子:
 
-```
+```py
 --------------------------------------------------------------------------------
 PATH: '/'
          95477 function calls (89364 primitive calls) in 0.202 seconds
@@ -480,20 +480,20 @@ Flask-SQLAlchemy 文档提到了 [get_debug_queries](http://pythonhosted.org/Fla
 
 这是一个很有用的信息。我们可以充分利用这个信息来得到提醒。为了充分利用这个功能，我们在配置文件中需要启动它(文件 *config.py*):
 
-```
+```py
 SQLALCHEMY_RECORD_QUERIES = True 
 ```
 
 我们需要设置一个阀值，超过这个值我们认为是一个慢的查询(文件 *config.py*):
 
-```
+```py
 # slow database query threshold (in seconds)
 DATABASE_QUERY_TIMEOUT = 0.5 
 ```
 
 为了检查是否需要发送警告，我们需要在每一个请求结束的时候进行处理。在 Flask 中，我们只需要设置一个 *after_request* 函数(文件 *app/views.py*):
 
-```
+```py
 from flask.ext.sqlalchemy import get_debug_queries
 from config import DATABASE_QUERY_TIMEOUT
 
